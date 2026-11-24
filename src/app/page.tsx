@@ -9,6 +9,8 @@ import { METODO, NUMEROS, SOBRE } from '@/domain/apresentacao';
 import { CATEGORY_LABEL, getProject, MAIS, PROJECTS, publicLink } from '@/domain/projects';
 import { PROFILE } from '@/domain/profile';
 import { PROJECT_IMAGES } from '@/domain/projectImages';
+import { SECOES } from '@/experience/perfil.js';
+import caverna from '../../public/img/cavern-ceiling.webp';
 import hero from '../../public/img/mono/hero.webp';
 import engenharia from '../../public/img/mono/engenharia.webp';
 import qualidade from '../../public/img/mono/qualidade.webp';
@@ -36,6 +38,22 @@ const ETAPAS = [
   ['Entrega', 'Sistema verificado'],
 ];
 const VARREDURA = ['Contratos de API', 'Testes automatizados', 'Acessibilidade', 'Performance'];
+
+// A caverna: o cliente vê o herói na rua, a entrega depende da caverna. Cada canto = uma atividade.
+// Textos (canto e "na entrega") vêm de perfil.js, os mesmos dos painéis da caverna 3D.
+// x/y = onde fica o canto na arte cavern-ceiling.webp, em % (letras: os túneis da arte já têm números).
+type Secao = { id: string; canto?: [string, string]; entrega?: string };
+const CANTOS = ([
+  ['fullstack', 'Desenvolvimento (Full Stack)', 51, 71],
+  ['qa', 'Testes e qualidade (QA)', 15, 84],
+  ['lead', 'Liderança técnica', 9, 25],
+  ['ia', 'Automação com IA', 50, 10],
+  ['uiux', 'Design de interface (UI/UX)', 51, 91],
+  ['projetos', 'Trabalhos entregues', 27, 47],
+] as const).map(([id, atividade, x, y], i) => {
+  const s = (SECOES as Secao[]).find((q) => q.id === id)!;
+  return { id, atividade, x, y, letra: 'ABCDEF'[i], canto: s.canto!, entrega: s.entrega! };
+});
 
 const ACHADOS = ['55% de 20 mil produtos perdidos', 'IDOR entre tenants', 'DELETE de 29 segundos', 'Endpoint 6× mais lento', '11.600+ casos de API', '208 endpoints · 59 tenants'];
 const APARENCIA = ['Importação concluída', 'Tenant isolado', 'DELETE executado', 'Status 200 OK', 'Tempo de resposta normal'];
@@ -79,6 +97,7 @@ export default function Home() {
       <Movimento />
       <nav className="m-trilho" aria-label="Onde você está">
         <ol>
+          <li><a href="#caverna"><b>00</b><span>A caverna</span></a></li>
           {CAPITULOS.map((c) => <li key={c.id}><a href={`#${c.id}`}><b>{c.n}</b><span>{getProject(c.projeto)?.title}</span></a></li>)}
           <li><a href="#projetos"><b>05</b><span>Mais trabalhos</span></a></li>
           <li><a href="#metodo"><b>06</b><span>Método</span></a></li>
@@ -135,6 +154,43 @@ export default function Home() {
           <Faixa />
           <Faixa inversa />
         </div>
+
+        {/* ---------- A CAVERNA: como cada atividade muda a entrega (a metáfora, em destaque) ---------- */}
+        <section className="m-sec m-cav" id="caverna" aria-labelledby="m-cav-t">
+          <div className="m-wrap">
+            <header className="m-cab">
+              <p className="m-rot">A metáfora</p>
+              <h2 id="m-cav-t">O cliente vê o herói na rua.<br /><em>A entrega depende da caverna.</em></h2>
+              <p>Todo site ou sistema que chega até você é a parte visível. Por trás existe um lugar onde ele é construído, testado e preparado para sair. Montei esse lugar em 3D: cada canto da caverna é uma parte do meu trabalho, e cada uma muda alguma coisa no que você recebe.</p>
+            </header>
+            <div className="m-cav-corpo">
+              <figure className="m-cav-arte">
+                <Image src={caverna} alt="A caverna: garagem com o carro à esquerda, computador central, emblema no piso, doze túneis em duas galerias, sacadas no alto e um óculo de luz no teto." placeholder="blur" sizes="(max-width: 1000px) 100vw, 58vw" />
+                {CANTOS.map((c) => (
+                  <Link key={c.id} href={`/arquivo#${c.id}`} prefetch={false} className="m-cav-pino" data-c={c.id} style={{ '--x': c.x, '--y': c.y } as CSSProperties} aria-label={`${c.canto[0]}: ${c.atividade}. Abrir na caverna 3D`}>
+                    <b aria-hidden="true">{c.letra}</b><span aria-hidden="true">{c.canto[0]}</span>
+                  </Link>
+                ))}
+              </figure>
+              <ol className="m-cav-lista">
+                {CANTOS.map((c) => (
+                  <li key={c.id} data-c={c.id}>
+                    <b className="m-cav-letra" aria-hidden="true">{c.letra}</b>
+                    <div>
+                      <p className="m-cav-onde">{c.canto[0]} <span>· {c.canto[1]}</span></p>
+                      <h3>{c.atividade}</h3>
+                      <p className="m-cav-entrega"><b>Na entrega</b> {c.entrega}</p>
+                    </div>
+                  </li>
+                ))}
+              </ol>
+            </div>
+            <p className="m-cav-acoes">
+              <Link href="/arquivo" prefetch={false} className="m-btn m-btn-cheio">Entrar na caverna em 3D <span aria-hidden="true">→</span></Link>
+              <Link href="/distritos" className="m-link">Versão sem 3D <span aria-hidden="true">→</span></Link>
+            </p>
+          </div>
+        </section>
 
         {/* ---------- TRABALHOS SELECIONADOS: um espaço do edifício por trabalho ---------- */}
         <div id="trabalho" className="m-travessia">
@@ -262,13 +318,6 @@ export default function Home() {
           </div>
         </section>
 
-        {/* ---------- LAB (a caverna 3D, secundária) ---------- */}
-        <section className="m-wrap m-lab" aria-labelledby="m-lab-t">
-          <p className="m-rot">Lab 01</p>
-          <h2 id="m-lab-t">Um arquivo navegável em 3D.</h2>
-          <p>Um experimento em Three.js, modelado com uma oficina de agentes de IA. Fora do caminho principal, para quem quiser explorar.</p>
-          <Link href="/arquivo" prefetch={false} className="m-link">Entrar no lab <span aria-hidden="true">→</span></Link>
-        </section>
       </main>
 
       <SiteFooter />

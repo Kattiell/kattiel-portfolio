@@ -368,3 +368,60 @@ html.k-fim .m-abre-pular{display:none}
   .m-abre-etapas{bottom:calc(84 * var(--mu))}
   .m-abre-tempo{left:var(--m-x);right:auto;bottom:calc(40 * var(--mu));justify-items:start;width:calc(140 * var(--mu))}
 }
+
+/* ---------- A caverna: a metáfora em destaque (cada canto = uma atividade; o que muda na entrega) ---------- */
+.m-cav h2 em{font-style:normal;color:var(--m-red)}
+.m-cav-corpo{display:grid;grid-template-columns:minmax(0,1.4fr) minmax(0,1fr);gap:calc(56 * var(--mu));margin-top:calc(56 * var(--mu));align-items:start}
+.m-cav-arte{position:sticky;top:calc(100 * var(--mu));margin:0;border:1px solid var(--m-linha);overflow:hidden;background:var(--m-obs)}
+.m-cav-arte img{display:block;width:100%;height:auto}
+.m-cav-arte:after{content:'';position:absolute;inset:0;pointer-events:none;background:linear-gradient(180deg,rgba(16,16,18,.3),transparent 28%,transparent 72%,rgba(16,16,18,.3))}
+.m-cav-pino{position:absolute;z-index:1;left:calc(var(--x) * 1%);top:calc(var(--y) * 1%);display:flex;align-items:center;gap:8px;transform:translate(-15px,-50%);text-decoration:none;border:0}
+.m-cav-pino b,.m-cav-letra{position:relative;display:grid;place-items:center;flex:none;width:30px;height:30px;border-radius:50%;background:var(--m-obs);border:1.5px solid var(--m-red);font:600 13px/1 var(--m-mono);color:var(--m-marfim);transition:background .25s,transform .25s}
+.m-cav-pino b:after{content:'';position:absolute;inset:-6px;border-radius:50%;border:1px solid var(--m-red);opacity:0;animation:m-cav-pulso 2.6s ease-out infinite}
+.m-cav-pino:nth-of-type(2) b:after{animation-delay:.4s}.m-cav-pino:nth-of-type(3) b:after{animation-delay:.8s}
+.m-cav-pino:nth-of-type(4) b:after{animation-delay:1.2s}.m-cav-pino:nth-of-type(5) b:after{animation-delay:1.6s}.m-cav-pino:nth-of-type(6) b:after{animation-delay:2s}
+@keyframes m-cav-pulso{0%{opacity:.8;transform:scale(.8)}100%{opacity:0;transform:scale(1.5)}}
+.m-cav-pino span{padding:6px 9px;background:rgba(16,16,18,.86);border:1px solid var(--m-linha);font:500 11.5px/1 var(--m-mono);letter-spacing:.1em;text-transform:uppercase;color:var(--m-marfim);white-space:nowrap;transition:border-color .25s,background .25s}
+.m-cav-lista{list-style:none;margin:0;padding:0}
+.m-cav-lista li{display:grid;grid-template-columns:auto 1fr;gap:calc(18 * var(--mu));padding:calc(22 * var(--mu)) calc(14 * var(--mu));border-top:1px solid var(--m-linha);transition:background .25s}
+.m-cav-lista li:last-child{border-bottom:1px solid var(--m-linha)}
+.m-cav-lista li:hover{background:rgba(200,65,75,.06)}
+.m-cav-onde{margin:2px 0 0;font:500 12px/1.4 var(--m-mono);letter-spacing:.12em;text-transform:uppercase;color:var(--m-bronze)}
+.m-cav-onde span{color:var(--m-mudo);letter-spacing:.06em}
+.m-cav-lista h3{margin:calc(8 * var(--mu)) 0 0;font:600 clamp(20px,1.6vw,calc(26 * var(--mu)))/1.15 var(--m-disp);color:var(--m-marfim)}
+.m-cav-entrega{margin:calc(10 * var(--mu)) 0 0;font:400 calc(16 * var(--mu))/1.6 var(--m-corpo);color:var(--m-texto)}
+.m-cav-entrega b{display:inline-block;margin-right:8px;padding:4px 7px;vertical-align:1px;background:var(--m-carm);font:600 10.5px/1 var(--m-mono);letter-spacing:.14em;text-transform:uppercase;color:var(--m-marfim)}
+.m-cav-acoes{display:flex;flex-wrap:wrap;align-items:center;gap:calc(28 * var(--mu));margin:calc(44 * var(--mu)) 0 0}
+.m-cav:has(li[data-c="fullstack"]:hover) .m-cav-pino[data-c="fullstack"],.m-cav:has(.m-cav-pino[data-c="fullstack"]:is(:hover,:focus-visible)) .m-cav-pino[data-c="fullstack"],
+.m-cav:has(li[data-c="qa"]:hover) .m-cav-pino[data-c="qa"],.m-cav:has(.m-cav-pino[data-c="qa"]:is(:hover,:focus-visible)) .m-cav-pino[data-c="qa"],
+.m-cav:has(li[data-c="lead"]:hover) .m-cav-pino[data-c="lead"],.m-cav:has(.m-cav-pino[data-c="lead"]:is(:hover,:focus-visible)) .m-cav-pino[data-c="lead"],
+.m-cav:has(li[data-c="ia"]:hover) .m-cav-pino[data-c="ia"],.m-cav:has(.m-cav-pino[data-c="ia"]:is(:hover,:focus-visible)) .m-cav-pino[data-c="ia"],
+.m-cav:has(li[data-c="uiux"]:hover) .m-cav-pino[data-c="uiux"],.m-cav:has(.m-cav-pino[data-c="uiux"]:is(:hover,:focus-visible)) .m-cav-pino[data-c="uiux"],
+.m-cav:has(li[data-c="projetos"]:hover) .m-cav-pino[data-c="projetos"],.m-cav:has(.m-cav-pino[data-c="projetos"]:is(:hover,:focus-visible)) .m-cav-pino[data-c="projetos"]{z-index:2}
+.m-cav:has(li[data-c="fullstack"]:hover) .m-cav-pino[data-c="fullstack"] b,.m-cav-pino[data-c="fullstack"]:is(:hover,:focus-visible) b,
+.m-cav:has(li[data-c="qa"]:hover) .m-cav-pino[data-c="qa"] b,.m-cav-pino[data-c="qa"]:is(:hover,:focus-visible) b,
+.m-cav:has(li[data-c="lead"]:hover) .m-cav-pino[data-c="lead"] b,.m-cav-pino[data-c="lead"]:is(:hover,:focus-visible) b,
+.m-cav:has(li[data-c="ia"]:hover) .m-cav-pino[data-c="ia"] b,.m-cav-pino[data-c="ia"]:is(:hover,:focus-visible) b,
+.m-cav:has(li[data-c="uiux"]:hover) .m-cav-pino[data-c="uiux"] b,.m-cav-pino[data-c="uiux"]:is(:hover,:focus-visible) b,
+.m-cav:has(li[data-c="projetos"]:hover) .m-cav-pino[data-c="projetos"] b,.m-cav-pino[data-c="projetos"]:is(:hover,:focus-visible) b{background:var(--m-red);transform:scale(1.12)}
+.m-cav:has(li[data-c="fullstack"]:hover) .m-cav-pino[data-c="fullstack"] span,.m-cav-pino[data-c="fullstack"]:is(:hover,:focus-visible) span,
+.m-cav:has(li[data-c="qa"]:hover) .m-cav-pino[data-c="qa"] span,.m-cav-pino[data-c="qa"]:is(:hover,:focus-visible) span,
+.m-cav:has(li[data-c="lead"]:hover) .m-cav-pino[data-c="lead"] span,.m-cav-pino[data-c="lead"]:is(:hover,:focus-visible) span,
+.m-cav:has(li[data-c="ia"]:hover) .m-cav-pino[data-c="ia"] span,.m-cav-pino[data-c="ia"]:is(:hover,:focus-visible) span,
+.m-cav:has(li[data-c="uiux"]:hover) .m-cav-pino[data-c="uiux"] span,.m-cav-pino[data-c="uiux"]:is(:hover,:focus-visible) span,
+.m-cav:has(li[data-c="projetos"]:hover) .m-cav-pino[data-c="projetos"] span,.m-cav-pino[data-c="projetos"]:is(:hover,:focus-visible) span{border-color:var(--m-red);background:rgba(128,31,48,.92)}
+.m-cav:has(.m-cav-pino[data-c="fullstack"]:is(:hover,:focus-visible)) li[data-c="fullstack"],
+.m-cav:has(.m-cav-pino[data-c="qa"]:is(:hover,:focus-visible)) li[data-c="qa"],
+.m-cav:has(.m-cav-pino[data-c="lead"]:is(:hover,:focus-visible)) li[data-c="lead"],
+.m-cav:has(.m-cav-pino[data-c="ia"]:is(:hover,:focus-visible)) li[data-c="ia"],
+.m-cav:has(.m-cav-pino[data-c="uiux"]:is(:hover,:focus-visible)) li[data-c="uiux"],
+.m-cav:has(.m-cav-pino[data-c="projetos"]:is(:hover,:focus-visible)) li[data-c="projetos"]{background:rgba(200,65,75,.08)}
+.m-cav-pino:focus-visible{outline:none}
+@media (prefers-reduced-motion: reduce){.m-cav-pino b:after{animation:none}}
+@media (max-width:1000px){
+  .m-cav-corpo{grid-template-columns:1fr;gap:28px}
+  .m-cav-arte{position:relative;top:auto}
+  .m-cav-pino span{display:none}
+  .m-cav-pino b{width:26px;height:26px;font-size:12px}
+  .m-cav-lista li{padding:18px 4px}
+}

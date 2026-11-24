@@ -237,3 +237,11 @@ body.modo-site #fade, body.modo-site #loading, body.modo-site #intro, body.modo-
 #cartao-projeto .cp-acoes :focus-visible { outline: 2px solid #e9c3a6; outline-offset: 3px; }
 #cartao-projeto .cp-dica { margin: 16px 0 0; font-size: 12px; color: #7f9993; }
 @media (max-width: 600px) { #cartao-projeto { padding: 22px 18px 18px; } #cartao-projeto .cp-acoes > * { flex: 1 1 100%; text-align: center; } }
+
+/* a metáfora: cada canto = uma atividade, e o que ela muda na entrega */
+#ap-metafora { margin: 14px 0 0; padding: 12px 14px; max-width: 52ch; border-left: 2px solid var(--cyan); background: rgba(6, 14, 22, .62); font-size: clamp(14.5px, 1.1vw, 16px); line-height: 1.55; color: #e6eef4; text-shadow: none; }
+.ap-entrega { margin: 18px 0 0; display: grid; gap: 10px; }
+.ap-entrega p { margin: 0; padding: 12px 14px; border: 1px solid rgba(118, 229, 245, .2); background: rgba(118, 229, 245, .05); font-size: 15px; line-height: 1.5; color: #dbe5ec; }
+.ap-entrega p + p { border-color: rgba(242, 196, 107, .38); background: rgba(242, 196, 107, .07); color: #f4ede0; }
+.ap-entrega span { display: block; margin-bottom: 6px; font: 600 11px/1 ui-monospace, Consolas, monospace; letter-spacing: .16em; text-transform: uppercase; color: var(--cyan); }
+.ap-entrega p + p span { color: #f2c46b; }

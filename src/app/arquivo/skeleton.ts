@@ -18,6 +18,7 @@ export const SKELETON = `<div id="app"></div>
       <h1 id="ap-h1"></h1>
       <p id="ap-sub"></p>
       <p id="ap-resumo"></p>
+      <p id="ap-metafora"></p>
       <div class="ap-acoes">
         <button id="ap-comecar" type="button" class="ap-btn prim">Conhecer a trajetória →</button>
         <button id="ap-explorar2" type="button" class="ap-btn">Explorar a caverna em 3D</button>

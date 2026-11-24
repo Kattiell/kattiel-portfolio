@@ -1,9 +1,10 @@
 import Link from 'next/link';
 import { PROFILE } from '@/domain/profile';
 
-type Ativo = 'inicio' | 'trabalho' | 'projetos' | 'metodo' | 'sobre' | 'distritos' | null;
+type Ativo = 'inicio' | 'caverna' | 'trabalho' | 'projetos' | 'metodo' | 'sobre' | 'distritos' | null;
 
 const NAV: { id: Exclude<Ativo, null | 'inicio' | 'distritos'>; rotulo: string; href: string }[] = [
+  { id: 'caverna', rotulo: 'Caverna', href: '/#caverna' },
   { id: 'trabalho', rotulo: 'Trabalho', href: '/#trabalho' },
   { id: 'projetos', rotulo: 'Projetos', href: '/projetos' },
   { id: 'metodo', rotulo: 'Método', href: '/#metodo' },

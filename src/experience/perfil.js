@@ -2,6 +2,9 @@
 // Regra: só fatos verificáveis. Campos `null` não aparecem no site (preencher: linkedin, email, links dos projetos).
 // `vista`: o canto da caverna onde a câmera para (os 12 túneis ficam reservados para os projetos).
 // 'heroi' | 'computador' | 'garagem' | 'sacada' | 'teto' | 'cachoeira' | 'emblema' | 'galerias' | 'entrada'.
+// A metáfora: o cliente vê o herói na rua; a entrega depende da caverna. Cada canto é uma atividade.
+// `canto` = o lugar da caverna e o papel dele; `entrega` = o que essa atividade muda no que o cliente recebe,
+// em linguagem de quem não é da área (a home usa os mesmos textos).
 
 export const PERFIL = {
   nome: 'Gabriel Caetano',
@@ -9,6 +12,9 @@ export const PERFIL = {
   resumo:
     'Construo produtos web de ponta a ponta e cuido para que eles não quebrem: desenvolvimento full stack, ' +
     'automação de testes, liderança técnica e IA aplicada ao dia a dia da engenharia.',
+  metafora:
+    'O cliente vê o herói na rua. A entrega depende da caverna. Cada canto desta caverna é uma parte do meu trabalho, ' +
+    'e cada painel mostra o que ela muda no que você recebe.',
   contato: {
     github: 'https://github.com/Kattiell',
     linkedin: null,
@@ -32,6 +38,8 @@ export const SECOES = [
     id: 'fullstack', menu: 'Full Stack', vista: 'computador',
     titulo: 'Full Stack',
     lead: 'Do banco de dados à interface: produtos completos, com segurança pensada desde o primeiro commit.',
+    canto: ['O Batcomputador', 'onde tudo é construído e ligado'],
+    entrega: 'Você recebe o produto inteiro funcionando e no ar, do banco de dados à tela, sem precisar de outra equipe para ligar as pontas.',
     itens: [
       'Aplicações em Next.js, React e TypeScript sobre Postgres e Supabase, com políticas de acesso por linha (RLS).',
       'APIs em Node (Fastify) e .NET, app desktop em Electron e sites estáticos rápidos em Astro.',
@@ -45,6 +53,8 @@ export const SECOES = [
     id: 'qa', menu: 'QA', vista: 'garagem',
     titulo: 'Automação de QA',
     lead: 'Qualidade como engenharia: testes que encontram o defeito antes do cliente.',
+    canto: ['A garagem', 'nada sai sem revisão'],
+    entrega: 'O defeito aparece aqui, não na mão do cliente. Um teste de carga mostrou que 55% de um lote de 20 mil produtos não seria salvo, antes de isso chegar à produção.',
     itens: [
       'QA na B2List, plataforma B2B: testes de API, ponta a ponta e regressão entre o sistema legado e o refatorado.',
       'Testes de carga e estresse: um lote de 20 mil produtos expôs o limite de tempo do gateway antes de chegar à produção.',
@@ -58,6 +68,8 @@ export const SECOES = [
     id: 'lead', menu: 'Tech Lead', vista: 'sacada',
     titulo: 'Tech Lead',
     lead: 'Direção técnica: processo, ferramenta e pessoas andando na mesma linha.',
+    canto: ['A sacada', 'a vista de cima do salão inteiro'],
+    entrega: 'O time enxerga o que entra na sprint, onde há retrabalho e quem está sobrecarregado. O problema aparece antes do prazo, não depois.',
     itens: [
       'Painel de acompanhamento e gestão do time por sprint: fluxo, retrabalho, carga por pessoa e horas estimadas contra registradas.',
       'Método de análise de cards em seis fases: extração, estudo, lacunas, bugs, cenários ponta a ponta e especificação técnica.',
@@ -71,6 +83,8 @@ export const SECOES = [
     id: 'ia', menu: 'IA', vista: 'teto',
     titulo: 'Integrações de IA',
     lead: 'IA aplicada a produto e a processo, com método e verificação.',
+    canto: ['O óculo no teto', 'por onde entra a luz'],
+    entrega: 'Agentes de IA fazem o trabalho repetitivo, como documentar 200 repositórios, e sobra tempo para o que exige julgamento.',
     itens: [
       'Sistemas multiagentes: agentes especialistas trabalhando no mesmo projeto. Esta caverna foi modelada no Blender por uma oficina de agentes.',
       'Agentes ligados ao ClickUp que transformaram centenas de repositórios e cards em base de conhecimento.',
@@ -84,6 +98,8 @@ export const SECOES = [
     id: 'cripto', menu: 'Cripto', vista: 'cachoeira',
     titulo: 'Cripto e Web3',
     lead: 'Web3 com os pés no chão: produto, segurança e execução.',
+    canto: ['A cachoeira', 'o fluxo que não para'],
+    entrega: 'Ordens executadas sozinhas, com limite de preço e taxa embutida, sem o usuário ficar de olho no gráfico.',
     itens: [
       'Bot de trading para Telegram na rede Base, com ordens limite e taxa embutida via API de execução.',
       'Estudo crítico de agentes de trading autônomos, com foco nos riscos de segurança.',
@@ -95,6 +111,8 @@ export const SECOES = [
     id: 'uiux', menu: 'UI/UX', vista: 'emblema',
     titulo: 'UI/UX moldado ao seu negócio',
     lead: 'Interfaces desenhadas a partir de quem vai usar e do que o negócio precisa vender.',
+    canto: ['O emblema no piso', 'a marca no centro de tudo'],
+    entrega: 'O site fala com quem vai usar: numa loja para um público mais velho, letra de 18 px e carrinho enxuto.',
     itens: [
       'Loja de peças automotivas pensada para um público mais velho: tipografia legível, base de 18 px e carrinho enxuto.',
       'Sites institucionais e landing pages para advocacia, nutrição e consultoria, fiéis à arte aprovada e conferidos pixel a pixel.',
@@ -108,6 +126,8 @@ export const SECOES = [
     id: 'projetos', menu: 'Projetos', vista: 'galerias',
     titulo: 'Projetos',
     lead: 'Uma seleção do que construí. Cada um dos doze túneis da caverna vai abrir um projeto; os links públicos já estão marcados.',
+    canto: ['Os doze túneis', 'um trabalho em cada'],
+    entrega: 'Cada túnel abre um trabalho real, com o link quando ele está no ar.',
     todos: true,
   },
   {

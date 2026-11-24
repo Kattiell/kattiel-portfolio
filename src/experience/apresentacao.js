@@ -101,6 +101,7 @@ export function criarApresentacao({ camera, districts, hub, reducedMotion, onExp
   function render(i) {
     const s = SECOES[i]; const n = String(i).padStart(2, '0');
     let h = `<p class="ap-kicker">${n} · ${esc(s.menu)}</p><h2 id="ap-titulo">${esc(s.titulo)}</h2><p class="ap-lead">${esc(s.lead)}</p>`;
+    if (s.canto) h += `<div class="ap-entrega"><p><span>Na caverna</span>${esc(s.canto[0])}: ${esc(s.canto[1])}.</p><p><span>Na entrega</span>${esc(s.entrega)}</p></div>`;
     if (s.itens) h += `<ul class="ap-itens">${s.itens.map((x) => `<li>${esc(x)}</li>`).join('')}</ul>`;
     if (s.projetos) h += `<h3>Projetos</h3><div class="ap-projs">${s.projetos.map(cartao).join('')}</div>`;
     if (s.todos) h += `<div class="ap-projs grade">${Object.keys(PROJETOS).map(cartao).join('')}</div>`;
@@ -141,6 +142,7 @@ export function criarApresentacao({ camera, districts, hub, reducedMotion, onExp
   /* ---------------- montagem da interface ---------------- */
   $('ap-nome').textContent = PERFIL.nome; $('ap-papel').textContent = PERFIL.papel;
   $('ap-h1').textContent = PERFIL.nome; $('ap-sub').textContent = PERFIL.papel; $('ap-resumo').textContent = PERFIL.resumo;
+  $('ap-metafora').textContent = PERFIL.metafora;
   ui.nav.innerHTML = SECOES.map((s, i) => `<button type="button" data-sec="${i}">${esc(s.menu)}</button>`).join('') +
     '<button type="button" class="ap-explorar" data-explorar>Explorar em 3D</button>' +
     '<button type="button" class="ap-explorar ap-site" data-site title="Voltar ao portfólio, sem o cenário 3D">← Portfólio</button>';
