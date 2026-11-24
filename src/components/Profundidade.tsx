@@ -159,7 +159,7 @@ void main(){
     float longe2 = 1. - d;
     float mat = smoothstep(thr, thr - .09, longe2);
     vec3 fim = mix(pre, c, mat);
-    fim += carmim * smoothstep(.035, 0., abs(longe2 - thr)) * (1. - smoothstep(4.5, 4.8, A)) * step(3.5, A) * .9;
+    fim += carmim * smoothstep(.018, 0., abs(longe2 - thr)) * (1. - smoothstep(4.5, 4.8, A)) * step(3.5, A) * .9;
     c = fim;
   }
 
@@ -172,8 +172,8 @@ void main(){
 type Props = { arte: string; prof: string; x?: number; fase?: number; atrio?: boolean };
 
 // Pontos da arte do átrio (em coordenadas da textura, y de baixo para cima)
-const ALVO: [number, number] = [0.545, 0.6];   // o pilar onde a "falha" é encontrada
-const ORIGEM: [number, number] = [0.9, 0.41];   // pé do feixe carmesim, no alto da escada: de onde saem os feixes
+const ALVO: [number, number] = [0.535, 0.67];  // a fissura carmesim no pilar: a "falha" que a inspeção encontra
+const ORIGEM: [number, number] = [0.81, 0.33];  // reflexo do feixe carmesim no piso, ao pé da escada: de onde saem os feixes
 const FIM_ABRE = 5.3;
 const FASES = [1, 2.3, 3.5, 4.7];
 const suave = (a: number, b: number, x: number) => { const t = Math.min(1, Math.max(0, (x - a) / (b - a))); return t * t * (3 - 2 * t); };
