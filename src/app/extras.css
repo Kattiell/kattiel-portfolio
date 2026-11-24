@@ -1,0 +1,138 @@
+/* ================= adições do app Next (além do molde V2) ================= */
+.masthead-action{text-decoration:none}
+.hero-art-caption a{display:inline-flex;gap:6px}
+.arch-frame img,.cave-window>img{width:100%;height:100%;object-fit:cover}
+.district-grid{list-style:none;margin:0;padding:0}.district-grid li{display:flex;min-width:0}.district-grid .district-btn{flex:1;min-width:0;padding-bottom:42px}
+.ledger-header a{color:#d8b79f;border-bottom:1px solid rgba(216,183,159,.4)}
+.ledger-header a:hover{color:#fff}
+
+/* 02 / atuação: lista editorial que abre por item (sem JS) */
+.practice{padding:20px clamp(22px,7.3vw,148px) 104px}
+.practice-title{font:600 clamp(44px,5.4vw,88px)/.98 var(--k-display);letter-spacing:-.07em;margin:38px 0 46px}
+.practice-title i{font-style:normal;color:var(--k-teal)}
+.practice-list{list-style:none;margin:0;padding:0;border-top:1px solid var(--k-ink)}
+.practice-list>li{border-bottom:1px solid var(--k-line);scroll-margin-top:24px}
+.practice-list summary{display:grid;grid-template-columns:60px minmax(180px,.9fr) 1.6fr 28px;align-items:baseline;gap:20px;padding:26px 0;cursor:pointer;list-style:none}
+.practice-list summary::-webkit-details-marker{display:none}
+.practice-no{font:600 11px var(--k-meta);color:var(--k-oxide)}
+.practice-name{font:600 clamp(24px,2.6vw,40px)/1 var(--k-display);letter-spacing:-.045em;transition:color .2s}
+.practice-lead{color:var(--k-muted);font-size:15px;line-height:1.55}
+.practice-toggle{width:18px;height:18px;position:relative;align-self:center;justify-self:end}
+.practice-toggle:before,.practice-toggle:after{content:'';position:absolute;left:0;right:0;top:50%;height:1.5px;background:var(--k-ink);transition:transform .2s}
+.practice-toggle:after{transform:rotate(90deg)}
+details[open] .practice-toggle:after{transform:rotate(0)}
+.practice-list summary:hover .practice-name{color:var(--k-oxide)}
+.practice-body{display:grid;grid-template-columns:60px 1fr;gap:20px;padding:0 0 30px}
+.practice-body ul{grid-column:2;margin:0;padding:0;list-style:none;display:grid;grid-template-columns:repeat(3,1fr);gap:24px}
+.practice-body li{font-size:15px;line-height:1.6;color:#3f4742;border-top:1px solid var(--k-line);padding-top:14px}
+.practice-body .k-chips{grid-column:2;margin:4px 0 0}
+.k-chips{display:flex;flex-wrap:wrap;gap:6px}
+.k-chips span{font:500 10px var(--k-meta);letter-spacing:.04em;padding:6px 9px;border:1px solid var(--k-line);color:var(--k-muted)}
+
+/* 04 / trabalhos */
+.work-photo-1{background:#14211f}
+.work-photo-2{background:#263c34;display:flex;align-items:center;justify-content:center}
+.work-photo-3{background:#332f2b;display:flex;align-items:center;justify-content:center}
+.work-photo-4{background:var(--k-cave);display:flex;align-items:center;justify-content:center}
+.code-glyph{margin:0;font:500 clamp(12px,1.2vw,15px)/1.9 var(--k-meta);color:#b9cbc4;white-space:pre}
+.work-links{margin-top:auto;display:flex;flex-direction:column;border-top:1px solid var(--k-line)}
+.work-description .work-links a,.work-links .work-disabled{margin:0;border-top:0;padding:16px 0;font:600 11px var(--k-meta);display:flex;justify-content:space-between;gap:10px}
+.work-links>*+*{border-top:1px solid var(--k-line)!important}
+.work-links a:hover{color:var(--k-oxide)}
+.others{margin-top:72px}
+.others-title{font:600 11px var(--k-meta);letter-spacing:.06em;text-transform:uppercase;color:var(--k-oxide);margin:0 0 14px}
+.others ul{list-style:none;margin:0;padding:0;border-top:1px solid var(--k-ink)}
+.others a{display:grid;grid-template-columns:minmax(160px,.8fr) 170px 1.6fr 24px;gap:20px;align-items:baseline;padding:18px 0;border-bottom:1px solid var(--k-line);transition:color .2s}
+.others a:hover{color:var(--k-oxide)}
+.o-name{font:600 21px var(--k-display);letter-spacing:-.03em}
+.o-kind{font:500 10px var(--k-meta);color:var(--k-muted);text-transform:uppercase;letter-spacing:.04em}
+.o-sum{font-size:14.5px;line-height:1.55;color:var(--k-muted)}
+.o-arrow{justify-self:end}
+.contact-mark{width:64px;height:64px;color:#efe9df;margin-top:26px;opacity:.85}
+.contact-btn{transition:background .2s}.contact-btn:hover{background:#fff}
+
+/* dossiês (projeto e distrito) */
+.crumbs{display:flex;gap:10px;font:500 11px var(--k-meta);color:var(--k-muted);padding:28px 0 0}
+.crumbs a:hover{color:var(--k-oxide)}
+.dossier{padding:0 clamp(22px,7.3vw,148px) 104px}
+.dossier-head{padding:56px 0 40px;border-bottom:1px solid var(--k-ink)}
+.dossier-head h1{font:700 clamp(56px,8vw,128px)/.92 var(--k-display);letter-spacing:-.075em;margin:26px 0 22px}
+.dossier-sum{font-size:clamp(17px,1.5vw,21px);line-height:1.6;color:#3f4742;max-width:60ch;margin:0}
+.dossier-grid{display:grid;grid-template-columns:1fr 340px;gap:clamp(30px,6vw,96px);padding-top:48px}
+.dossier-body section{padding:0 0 34px;margin-bottom:34px;border-bottom:1px solid var(--k-line)}
+.dossier-body h2{font:600 11px var(--k-meta);letter-spacing:.06em;text-transform:uppercase;color:var(--k-oxide);margin:0 0 14px}
+.dossier-body p,.dossier-body li{font-size:17px;line-height:1.7;color:#2f3733;max-width:66ch;margin:0}
+.dossier-body ul{margin:0;padding-left:20px;display:grid;gap:10px}
+.dossier-side{position:sticky;top:24px;align-self:start;border:1px solid var(--k-line);padding:24px;background:var(--k-warm)}
+.dossier-side dl{margin:0 0 24px;display:grid;gap:6px}
+.dossier-side dt{font:500 10px var(--k-meta);text-transform:uppercase;letter-spacing:.05em;color:var(--k-muted);margin-top:10px}
+.dossier-side dd{margin:0;font-size:15px}
+.dossier-side dd a{border-bottom:1px solid var(--k-oxide)}
+.dossier-side .primary-cta{justify-content:space-between;gap:20px}
+.link-empty{font:500 11px/1.7 var(--k-meta);color:var(--k-muted);border-top:1px solid var(--k-line);padding-top:14px;margin:0}
+
+/* páginas escuras do arquivo (distritos) */
+.k-dark-page{background:var(--k-cave);color:#e6e9e1}
+.k-dark-page .masthead{border-color:#2b3c3a}
+.k-dark-page .identity-words small,.k-dark-page .crumbs{color:#9aaba5}
+.k-dark-page .brandmark{color:#e6e9e1}
+.k-dark-page .masthead-action{background:#ebe9df;color:var(--k-ink)}
+.district-file{padding:0 clamp(22px,4vw,82px) 100px;max-width:1480px;margin:0 auto}
+.file-grid{display:grid;grid-template-columns:1.05fr .95fr;gap:clamp(30px,5vw,80px);align-items:start;padding-top:44px}
+.file-code{font:500 11px var(--k-meta);color:#d29b74;margin:0;letter-spacing:.04em}
+.district-file h1{font:600 clamp(54px,7.4vw,112px)/.95 var(--k-display);letter-spacing:-.065em;margin:26px 0 16px;color:#f1efe6}
+.district-file h1:after{content:'';display:block;width:72px;height:3px;background:var(--n,#c7845d);margin-top:22px}
+.file-focal{font-size:clamp(17px,1.4vw,20px);line-height:1.6;color:#b7c6bf;max-width:56ch}
+.file-facts{display:grid;grid-template-columns:120px 1fr;gap:12px 20px;margin:34px 0;padding:24px 0;border-top:1px solid #2f4341;border-bottom:1px solid #2f4341}
+.file-facts dt{font:500 10px var(--k-meta);text-transform:uppercase;letter-spacing:.05em;color:#8fa39d;padding-top:3px}
+.file-facts dd{margin:0;color:#dfe5dd;line-height:1.55}
+.file-facts b{color:#e9c3a6;font-weight:600}
+.file-project h2{font:600 11px var(--k-meta);letter-spacing:.06em;text-transform:uppercase;color:#d29b74;margin:0 0 10px}
+.file-project p{line-height:1.65;color:#cdd8d2}
+.file-project a{border-bottom:1px solid #d1a58a;color:#e9c3a6}
+.k-dark-page .link-empty{color:#9aaba5;border-color:#2f4341}
+.file-actions{display:flex;align-items:center;gap:22px;flex-wrap:wrap;margin:34px 0 10px}
+.file-hint{font:500 11px/1.6 var(--k-meta);color:#8fa39d;max-width:280px}
+.file-pager{display:flex;justify-content:space-between;gap:16px;margin-top:40px;padding-top:18px;border-top:1px solid #2f4341;font:500 11px var(--k-meta);color:#b4c1bd}
+.file-pager a:hover,.map-list a:hover{color:#e9c3a6}
+.map-list{list-style:none;margin:30px 0;padding:0;display:grid;grid-template-columns:repeat(2,1fr);gap:1px;background:#2f4341;border:1px solid #2f4341}
+.map-list a{display:grid;grid-template-columns:34px 1fr;gap:2px 10px;padding:14px 16px;background:#122020;height:100%}
+.map-list a:hover{background:#1b3130}
+.map-list small{grid-column:2;font:500 9px var(--k-meta);color:#7f9993;text-transform:uppercase}
+.district-map{margin:0;position:sticky;top:24px;border:1px solid #2f4341;background:radial-gradient(ellipse at 50% 60%,#132626,#0b1415 70%);padding:12px}
+.district-map svg{display:block;width:100%;height:auto}
+.district-map figcaption{font:500 10px var(--k-meta);color:#7f9993;padding:6px 6px 2px}
+.map-gallery{fill:none;stroke:#3a5250;stroke-width:22;stroke-linecap:round;opacity:.55}
+.map-platform{fill:#152b2a;stroke:#4c6866}
+.map-corridor{stroke:#3a5250;stroke-width:1.5}
+.map-label{font:500 9px var(--k-meta);fill:#7f9993;letter-spacing:.08em}
+.map-node circle{fill:#0f1d1d;stroke:var(--n);stroke-width:2;transition:fill .2s}
+.map-node text{font:600 11px var(--k-meta);fill:#e6e9e1;pointer-events:none}
+.district-map a:hover .map-node circle,.district-map a:focus .map-node circle,.map-node.is-on circle{fill:var(--n)}
+.district-map a:hover .map-node text,.map-node.is-on text{fill:#0b1415}
+.district-map a:focus{outline:none}.district-map a:focus-visible .map-node circle{stroke:#fff;stroke-width:3}
+
+/* /arquivo sem WebGL 2 */
+.k-semgl{position:fixed;inset:0;z-index:60;background:var(--k-cave);color:#e6e9e1;display:grid;place-content:center;gap:10px;padding:24px;font-family:var(--k-body)}
+.k-semgl.hide{display:none}
+.k-semgl h1{font:600 clamp(32px,5vw,60px)/1 var(--k-display);letter-spacing:-.05em;margin:0;max-width:18ch}
+.k-semgl p{max-width:56ch;line-height:1.6;color:#b7c6bf}
+.k-semgl .k-semgl-code{font:500 11px var(--k-meta);color:#d29b74}
+.k-semgl a{color:#e9c3a6;margin-right:18px;border-bottom:1px solid #d1a58a;text-decoration:none}
+
+@media(max-width:1100px){
+  .practice-list summary{grid-template-columns:44px 1fr 24px}.practice-lead{grid-column:2}.practice-toggle{grid-row:1;grid-column:3}
+  .practice-body{grid-template-columns:44px 1fr}.practice-body ul{grid-template-columns:1fr}
+  .dossier-grid,.file-grid{grid-template-columns:1fr}.dossier-side,.district-map{position:static}
+  .others a{grid-template-columns:1fr 24px}.o-kind,.o-sum{grid-column:1}.o-arrow{grid-row:1;grid-column:2}
+}
+@media(max-width:750px){
+  .practice{padding:10px 22px 70px}.dossier{padding:0 22px 70px}.district-file{padding:0 20px 70px}
+  .work-description{min-height:0}.map-list{grid-template-columns:1fr}.file-facts{grid-template-columns:1fr;gap:4px}.file-facts dd{margin-bottom:10px}
+}
+@media(prefers-reduced-motion:reduce){.k-site *,.k-site *::before,.k-site *::after{transition:none!important;animation:none!important}}
+@media(max-width:750px){.arch-stamp{left:auto;right:9%;top:46px}}
+.work-photo img.shot{object-position:center 28%;filter:none}
+.dossier-shot{margin:40px 0 0;border:1px solid var(--k-line);background:#1b2438}
+.dossier-shot img{display:block;width:100%;height:auto}
+.dossier-shot figcaption{font:500 10px var(--k-meta);color:var(--k-muted);padding:10px 12px;background:var(--k-paper)}

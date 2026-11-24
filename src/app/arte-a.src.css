@@ -1,0 +1,292 @@
+/* =====================================================================
+   ARTE A (portão + faixa Manifesto). Medidas em "u" = 1 px da arte de 1024 px.
+   Fonte deste arquivo: arte-a.src.css -> node tools/arte-a-css.mjs gera arte-a.css (u -> calc).
+   ===================================================================== */
+.ka{
+  --u: calc(min(100vw, 1440px) / 1024);
+  --a-bg:#0A0F16; --a-bg2:#0E151D; --a-pedra:#161F28; --a-pedra2:#1C2731; --a-borda:#33414D;
+  --a-ouro:#D9AA67; --a-ouro2:#C79A57; --a-ouro-claro:#F0D49B; --a-red:#C8323C; --a-red2:#9E1F29; --a-red-viva:#D64E58;
+  --a-ciano:#6FD3E4; --a-creme:#EFE7DA; --a-texto:#D6D0C6; --a-cinza:#A7ADB3;
+  --f-caps: var(--font-caps), 'Trajan Pro', Georgia, serif;
+  --f-serif: var(--font-serif), Georgia, serif;
+  --f-sans: var(--font-sans), Arial, sans-serif;
+  background:
+    radial-gradient(ellipse 60% 30% at 20% 0%, rgba(30,48,66,.35), transparent 70%),
+    var(--a-bg);
+  color:var(--a-creme); font-family:var(--f-sans);
+}
+.ka-sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+.ka a{color:inherit;text-decoration:none}
+.ka :focus-visible{outline:2px solid var(--a-ouro);outline-offset:3px}
+
+/* textura de rocha (ruído) reaproveitada em várias superfícies */
+.ka-hero,.ka-manifesto,.ka-nucleo,.ka-transmissao,.ka-projeto{position:relative;isolation:isolate}
+.ka-hero:before,.ka-nucleo:before,.ka-transmissao:before,.ka-projeto:before{
+  content:'';position:absolute;inset:0;z-index:-1;pointer-events:none;opacity:.55;mix-blend-mode:overlay;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='300'%3E%3Cfilter id='r'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.012 .02' numOctaves='5' seed='7'/%3E%3CfeColorMatrix values='0 0 0 0 .5 0 0 0 0 .55 0 0 0 0 .6 0 0 0 1.4 -.35'/%3E%3C/filter%3E%3Crect width='300' height='300' filter='url(%23r)'/%3E%3C/svg%3E");
+  background-size:300u 300u;
+}
+
+/* ---------- cabeçalho ---------- */
+.ka-topo{height:50u;display:flex;align-items:center;justify-content:space-between;padding:0 40u 0 55u;position:relative;z-index:20;
+  background:linear-gradient(180deg,rgba(6,10,15,.92),rgba(6,10,15,.55));border-bottom:1px solid rgba(217,170,103,.12)}
+.ka-id{display:flex;align-items:center;gap:13u}
+.ka-id .ka-mono{font-size:31u}
+.ka-id>span:last-child{font:600 14.5u/1 var(--f-caps);letter-spacing:.34em;color:var(--a-creme)}
+.ka-topo nav{position:absolute;left:50%;transform:translateX(-50%);display:flex;gap:31u}
+.ka-topo nav a{font:500 9.4u/1 var(--f-sans);letter-spacing:.17em;color:var(--a-texto);padding:8u 0;position:relative;transition:color .2s}
+.ka-topo nav a:hover{color:var(--a-creme)}
+.ka-topo nav a.is-on{color:var(--a-creme)}
+.ka-topo nav a.is-on:after{content:'';position:absolute;left:-1u;right:-1u;bottom:-6u;height:2u;background:var(--a-red-viva);box-shadow:0 0 8u rgba(214,78,88,.7)}
+.ka-contato{display:flex;align-items:center;gap:10u;height:30u;padding:0 15u;border:1px solid var(--a-ouro2);border-radius:5u;
+  font:600 9.6u/1 var(--f-sans);letter-spacing:.2em;color:var(--a-creme);background:rgba(10,15,22,.6);transition:background .2s}
+.ka-contato .ka-ico{width:12u;height:12u;color:var(--a-ouro)}
+.ka-contato:hover{background:rgba(217,170,103,.12)}
+
+/* ---------- monograma K/ ---------- */
+.ka-mono{position:relative;display:inline-block;font:500 1em/1 var(--f-caps);width:1.12em;height:1em;color:var(--a-ouro)}
+.ka-mono-k{position:absolute;left:0;top:0;line-height:1;background:linear-gradient(180deg,var(--a-ouro-claro),var(--a-ouro) 50%,#8E6532);-webkit-background-clip:text;background-clip:text;color:transparent}
+.ka-mono-bar{position:absolute;left:.66em;top:.04em;width:.07em;height:.98em;background:linear-gradient(180deg,var(--a-ouro-claro),var(--a-ouro) 55%,#8E6532);transform:skewX(-27deg);transform-origin:bottom}
+
+/* ---------- HERO ---------- */
+.ka-hero{height:480u;overflow:hidden;
+  background:
+    radial-gradient(ellipse 45% 70% at 72% 55%, rgba(60,130,160,.18), transparent 70%),
+    linear-gradient(90deg,#0B1118 0%,#0D141C 40%,#0A1017 100%)}
+.ka-hero-art{position:absolute;top:0;bottom:0;right:0;width:594u;z-index:0;
+  -webkit-mask-image:linear-gradient(90deg,transparent 0,#000 22%,#000 100%);mask-image:linear-gradient(90deg,transparent 0,#000 22%,#000 100%)}
+.ka-portao{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:46% 0;filter:saturate(.42) brightness(.62) contrast(1.15) hue-rotate(-8deg)}
+.ka-hero-art:after{content:'';position:absolute;inset:0;background:
+  linear-gradient(180deg,rgba(8,12,18,.55) 0,transparent 18%,transparent 70%,rgba(8,12,18,.75) 100%),
+  radial-gradient(ellipse 70% 55% at 50% 60%,transparent 40%,rgba(8,12,18,.55) 100%)}
+.ka-placa{position:absolute;z-index:2;left:200u;top:78u;width:196u;height:28u;display:grid;place-items:center;
+  font:500 10.5u/1 var(--f-caps);letter-spacing:.24em;color:var(--a-ouro-claro);
+  background:linear-gradient(180deg,#20262B,#0F1418);border:1px solid var(--a-ouro2);
+  clip-path:polygon(6% 0,94% 0,100% 50%,94% 100%,6% 100%,0 50%);box-shadow:0 0 18u rgba(0,0,0,.6)}
+.ka-selo{position:absolute;z-index:2;left:248u;top:226u;width:100u;height:100u;border-radius:50%;display:grid;place-items:center;
+  border:2u solid rgba(217,170,103,.75);box-shadow:0 0 0 7u rgba(217,170,103,.12),0 0 30u rgba(111,211,228,.25),inset 0 0 24u rgba(0,0,0,.8);
+  background:radial-gradient(circle,rgba(20,28,34,.92),rgba(8,12,16,.95))}
+.ka-selo .ka-mono{font-size:58u}
+.ka-fresta{position:absolute;z-index:1;left:297u;top:160u;width:2u;height:300u;background:linear-gradient(180deg,transparent,var(--a-ciano) 30%,var(--a-ciano) 80%,transparent);
+  box-shadow:0 0 12u var(--a-ciano),0 0 30u rgba(111,211,228,.6)}
+.ka-fresta:after{content:'';position:absolute;left:-150u;width:300u;bottom:-6u;height:26u;border-radius:50%;background:radial-gradient(ellipse,rgba(111,211,228,.5),transparent 70%)}
+.ka-nevoa{position:absolute;z-index:1;left:0;right:0;bottom:0;height:140u;background:radial-gradient(ellipse 60% 100% at 55% 100%,rgba(160,200,215,.22),transparent 70%)}
+.ka-bandeira{position:absolute;z-index:2;top:136u;width:56u;height:202u;display:flex;justify-content:center;padding-top:62u;
+  background:linear-gradient(90deg,#4A0A10 0,#8E1C25 30%,#A5242E 55%,#5E0E15 100%);
+  clip-path:polygon(0 0,100% 0,100% 86%,50% 100%,0 86%);box-shadow:inset 0 0 20u rgba(0,0,0,.5)}
+.ka-bandeira:before{content:'';position:absolute;left:3u;right:3u;top:0;bottom:4u;border:1px solid rgba(217,170,103,.55);clip-path:polygon(0 0,100% 0,100% 86%,50% 100%,0 86%)}
+.ka-bandeira:after{content:'';position:absolute;left:-6u;right:-6u;top:-4u;height:5u;background:linear-gradient(180deg,#E5BE7E,#8E6532);clip-path:none}
+.ka-bandeira .ka-mono{font-size:26u}
+.ka-bandeira-e{left:88u}
+.ka-bandeira-d{left:516u}
+.ka-lampiao{position:absolute;z-index:2;top:62u;width:30u;height:56u;border-radius:3u 3u 6u 6u;
+  background:radial-gradient(ellipse at 50% 55%,#FFE6A8 0,#F6B65A 35%,#5A3A16 75%);border:2u solid #2A2018;box-shadow:0 0 22u 6u rgba(246,182,90,.45)}
+.ka-lampiao:before{content:'';position:absolute;left:3u;right:3u;top:-9u;height:8u;background:#2A2018;clip-path:polygon(20% 0,80% 0,100% 100%,0 100%)}
+.ka-lampiao-e{left:101u}
+.ka-lampiao-d{left:529u}
+
+.ka-hero-copy{position:relative;z-index:3;height:100%}
+.ka-arquivo{position:absolute;left:78u;top:42u;margin:0;font:500 9.5u/1 var(--f-sans);letter-spacing:.44em;color:#C9C3B8;display:flex;align-items:center;gap:16u}
+.ka-arquivo:after{content:'';width:65u;height:1px;background:var(--a-ouro2)}
+.ka-marca{position:absolute;left:66u;top:72u;margin:0;font:700 97u/1 var(--f-caps);letter-spacing:-.015em;white-space:nowrap;
+  background:linear-gradient(180deg,#F4ECDD 0%,#D9CCB4 35%,#A89679 62%,#E6D8BF 80%,#8A7A63 100%);-webkit-background-clip:text;background-clip:text;color:transparent;
+  filter:drop-shadow(0 3u 0 rgba(0,0,0,.55)) drop-shadow(0 0 12u rgba(0,0,0,.6))}
+.ka-rasgo{position:absolute;z-index:-1;left:-11u;top:-8u;width:58u;height:150u;background:linear-gradient(170deg,#E03A44,#A51D27 60%,#6E1018);
+  clip-path:polygon(48% 0,100% 0,52% 100%,0 100%);-webkit-background-clip:border-box;background-clip:border-box;opacity:.95}
+.ka-nome{position:absolute;left:80u;top:175u;margin:0;font:500 19u/1 var(--f-caps);letter-spacing:.43em;color:var(--a-ouro2);white-space:nowrap}
+.ka-papeis{position:absolute;left:77u;top:213u;margin:0;font:500 13.6u/1 var(--f-sans);color:var(--a-creme);white-space:nowrap}
+.ka-papeis i{font-style:normal;margin:0 5u;color:var(--a-texto)}
+.ka-lema{position:absolute;left:80u;top:256u;margin:0;padding-left:24u;border-left:3u solid var(--a-red-viva);
+  font:italic 500 30.5u/34u var(--f-serif);color:var(--a-creme);letter-spacing:.005em}
+.ka-acoes{position:absolute;left:70u;top:359u;display:flex;gap:18u}
+.ka-btn{display:inline-flex;align-items:center;justify-content:center;gap:12u;height:43u;font:600 12.2u/1 var(--f-sans);letter-spacing:.17em;transition:filter .2s,transform .2s}
+.ka-btn>span{font-size:17u;letter-spacing:0}
+.ka-btn-red{width:248u;color:#F7EDE2;background:linear-gradient(180deg,#D8414B,#B02731);clip-path:polygon(3.5% 0,100% 0,96.5% 100%,0 100%);
+  box-shadow:inset 0 0 0 1px rgba(255,190,190,.25)}
+.ka-btn-ghost{width:192u;color:var(--a-creme);background:rgba(10,15,22,.7);position:relative;clip-path:polygon(4.5% 0,100% 0,95.5% 100%,0 100%)}
+.ka-btn-ghost:before{content:'';position:absolute;inset:0;border:1px solid var(--a-ouro2);clip-path:inherit}
+.ka-btn-ghost .ka-ico{width:15u;height:15u;color:var(--a-ouro)}
+.ka-btn:hover{filter:brightness(1.12);transform:translateY(-1u)}
+.ka-riscos{position:absolute;left:75u;top:430u;display:flex;align-items:center;gap:4u}
+.ka-riscos i{width:4u;height:8u;background:var(--a-ouro);transform:skewX(-30deg)}
+.ka-riscos b{width:165u;height:1px;margin-left:8u;background:linear-gradient(90deg,var(--a-ouro2),transparent)}
+
+/* ---------- MANIFESTO ---------- */
+.ka-manifesto{height:140u;display:flex;align-items:center;gap:0;padding-left:95u;overflow:hidden;margin-top:2u;
+  background:
+    radial-gradient(ellipse 35% 90% at 92% 50%,rgba(240,90,90,.25),transparent 70%),
+    linear-gradient(90deg,#5E0E15 0%,#861820 25%,#9C2029 55%,#6E121A 80%,#A3252E 100%);
+  border-top:1px solid rgba(240,150,140,.35);border-bottom:1px solid rgba(0,0,0,.6)}
+.ka-manifesto:before{content:'';position:absolute;inset:0;z-index:-1;opacity:1;mix-blend-mode:multiply;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='400' height='200'%3E%3Cfilter id='r'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.008 .03' numOctaves='6' seed='3'/%3E%3CfeColorMatrix values='0 0 0 0 .3 0 0 0 0 .03 0 0 0 0 .06 0 0 0 2.4 -.75'/%3E%3C/filter%3E%3Crect width='400' height='200' filter='url(%23r)'/%3E%3C/svg%3E");
+  background-size:400u 200u}
+.ka-emblema{position:relative;width:116u;height:116u;flex:none;display:grid;place-items:center}
+.ka-louros{position:absolute;inset:0;width:100%;height:100%;filter:drop-shadow(0 2u 2u rgba(0,0,0,.5))}
+.ka-emblema .ka-mono{font-size:44u;margin-top:-6u}
+.ka-fio{width:2u;height:85u;flex:none;margin:0 28u 0 32u;background:linear-gradient(180deg,transparent,var(--a-ouro) 15%,var(--a-ouro) 85%,transparent)}
+.ka-rotulo{margin:0;font:600 10.5u/1 var(--f-sans);letter-spacing:.5em}
+.ka-rotulo-ouro{color:var(--a-ouro-claro)}
+.ka-manifesto-txt{margin:15u 0 0;max-width:575u;font:400 21.2u/25.5u var(--f-serif);color:#F6ECE0;text-shadow:0 1px 2px rgba(0,0,0,.35)}
+.ka-manifesto-txt b{font-weight:600}
+
+/* ---------- blocos e rótulos de seção ---------- */
+.ka-bloco{position:relative;padding:0 42u}
+.ka-secao{display:flex;align-items:center;gap:22u;color:#D8D0C4;font-size:10u;letter-spacing:.47em;padding-left:21u}
+.ka-secao:after{content:'';width:80u;height:1px;background:linear-gradient(90deg,var(--a-ouro2),transparent)}
+
+/* ---------- NÚCLEOS ---------- */
+#ka-nucleos-t{padding-top:25u}
+.ka-nucleos{list-style:none;margin:16u 0 0;padding:0;display:grid;grid-template-columns:repeat(4,1fr);gap:13u}
+.ka-nucleo{height:163u;display:flex;flex-direction:column;align-items:center;padding-top:18u;text-align:center;
+  background:linear-gradient(160deg,#2A3743 0%,#1A242E 50%,#111920 100%);
+  clip-path:polygon(12u 0,100% 0,100% calc(100% - 12u),calc(100% - 12u) 100%,0 100%,0 12u);
+  box-shadow:inset 0 0 0 1px #3A4753,inset 0 1px 0 rgba(255,255,255,.06),inset 0 -30u 40u rgba(0,0,0,.35);transition:transform .25s}
+.ka-nucleo:after{content:'';position:absolute;inset:4u;border:1px solid rgba(217,170,103,.16);pointer-events:none;
+  clip-path:polygon(10u 0,100% 0,100% calc(100% - 10u),calc(100% - 10u) 100%,0 100%,0 10u)}
+.ka-nucleo .ka-ico{stroke-width:2;width:60u;height:60u;color:var(--a-ouro);filter:drop-shadow(0 0 6u rgba(217,170,103,.35))}
+.ka-nucleo h3{margin:12u 0 0;font:500 19u/22u var(--f-caps);letter-spacing:.11em;text-transform:uppercase;color:var(--a-creme)}
+.ka-nucleo:hover{transform:translateY(-2u)}
+
+/* ---------- PROJETOS ---------- */
+.ka #projetos{padding-top:28u}
+.ka-projetos{list-style:none;margin:16u 0 0;padding:0;display:grid;grid-template-columns:repeat(3,1fr);gap:16u}
+.ka-projeto{display:block;height:215u;overflow:hidden;
+  background:linear-gradient(170deg,#18222C,#0D141B);box-shadow:inset 0 0 0 1px #3A4753;
+  clip-path:polygon(0 0,calc(100% - 10u) 0,100% 10u,100% 100%,10u 100%,0 calc(100% - 10u))}
+.ka-num{position:absolute;z-index:3;left:8u;top:15u;width:60u;height:46u;display:grid;place-items:center;padding-right:8u;
+  font:600 27u/1 var(--f-caps);color:#F6ECE0;background:linear-gradient(180deg,#CC3A44,#9E222C);clip-path:polygon(0 0,100% 0,82% 100%,0 100%)}
+.ka-projeto-cab{position:absolute;z-index:3;left:86u;top:24u;right:12u;display:flex;flex-direction:column;gap:9u}
+.ka-projeto-cab strong{font:600 16.6u/1 var(--f-caps);letter-spacing:.08em;text-transform:uppercase;color:var(--a-creme);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.ka-projeto-cab small{font:500 10.4u/1 var(--f-sans);color:var(--a-texto);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.ka-projeto-cab:after{content:'';position:absolute;left:-2u;right:0;top:27u;height:1px;background:linear-gradient(90deg,rgba(217,170,103,.5),transparent)}
+.ka-projeto-foto{position:absolute;left:8u;right:8u;top:75u;bottom:8u;overflow:hidden;background:#0A0F15}
+.ka-projeto-foto img{width:100%;height:100%;object-fit:cover;object-position:center 30%;filter:saturate(.85) contrast(1.05);transition:transform .5s}
+.ka-projeto-foto:after{content:'';position:absolute;inset:0;background:linear-gradient(180deg,rgba(10,15,22,.25),transparent 40%,rgba(10,15,22,.45))}
+.ka-projeto:hover .ka-projeto-foto img{transform:scale(1.04)}
+.ka-canto{position:absolute;z-index:3;right:8u;bottom:8u;width:62u;height:30u;display:grid;place-items:center;font-size:17u;color:var(--a-creme);
+  background:rgba(10,15,22,.85);clip-path:polygon(22% 0,100% 0,100% 100%,0 100%);box-shadow:inset 1px 1px 0 rgba(217,170,103,.5)}
+.ka-todos{position:absolute;right:42u;top:28u;margin:0;font:600 9.6u/1 var(--f-sans);letter-spacing:.24em;color:var(--a-ouro)}
+.ka-todos a:hover{color:var(--a-creme)}
+
+/* ---------- LINHA DO TEMPO ---------- */
+.ka-tempo{padding-top:22u;height:265u;overflow:hidden}
+.ka-tempo>*:not(.ka-salao){position:relative;z-index:2}
+.ka-marcos{list-style:none;margin:20u 0 0;padding:0;display:grid;grid-template-columns:repeat(5,1fr);position:relative}
+.ka-marcos:before{content:'';position:absolute;left:10%;right:10%;top:25u;height:1.5u;
+  background:linear-gradient(90deg,rgba(111,211,228,.15),var(--a-ciano) 20%,rgba(111,211,228,.35) 50%,var(--a-ciano) 80%,rgba(111,211,228,.15));box-shadow:0 0 10u rgba(111,211,228,.7)}
+.ka-marcos li{display:flex;flex-direction:column;align-items:center;text-align:center}
+.ka-marco-ico{width:50u;height:50u;border-radius:50%;display:grid;place-items:center;background:#0C131A;border:1.5u solid var(--a-ouro2);
+  box-shadow:0 0 0 4u rgba(10,15,22,.9),0 0 16u rgba(217,170,103,.25);position:relative}
+.ka-marco-ico .ka-ico{width:30u;height:30u;color:var(--a-ouro)}
+.ka-marcos strong{margin-top:15u;font:700 11.4u/1 var(--f-sans);letter-spacing:.2em;color:var(--a-creme)}
+.ka-marcos span:last-child{margin-top:6u;font:400 11.6u/15u var(--f-sans);color:var(--a-texto)}
+.ka-salao{position:absolute;z-index:0;left:0;right:0;bottom:0;height:150u;pointer-events:none;
+  -webkit-mask-image:linear-gradient(180deg,transparent,#000 55%);mask-image:linear-gradient(180deg,transparent,#000 55%)}
+.ka-salao img{width:100%;height:100%;object-fit:cover;object-position:center 40%;filter:saturate(.5) brightness(.72) blur(.6px)}
+
+/* ---------- OPEN TRANSMISSION ---------- */
+.ka-transmissao{height:126u;display:flex;align-items:center;padding:0 49u 0 60u;
+  background:linear-gradient(180deg,#0A1017,#070B10);border-top:1px solid rgba(217,170,103,.35);box-shadow:0 -1px 0 rgba(0,0,0,.8)}
+.ka-transmissao-k{font-size:76u}
+.ka-fio-red{width:2u;height:62u;margin:0 37u 0 40u;background:linear-gradient(180deg,transparent,var(--a-red-viva) 15%,var(--a-red-viva) 85%,transparent)}
+.ka-transmissao-txt h2{margin:0;font:500 24u/1 var(--f-caps);letter-spacing:.43em;color:var(--a-creme)}
+.ka-transmissao-txt p{margin:13u 0 0;font:500 10.4u/1 var(--f-sans);letter-spacing:.38em;color:var(--a-texto)}
+.ka-btn-contato{margin-left:auto;width:252u;height:38u;font-size:11.6u}
+
+/* ---------- lista de projetos (/projetos) ---------- */
+.ka-lista{padding:50u 60u 80u;max-width:1240u;margin:0 auto}
+.ka-lista .ka-secao{padding-left:0}
+.ka-lista h1{margin:22u 0 12u;font:600 56u/1 var(--f-caps);letter-spacing:.06em;color:var(--a-creme)}
+.ka-lista-intro{max-width:560u;font:400 17u/1.5 var(--f-serif);color:var(--a-texto);margin:0 0 34u}
+.ka-lista-itens{list-style:none;margin:0;padding:0;display:grid;gap:10u}
+.ka-lista-itens a{display:grid;grid-template-columns:48u minmax(180u,.9fr) 1.6fr 24u;grid-template-rows:auto auto;gap:6u 20u;align-items:baseline;padding:18u 20u;
+  background:linear-gradient(170deg,#17212A,#0E151C);box-shadow:inset 0 0 0 1px #33414D;transition:box-shadow .2s}
+.ka-lista-itens a:hover{box-shadow:inset 0 0 0 1px var(--a-ouro2)}
+.ka-lista-n{grid-row:1/3;font:600 20u/1 var(--f-caps);color:var(--a-red-viva)}
+.ka-lista-nome{font:600 17u/1.2 var(--f-caps);letter-spacing:.06em;color:var(--a-creme)}
+.ka-lista-tipo{grid-column:2;grid-row:2;font:500 9.6u/1.4 var(--f-sans);letter-spacing:.12em;text-transform:uppercase;color:var(--a-ouro)}
+.ka-lista-sum{grid-column:3;grid-row:1/3;font:400 14u/1.5 var(--f-sans);color:var(--a-texto)}
+.ka-lista-seta{grid-column:4;grid-row:1/3;color:var(--a-ouro)}
+
+/* páginas internas antigas: só o cabeçalho e o rodapé novos entram nelas */
+.k-site:not(.ka) .ka-topo,.k-site:not(.ka) .ka-transmissao{--u: calc(min(100vw, 1440px) / 1024);
+  --a-ouro:#D9AA67; --a-ouro2:#C79A57; --a-ouro-claro:#F0D49B; --a-red-viva:#D64E58; --a-creme:#EFE7DA; --a-texto:#D6D0C6;
+  --f-caps: var(--font-caps), Georgia, serif; --f-serif: var(--font-serif), Georgia, serif; --f-sans: var(--font-sans), Arial, sans-serif;
+  font-family:var(--f-sans);color:var(--a-creme)}
+.k-site:not(.ka) .ka-topo a,.k-site:not(.ka) .ka-transmissao a{color:inherit}
+
+/* ---------- tablet ---------- */
+@media (max-width:900px){
+  .ka{--u: calc(100vw / 1024)}
+  .ka-topo nav{display:none}
+  .ka-topo{height:64px;padding:0 20px}
+  .ka-id .ka-mono{font-size:30px}.ka-id>span:last-child{font-size:15px}
+  .ka-contato{height:34px;padding:0 14px;font-size:10px}.ka-contato .ka-ico{width:12px;height:12px}
+}
+/* ---------- celular: a arte não tem versão vertical; a mesma linguagem empilhada ---------- */
+@media (max-width:760px){
+  .ka{--u:1px}
+  .ka-hero{height:auto;padding:0 0 36px}
+  .ka-hero-art{position:relative;width:100%;height:400px;-webkit-mask-image:linear-gradient(180deg,#000 70%,transparent);mask-image:linear-gradient(180deg,#000 70%,transparent)}
+  .ka-portao{object-position:50% 0}
+  .ka-hero-art .ka-placa{left:50%;transform:translateX(-50%);top:70px;width:180px}
+  .ka-hero-art .ka-selo{left:calc(50% - 45px);top:190px;width:90px;height:90px}
+  .ka-hero-art .ka-selo .ka-mono{font-size:50px}
+  .ka-hero-art .ka-fresta{left:50%;top:150px;height:220px}
+  .ka-bandeira{top:110px;width:46px;height:170px;padding-top:52px}
+  .ka-bandeira-e{left:6%}.ka-bandeira-d{left:auto;right:6%}
+  .ka-lampiao-e{left:calc(6% + 12px);top:62px}.ka-lampiao-d{left:auto;right:calc(6% + 12px);top:62px}
+  .ka-hero-copy{height:auto;margin-top:-70px;padding:0 22px;display:flex;flex-direction:column;align-items:flex-start}
+  .ka-hero-copy>*{position:relative!important;left:auto!important;top:auto!important}
+  .ka-arquivo{font-size:9px}
+  .ka-marca{margin-top:14px;font-size:clamp(54px,17vw,82px)}
+  .ka-rasgo{width:44px;height:110px}
+  .ka-nome{margin-top:12px;font-size:15px;letter-spacing:.32em}
+  .ka-papeis{margin-top:16px;font-size:12.5px;white-space:normal;line-height:1.6}
+  .ka-lema{margin-top:22px;font-size:27px;line-height:31px;padding-left:18px}
+  .ka-acoes{margin-top:26px;flex-wrap:wrap;gap:12px}
+  .ka-btn-red{width:250px}.ka-btn-ghost{width:180px}
+  .ka-riscos{margin-top:24px}
+  .ka-manifesto{height:auto;flex-direction:column;align-items:flex-start;padding:30px 22px 34px}
+  .ka-emblema{width:92px;height:92px}.ka-emblema .ka-mono{font-size:36px}
+  .ka-manifesto .ka-fio{display:none}
+  .ka-manifesto-txt{font-size:19px;line-height:26px}
+  .ka-bloco{padding:0 18px}
+  .ka-secao{padding-left:4px;letter-spacing:.32em}
+  .ka-nucleos{grid-template-columns:repeat(2,1fr);gap:10px}
+  .ka-nucleo{height:150px}.ka-nucleo h3{font-size:14.5px;line-height:19px;letter-spacing:.08em}
+  .ka-projetos{grid-template-columns:1fr;gap:14px}
+  .ka-projeto{height:230px}
+  .ka-todos{position:static;margin-top:14px;text-align:right}
+  .ka-tempo{height:auto;padding-top:40px;padding-bottom:150px}
+  .ka-secao{font-size:9.5px}
+  .ka-tempo .ka-secao{letter-spacing:.22em}
+  .ka-marcos{grid-template-columns:1fr;gap:22px;justify-items:start;padding-left:6px}
+  .ka-marcos:before{left:31px;right:auto;top:10px;bottom:10px;width:1.5px;height:auto}
+  .ka-marcos li{display:grid;grid-template-columns:50px 1fr;column-gap:16px;text-align:left;align-items:center}
+  .ka-marco-ico{grid-row:1/3}
+  .ka-marcos strong{margin:0;align-self:end}.ka-marcos span:last-child{margin:4px 0 0;align-self:start}
+  .ka-marcos br{display:none}
+  .ka-transmissao{height:auto;flex-wrap:wrap;padding:32px 22px;gap:18px}
+  .ka-transmissao-k{font-size:54px}
+  .ka-fio-red{height:50px;margin:0}
+  .ka-transmissao-txt h2{font-size:19px;letter-spacing:.3em}
+  .ka-transmissao-txt p{font-size:9.5px;letter-spacing:.26em;line-height:1.6}
+  .ka-btn-contato{margin:4px 0 0;width:100%}
+  .ka-lista{padding:30px 18px 60px}
+  .ka-lista h1{font-size:40px}
+  .ka-lista-itens a{grid-template-columns:36px 1fr 18px}
+  .ka-lista-sum{grid-column:2;grid-row:3}
+  .ka-lista-seta{grid-column:3}
+}
+@media (max-width:760px){
+  .k-site:not(.ka) .ka-topo,.k-site:not(.ka) .ka-transmissao{--u:1px}
+}
+@media (prefers-reduced-motion:reduce){.ka *{transition:none!important}}
+
+/* dossiês e distritos herdam a tipografia da arte (títulos em capitulares romanas, rótulos espaçados) */
+.dossier-head h1,.district-file h1,.k-semgl h1{font-family:var(--font-caps),Georgia,serif;font-weight:600;letter-spacing:.01em;line-height:1}
+.dossier-head h1{font-size:clamp(44px,6vw,92px)}
+.district-file h1{font-size:clamp(44px,6vw,92px)}
+.dossier-body h2,.file-project h2,.section-index,.file-code{font-family:var(--font-sans),Arial,sans-serif;letter-spacing:.3em}
+.dossier-sum,.file-focal{font-family:var(--font-serif),Georgia,serif;font-size:clamp(19px,1.6vw,23px)}

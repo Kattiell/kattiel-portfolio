@@ -1,0 +1,5 @@
+# só o app vai para a Vercel: ferramentas, documentação e testes ficam de fora
+tools/
+docs/
+tests/
+playwright.config.ts

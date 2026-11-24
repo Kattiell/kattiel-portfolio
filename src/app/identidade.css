@@ -1,0 +1,227 @@
+/* =====================================================================
+   KATTIEL — identidade: "K/" e a linha de inspeção.
+   A barra vermelha da marca é a mesma linha que varre cada espaço (o olhar do QA).
+   Carregado depois de monumental.css.
+   ===================================================================== */
+
+/* ---------- abertura: o K/ e a barra que corta a tela ---------- */
+.m-intro{display:none}
+@media (prefers-reduced-motion:no-preference){
+  .m-intro{display:grid;place-items:center;position:fixed;inset:0 -40%;z-index:200;pointer-events:none;background:var(--m-obs);
+    transform:skewX(-18deg);animation:m-intro-sai .8s cubic-bezier(.7,0,.2,1) .75s both}
+  .m-intro span{transform:skewX(18deg);font:800 clamp(96px,14vw,calc(260 * var(--mu)))/1 var(--m-disp);letter-spacing:-.06em;color:var(--m-marfim);
+    animation:m-intro-k .7s cubic-bezier(.2,.8,.2,1) both}
+  .m-intro i{font-style:normal;color:var(--m-red);display:inline-block;animation:m-intro-barra .5s cubic-bezier(.2,.8,.2,1) .2s both}
+  @keyframes m-intro-sai{to{transform:skewX(-18deg) translateX(110%)}}
+  @keyframes m-intro-k{from{opacity:0;transform:skewX(18deg) translateY(30%)}}
+  @keyframes m-intro-barra{from{transform:translateY(-120%) scaleY(1.6);opacity:0}}
+
+  /* o átrio entra depois da abertura */
+  .km .m-hero-arte img{animation-delay:.7s}
+  .km .m-hero-txt>:nth-child(1){animation-delay:1.05s}.km .m-hero-txt>:nth-child(3){animation-delay:1.5s}.km .m-hero-txt>:nth-child(4){animation-delay:1.62s}
+  .km .m-numeros li:nth-child(1){animation-delay:1.7s}.km .m-numeros li:nth-child(2){animation-delay:1.8s}.km .m-numeros li:nth-child(3){animation-delay:1.9s}.km .m-numeros li:nth-child(4){animation-delay:2s}
+}
+
+/* ---------- o nome: letra por letra ---------- */
+.m-palavra{display:inline-block;overflow:hidden;vertical-align:top;padding:0 .02em .1em 0;margin-bottom:-.1em}
+.m-l{display:inline-block;transition:translate .35s cubic-bezier(.2,.8,.2,1),color .35s}
+.m-l:hover{translate:0 -.08em;color:var(--m-red)}
+@media (prefers-reduced-motion:no-preference){
+  .km .m-nome{animation:none!important}
+  .m-l{animation:m-letra 1.1s cubic-bezier(.2,.8,.2,1) both;animation-delay:calc(1.1s + var(--i) * .045s)}
+  @keyframes m-letra{from{transform:translateY(110%) rotate(8deg)}}
+}
+
+/* ---------- a linha de inspeção (laser) ---------- */
+.m-laser{position:absolute;left:0;right:0;top:0;z-index:2;height:2px;pointer-events:none;opacity:0;
+  background:linear-gradient(90deg,transparent,var(--m-red) 18%,#FF7A82 50%,var(--m-red) 82%,transparent);
+  box-shadow:0 0 14px 1px rgba(200,65,75,.8),0 0 60px 6px rgba(200,65,75,.28)}
+.m-laser:before{content:'';position:absolute;left:0;right:0;bottom:2px;height:calc(140 * var(--mu));
+  background:linear-gradient(180deg,transparent,rgba(200,65,75,.10))}
+@media (prefers-reduced-motion:no-preference){
+  .m-hero .m-laser{animation:m-varre 7s cubic-bezier(.45,0,.55,1) 2.2s infinite}
+  @keyframes m-varre{0%{top:0;opacity:0}6%{opacity:1}55%{opacity:1}62%{top:100%;opacity:0}100%{top:100%;opacity:0}}
+}
+
+/* ---------- átrio: parallax pelo cursor e leitura de inspeção ---------- */
+.m-hud{position:absolute;top:calc(112 * var(--mu));right:var(--m-x);display:flex;flex-direction:column;align-items:flex-end;gap:calc(10 * var(--mu));
+  font:500 calc(11 * var(--mu))/1 var(--m-mono);letter-spacing:.18em;text-transform:uppercase;color:var(--m-mudo);font-variant-numeric:tabular-nums}
+.m-hud span{display:flex;align-items:center;gap:calc(8 * var(--mu))}
+.m-hud i{width:calc(7 * var(--mu));height:calc(7 * var(--mu));min-width:5px;min-height:5px;border-radius:50%;background:var(--m-red);box-shadow:0 0 10px var(--m-red)}
+.m-hud b{font-weight:500;color:var(--m-marfim)}
+.m-hud b:after{content:' ✓';color:var(--m-red)}
+@media (prefers-reduced-motion:no-preference){
+  .m-hud{animation:m-sobe 1s cubic-bezier(.2,.7,.2,1) 1.9s both}
+  .m-hud i{animation:m-pisca 1.6s steps(2,jump-none) infinite}
+  @keyframes m-pisca{50%{opacity:.15}}
+}
+.m-numeros strong{font-variant-numeric:tabular-nums}
+
+/* ---------- faixa da marca: vermelha, inclinada como a barra do K/ ---------- */
+.m-faixa{position:relative;z-index:2;width:112%;margin:calc(40 * var(--mu)) -6% 0;transform:rotate(-2.2deg);overflow:hidden}
+.m-faixa-linha{overflow:hidden;padding:calc(18 * var(--mu)) 0;transform:skewX(clamp(-14deg,calc(var(--m-vel,0) * -.5deg),14deg))}
+.m-faixa-linha:first-child{background:var(--m-red);color:var(--m-obs)}
+.m-faixa-linha.is-inversa{background:var(--m-obs);color:transparent;-webkit-text-stroke:1px rgba(233,227,216,.42);border-bottom:1px solid var(--m-linha)}
+.m-faixa-trilha{display:flex;width:max-content}
+.m-faixa-trilha>span{display:flex;flex-shrink:0}
+.m-faixa-trilha>span>span{display:flex;align-items:center;white-space:nowrap;font:800 clamp(40px,5.6vw,calc(118 * var(--mu)))/1 var(--m-disp);letter-spacing:-.035em;text-transform:uppercase}
+.m-faixa-trilha i{font-style:normal;margin:0 .5em;font-size:.5em;letter-spacing:-.04em;color:var(--m-marfim);-webkit-text-stroke:0}
+.m-faixa-linha.is-inversa i{color:var(--m-red)}
+@media (prefers-reduced-motion:no-preference){
+  .m-faixa-trilha{animation:m-corre 48s linear infinite}
+  .is-inversa .m-faixa-trilha{animation-direction:reverse;animation-duration:56s}
+  @keyframes m-corre{to{transform:translateX(-50%)}}
+  @supports (animation-timeline:view()){
+    .m-faixa{animation:m-faixa-gira linear both;animation-timeline:view()}
+    @keyframes m-faixa-gira{from{transform:rotate(-4deg) translateY(20%)}to{transform:rotate(-.6deg) translateY(-10%)}}
+  }
+}
+
+/* ---------- trilho de progresso (telas largas) ---------- */
+.m-trilho{display:none}
+@media (min-width:1200px){
+  .m-trilho{display:block;position:fixed;left:calc(var(--m-x) * .32);top:50%;z-index:40;transform:translateY(-50%)}
+  .m-trilho ol{position:relative;list-style:none;margin:0;padding:0;display:grid;gap:calc(22 * var(--mu))}
+  .m-trilho ol:before,.m-trilho ol:after{content:'';position:absolute;left:calc(-14 * var(--mu));top:0;bottom:0;width:1px;background:var(--m-linha)}
+  .m-trilho ol:after{background:var(--m-red);transform-origin:top;transform:scaleY(var(--p,0))}
+  .m-trilho a{position:relative;display:flex;align-items:center;font:500 calc(11 * var(--mu))/1 var(--m-mono);letter-spacing:.16em;color:var(--m-mudo);transition:color .3s}
+  .m-trilho b{font-weight:500}
+  .m-trilho span{position:absolute;left:calc(100% + 14 * var(--mu));padding:calc(6 * var(--mu)) calc(9 * var(--mu));white-space:nowrap;text-transform:uppercase;
+    background:rgba(16,16,18,.92);border:1px solid var(--m-linha);color:var(--m-marfim);opacity:0;translate:calc(-8 * var(--mu)) 0;pointer-events:none;transition:opacity .25s,translate .25s}
+  .m-trilho a:hover span,.m-trilho a:focus-visible span{opacity:1;translate:0 0}
+  .m-trilho a:hover,.m-trilho a.is-on{color:var(--m-marfim)}
+  .m-trilho a.is-on b{color:var(--m-red)}
+  .m-trilho a.is-on:before{content:'';position:absolute;left:calc(-17 * var(--mu));width:7px;height:7px;border-radius:50%;background:var(--m-red);box-shadow:0 0 10px var(--m-red)}
+  @supports (animation-timeline:scroll()){
+    .m-trilho{animation:m-trilho-entra linear both;animation-timeline:scroll(root);animation-range:calc(500 * var(--mu)) calc(900 * var(--mu))}
+    @keyframes m-trilho-entra{from{opacity:0;visibility:hidden}to{opacity:1;visibility:visible}}
+    .m-trilho ol:after{animation:m-trilho-enche linear both;animation-timeline:scroll(root)}
+    @keyframes m-trilho-enche{from{transform:scaleY(0)}to{transform:scaleY(1)}}
+  }
+}
+
+/* ---------- capítulos: a imagem se abre, a linha varre, o número gigante desliza ---------- */
+.m-cap{view-timeline:--cap block}
+.m-cap-txt{position:relative;z-index:1}
+.m-cap-gigante{position:absolute;z-index:0;top:50%;pointer-events:none;font:800 clamp(200px,24vw,calc(520 * var(--mu)))/.8 var(--m-disp);letter-spacing:-.07em;
+  color:transparent;-webkit-text-stroke:1px rgba(233,227,216,.09);translate:0 -50%}
+.m-cap-esq .m-cap-gigante{right:auto;left:calc(var(--m-x) * .6)}
+.m-cap-dir .m-cap-gigante{right:calc(var(--m-x) * .6)}
+@media (prefers-reduced-motion:no-preference){
+  @supports (animation-timeline:view()){
+    .m-cap-arte{animation:m-abre linear both;animation-timeline:--cap;animation-range:entry 0% entry 95%}
+    @keyframes m-abre{from{clip-path:inset(10% 6% 10% 6%)}to{clip-path:inset(0)}}
+    .m-cap .m-laser{animation:m-scan linear both;animation-timeline:--cap;animation-range:entry 40% cover 62%}
+    @keyframes m-scan{0%{top:0;opacity:0}10%{opacity:1}88%{opacity:1}100%{top:100%;opacity:0}}
+    /* títulos sobem por trás de uma máscara; o traço vermelho dos rótulos cresce */
+    .m-rot:before{animation:m-traco linear both;animation-timeline:view();animation-range:entry 0% cover 25%;transform-origin:left}
+    @keyframes m-traco{from{transform:scaleX(0)}}
+  }
+}
+
+/* ---------- projetos: capa inclina, linha passa ao apontar ---------- */
+.m-projeto-capa{transition:border-color .3s}
+.m-projeto-capa img{filter:saturate(.7) brightness(.86);transition:transform .8s cubic-bezier(.2,.7,.2,1),filter .5s}
+.m-projeto-capa:hover{border-color:rgba(200,65,75,.6)}
+.m-projeto-capa:hover img{filter:none}
+.m-projeto-capa:after{content:'';position:absolute;left:0;right:0;top:0;height:2px;opacity:0;pointer-events:none;
+  background:linear-gradient(90deg,transparent,var(--m-red) 20%,#FF7A82 50%,var(--m-red) 80%,transparent);box-shadow:0 0 14px rgba(200,65,75,.8)}
+@media (prefers-reduced-motion:no-preference){
+  .m-projeto-capa:hover:after{animation:m-varre-capa .75s cubic-bezier(.65,0,.35,1)}
+  @keyframes m-varre-capa{0%{top:0;opacity:0}12%{opacity:1}85%{opacity:1}100%{top:100%;opacity:0}}
+}
+.m-projeto h3 a{background:linear-gradient(var(--m-red),var(--m-red)) 0 100%/0 2px no-repeat;transition:background-size .4s cubic-bezier(.2,.7,.2,1)}
+.m-projeto:hover h3 a{background-size:100% 2px}
+
+/* ---------- rodapé: a marca inteira, preenchida pela rolagem ---------- */
+.m-rodape>p.m-rodape-marca{max-width:none;margin:calc(96 * var(--mu)) 0 0;font:800 15.5vw/.78 var(--m-disp);letter-spacing:-.06em;white-space:nowrap;
+  color:transparent;-webkit-text-stroke:1px rgba(233,227,216,.22);
+  background:linear-gradient(var(--m-marfim),var(--m-marfim)) 0 0/100% 100% no-repeat;-webkit-background-clip:text;background-clip:text}
+.m-rodape-marca i{font-style:normal;color:var(--m-red);-webkit-text-stroke:0}
+@media (prefers-reduced-motion:no-preference){
+  @supports (animation-timeline:view()){
+    .m-rodape>p.m-rodape-marca{animation:m-enche linear both;animation-timeline:view();animation-range:entry 0% entry 100%}
+    @keyframes m-enche{from{background-size:0% 100%;transform:translateY(30%)}to{background-size:100% 100%;transform:none}}
+  }
+}
+
+/* ---------- retícula (só com mouse) ---------- */
+.m-reticula{position:fixed;left:0;top:0;z-index:300;width:0;height:0;pointer-events:none;opacity:0;transition:opacity .3s}
+.m-reticula.is-on{opacity:1}
+.m-reticula i{position:absolute;left:-17px;top:-17px;width:34px;height:34px;border:1px solid rgba(233,227,216,.55);border-radius:50%;
+  transition:all .35s cubic-bezier(.2,.8,.2,1)}
+.m-reticula i:before,.m-reticula i:after{content:'';position:absolute;background:var(--m-red)}
+.m-reticula i:before{left:50%;top:-7px;bottom:-7px;width:1px;translate:-50% 0;
+  -webkit-mask:linear-gradient(#000 0 7px,transparent 7px calc(100% - 7px),#000 calc(100% - 7px));mask:linear-gradient(#000 0 7px,transparent 7px calc(100% - 7px),#000 calc(100% - 7px))}
+.m-reticula i:after{top:50%;left:-7px;right:-7px;height:1px;translate:0 -50%;
+  -webkit-mask:linear-gradient(90deg,#000 0 7px,transparent 7px calc(100% - 7px),#000 calc(100% - 7px));mask:linear-gradient(90deg,#000 0 7px,transparent 7px calc(100% - 7px),#000 calc(100% - 7px))}
+.m-reticula b{position:absolute;left:0;top:0;translate:-50% -50%;font:600 10px/1 var(--m-mono);letter-spacing:.18em;text-transform:uppercase;color:var(--m-marfim);opacity:0;transition:opacity .25s}
+.m-reticula.is-alvo i{left:-30px;top:-30px;width:60px;height:60px;border-color:var(--m-red);background:rgba(200,65,75,.14);rotate:45deg}
+.m-reticula.is-alvo b:not(:empty){opacity:1}
+.m-reticula.is-alvo:has(b:not(:empty)) i{left:-42px;top:-42px;width:84px;height:84px;background:rgba(200,65,75,.85);rotate:0deg}
+.m-reticula.is-clique i{scale:.8}
+
+/* ---------- tablet e celular ---------- */
+@media (max-width:1000px){
+  .m-hud{display:none}
+  .m-cap-gigante{display:none}
+}
+@media (max-width:760px){
+  .m-faixa{margin-top:calc(24 * var(--mu))}
+  .m-rodape>p.m-rodape-marca{font-size:17vw}
+}
+
+/* com a retícula ativa, ela substitui a seta */
+html.m-mira .km,html.m-mira .km *{cursor:none}
+
+/* =====================================================================
+   Entrada e inspeção dos cards — sem inclinação, sem flutuar, sem deslize lateral.
+   Referência: revelação por máscara (clip-path) das galerias editoriais. Roda UMA vez,
+   por tempo (não presa à rolagem), e nada se move na horizontal.
+   ===================================================================== */
+/* hover: a linha de inspeção desce e, atrás dela, a capa ganha cor. A capa não se mexe. */
+.m-projeto-capa img{filter:none;transition:transform 1.4s cubic-bezier(.16,1,.3,1)}
+.m-projeto-capa:hover img{filter:none;transform:scale(1.035)}
+.m-projeto-capa:before{content:'';position:absolute;inset:0;z-index:1;pointer-events:none;
+  -webkit-backdrop-filter:saturate(.25) brightness(.78);backdrop-filter:saturate(.25) brightness(.78);
+  clip-path:inset(0 0 0 0);transition:clip-path .75s cubic-bezier(.65,0,.35,1)}
+.m-projeto-capa:hover:before,.m-projeto-capa:focus-visible:before{clip-path:inset(100% 0 0 0)}
+.m-projeto-capa:after{z-index:2}
+
+@media (prefers-reduced-motion:no-preference){
+  /* estado inicial (só com JS ligado: sem JS tudo aparece) */
+  html.m-vivo .m-projeto .m-projeto-capa{clip-path:inset(100% 0 0 0)}
+  html.m-vivo .m-projeto .m-projeto-capa>*{transform:scale(1.16)}
+  html.m-vivo :is(.m-projeto,.m-cap-txt,.m-cab,.m-sobre,.m-lab,.m-xp>li)>:not(.m-projeto-capa),
+  html.m-vivo .m-rodape>:not(.m-rodape-marca){opacity:0;transform:translateY(18px)}
+
+  /* revelação: a capa abre de baixo para cima, a imagem assenta, o texto sobe em sequência */
+  html.m-vivo .m-projeto.is-visto .m-projeto-capa{clip-path:inset(0 0 0 0);
+    transition:clip-path 1.1s cubic-bezier(.77,0,.18,1) calc(var(--i,0) * 110ms),border-color .3s}
+  html.m-vivo .m-projeto.is-visto .m-projeto-capa>*{transform:none;transition:transform 1.6s cubic-bezier(.16,1,.3,1) calc(var(--i,0) * 110ms)}
+  html.m-vivo .m-projeto.is-visto .m-projeto-capa:hover img{transform:scale(1.035);transition-delay:0s}
+  html.m-vivo .is-visto>:not(.m-projeto-capa):not(.m-rodape-marca){opacity:1;transform:none;
+    transition:opacity .7s cubic-bezier(.16,1,.3,1),transform .9s cubic-bezier(.16,1,.3,1);
+    transition-delay:calc(var(--i,0) * 110ms + var(--d,0ms))}
+  html.m-vivo .m-projeto.is-visto>*{--d:420ms}
+  .is-visto>:nth-child(2){--d:60ms}.is-visto>:nth-child(3){--d:120ms}.is-visto>:nth-child(4){--d:180ms}
+  .is-visto>:nth-child(5){--d:240ms}.is-visto>:nth-child(6){--d:300ms}
+  html.m-vivo .m-projeto.is-visto>:nth-child(3){--d:480ms}html.m-vivo .m-projeto.is-visto>:nth-child(4){--d:540ms}
+  html.m-vivo .m-projeto.is-visto>:nth-child(5){--d:600ms}html.m-vivo .m-projeto.is-visto>:nth-child(6){--d:660ms}
+}
+
+/* faixa: rótulo fixo de cada pista; o achado é texto cheio, a aparência é contorno riscado */
+.m-faixa-linha{position:relative}
+.m-faixa-rot{position:absolute;z-index:2;right:7%;top:50%;translate:0 -50%;padding:.55em .9em;font:600 calc(12 * var(--mu))/1 var(--m-mono);letter-spacing:.18em;text-transform:uppercase;
+  background:var(--m-obs);color:var(--m-marfim);-webkit-text-stroke:0;border:1px solid rgba(233,227,216,.25)}
+.m-faixa-rot:before{content:'';display:inline-block;width:.6em;height:.6em;margin-right:.7em;background:var(--m-red);vertical-align:-.05em}
+.m-faixa-linha.is-inversa .m-faixa-rot{background:transparent;color:rgba(233,227,216,.6);border-color:rgba(233,227,216,.18)}
+.m-faixa-linha.is-inversa .m-faixa-rot:before{background:transparent;border:1px solid rgba(233,227,216,.5)}
+.m-faixa-trilha s{text-decoration:none}
+.m-faixa-linha.is-inversa .m-faixa-trilha s{text-decoration:line-through;text-decoration-color:var(--m-red);text-decoration-thickness:.07em}
+@media (max-width:700px){.m-faixa-rot{right:9%;font-size:10px}}
+
+/* ---------- arte em profundidade (Profundidade.tsx): o canvas cobre a imagem estática quando o 1º quadro sai ---------- */
+.m-gl{position:absolute;inset:0;width:100%;height:100%;display:block;opacity:0;transition:opacity 1.4s cubic-bezier(.16,1,.3,1);pointer-events:none}
+.m-gl.is-on{opacity:1}
+.m-gl.is-on~.m-laser{display:none}

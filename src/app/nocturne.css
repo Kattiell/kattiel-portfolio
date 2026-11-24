@@ -1,0 +1,189 @@
+/* =====================================================================
+   KATTIEL / NOCTURNE
+   Obsidiana + grafite azulado + vermelho mineral + latão envelhecido + azul glacial.
+   - vermelho  (--k-sig)   = assinatura de Kattiel, em áreas expressivas (faixas, placas, contato)
+   - latão     (--k-metal) = marca os distritos (números, índice, mapa)
+   - ciano     (--k-tech)  = só tecnologia e portais (arquivo 3D, código, entrada da caverna)
+   Carregado por último: redefine os tokens do molde e cobre as cores fixas dele.
+   ===================================================================== */
+:root{
+  --k-base:#0B1018; --k-surface:#1B2732; --k-sig:#D64E58; --k-metal:#D9AA67; --k-tech:#80CCD8; --k-text:#F4EEE7;
+  --k-deep:#070B11;            /* fundo mais fundo: arquivo, rodapé */
+  --k-surface2:#141E28;        /* entre base e superfície */
+  --k-sig-deep:#7A2128;        /* vermelho mineral escuro, para placas grandes */
+  --k-on-sig:#070B11;          /* texto sobre o vermelho (AA) */
+  /* tokens antigos do molde, remapeados */
+  --k-paper:var(--k-base); --k-warm:var(--k-surface); --k-ink:var(--k-text);
+  --k-oxide:var(--k-sig); --k-teal:var(--k-metal); --k-cyan:var(--k-tech);
+  --k-cave:var(--k-deep); --k-cave2:var(--k-surface2);
+  --k-muted:#9BA6B1;           /* 7,4:1 sobre a base */
+  --k-line:#26333F; --k-white:var(--k-text); --k-stone:#9BA6B1; --k-archive:var(--k-surface);
+  color-scheme:dark;
+}
+html{background:var(--k-base)}
+.k-site{background:var(--k-base);color:var(--k-text)}
+::selection{background:var(--k-sig);color:var(--k-on-sig)}
+.grain{opacity:.05;mix-blend-mode:screen}
+.skip{background:var(--k-sig);color:var(--k-on-sig)}
+
+/* ---------- cabeçalho ---------- */
+.masthead{border-color:var(--k-line)}
+.brandmark{color:var(--k-text)}
+.masthead nav a:hover{color:var(--k-sig)}
+.masthead-action{background:var(--k-sig);color:var(--k-on-sig);transition:background .2s}
+.masthead-action:hover{background:#E46670}
+
+/* ---------- hero ---------- */
+.hero{background:radial-gradient(ellipse 60% 70% at 78% 40%,rgba(214,78,88,.14),transparent 70%),var(--k-base)}
+.hero-kattiel{color:var(--k-text)}
+.hero h1 .serif-mark{color:var(--k-sig)}
+.hero h1 em{color:var(--k-metal)}
+.hero h1 em:after{background:var(--k-metal)}
+.hero-signature{color:var(--k-text)}
+.hero-signature span{color:var(--k-sig)}
+.hero-intro{color:#B9C1C9}
+.primary-cta{background:var(--k-sig);border-color:var(--k-sig);color:var(--k-on-sig)}
+.primary-cta:hover{background:#E46670;border-color:#E46670}
+.secondary-cta{border-color:var(--k-metal);color:var(--k-text)}
+.secondary-cta:hover{color:var(--k-metal)}
+/* a placa atrás do arco vira o grande bloco vermelho da assinatura */
+.hero-art-back{background:linear-gradient(160deg,var(--k-sig) 0%,#B23C47 46%,var(--k-sig-deep) 100%);opacity:1}
+.hero-art-back:after{content:'';position:absolute;inset:0;background:repeating-linear-gradient(90deg,transparent 0 46px,rgba(7,11,17,.16) 46px 47px)}
+.arch-frame{box-shadow:22px 20px 0 rgba(7,11,17,.55),0 0 0 1px rgba(217,170,103,.35)}
+.arch-stamp{color:var(--k-text);border-color:rgba(217,170,103,.85);background:rgba(7,11,17,.6)}
+.arch-stamp strong{color:var(--k-metal)}
+.arch-ordinal{color:var(--k-text)}
+.hero-art-caption a{color:var(--k-tech)}
+
+/* faixa de declaração: vermelho cheio */
+.statement-band{background:var(--k-sig);color:var(--k-on-sig);font-weight:600}
+.statement-band span{color:var(--k-base)}
+
+/* ---------- 01 perfil ---------- */
+.manifesto h2 span{color:var(--k-sig)}
+.manifesto h2 i{color:var(--k-metal)}
+.asymmetric-frame{border-color:var(--k-metal)}
+.asymmetric-frame:before{background:var(--k-sig);width:58px;height:58px;right:-14px;top:-14px}
+.asymmetric-frame span{color:var(--k-text)}
+.manifesto-aside p{color:#B9C1C9}
+.signature-line{color:var(--k-metal)}
+.capability-grid article{transition:background .25s}
+.capability-grid article:hover{background:linear-gradient(180deg,rgba(214,78,88,.12),transparent 70%)}
+.cap-fine{color:#7F8A95}
+
+/* ---------- 02 atuação ---------- */
+.practice-title i{color:var(--k-metal)}
+.practice-list{border-top-color:var(--k-sig)}
+.practice-list>li{transition:background .2s}
+.practice-list details[open]{background:linear-gradient(90deg,rgba(214,78,88,.10),transparent 60%);box-shadow:inset 3px 0 0 var(--k-sig)}
+.practice-toggle:before,.practice-toggle:after{background:var(--k-text)}
+.practice-body li{color:#C3CAD1}
+.k-chips span{border-color:var(--k-line);color:var(--k-muted);background:var(--k-surface2)}
+
+/* ---------- 03 arquivo (tecnologia e portais: ciano; distritos: latão) ---------- */
+.archive{background:radial-gradient(ellipse 70% 50% at 50% 0%,rgba(128,204,216,.07),transparent 70%),var(--k-deep);color:var(--k-text);border-top:1px solid var(--k-line)}
+.light-index,.archive .section-index{color:var(--k-tech)}
+.archive .section-tick{background:var(--k-tech)}
+.archive-heading h2 span{color:var(--k-metal)}
+.archive-heading p{color:var(--k-muted)}
+.cave-window{border-color:rgba(128,204,216,.35)}
+.cave-window-shade{background:linear-gradient(0deg,rgba(7,11,17,.78),transparent 50%,rgba(7,11,17,.22))}
+.cave-ref-label{color:var(--k-tech)}
+.cave-launch{background:var(--k-text);color:var(--k-base);box-shadow:0 0 0 1px rgba(128,204,216,.6),0 0 46px rgba(128,204,216,.28),0 10px 50px rgba(0,0,0,.5);transition:box-shadow .25s,transform .25s}
+.cave-launch:hover{box-shadow:0 0 0 1px var(--k-tech),0 0 70px rgba(128,204,216,.45),0 10px 50px rgba(0,0,0,.5);transform:translateX(-50%) translateY(-2px)}
+.cave-launch .launch-icon{color:#2C7F8C}
+.ledger-header{color:var(--k-muted)}
+.ledger-header a{color:var(--k-metal);border-bottom-color:rgba(217,170,103,.45)}
+.ledger-header a:hover{color:var(--k-text)}
+.district-grid{border-color:var(--k-line);background:var(--k-line)}
+.district-btn{background:var(--k-base);color:var(--k-text)}
+.district-btn:hover,.district-btn:focus-visible{background:var(--k-surface);box-shadow:inset 0 -3px 0 var(--k-metal)}
+.district-no{color:var(--k-metal)}
+.district-arrow{color:var(--k-metal)}
+.district-meta{color:#7F8A95}
+
+/* ---------- 04 trabalhos ---------- */
+.work-intro h2 i{color:var(--k-sig)}
+.work-items{background:var(--k-line);border-color:var(--k-line)}
+.work-item{background:var(--k-surface2)}
+.work-photo,.work-photo-1{background:var(--k-deep)}
+.work-photo-2,.work-photo-second{background:linear-gradient(150deg,var(--k-sig-deep),#3A1218)}
+.work-photo-3,.work-photo-third{background:var(--k-surface)}
+.work-photo-4{background:var(--k-deep)}
+.work-photo img{filter:saturate(.8)}
+.work-meta{color:var(--k-sig)}
+.work-description p{color:var(--k-muted)}
+.work-disabled{color:#7F8A95}
+.project-glyph{color:var(--k-text)}
+.project-glyph span{color:var(--k-metal)}
+.project-glyph-caption{color:var(--k-text)}
+.qa-lines span{background:var(--k-metal)}
+.qa-lines span:before{border-color:var(--k-metal);background:var(--k-surface)}
+.code-glyph{color:var(--k-tech)}
+.others ul{border-top-color:var(--k-sig)}
+
+/* ---------- 05 contato: o vermelho como superfície ---------- */
+.contact{background:linear-gradient(135deg,var(--k-sig) 0%,#C2414C 55%,#9E2F39 100%);color:var(--k-on-sig);position:relative;overflow:hidden}
+.contact:before{content:'K';position:absolute;right:-2vw;bottom:-14vw;font:800 46vw/1 var(--k-display);letter-spacing:-.1em;color:rgba(7,11,17,.08);pointer-events:none}
+.contact>*{position:relative}
+.contact .section-index,.contact .section-index span:last-child{color:var(--k-on-sig)}
+.contact .section-tick{background:var(--k-on-sig)}
+.contact h2 i{color:var(--k-text)}
+.contact-side p,.contact-side small{color:#1A0D10}
+.contact-btn{background:var(--k-deep);color:var(--k-text)}
+.contact-btn:hover{background:var(--k-surface)}
+.contact-mark{color:var(--k-on-sig);opacity:.7}
+
+/* ---------- rodapé ---------- */
+.site-footer{background:var(--k-deep);color:var(--k-muted);border-top:1px solid var(--k-line)}
+.footer-wordmark{color:var(--k-text)}
+.footer-star{color:var(--k-sig)}
+
+/* ---------- dossiês de projeto ---------- */
+.dossier-head{border-bottom-color:var(--k-sig)}
+.dossier-sum{color:#C3CAD1}
+.dossier-body p,.dossier-body li{color:#C9D0D6}
+.dossier-side{background:var(--k-surface);border-color:var(--k-line);box-shadow:inset 0 3px 0 var(--k-sig)}
+.dossier-side dd a{color:var(--k-text)}
+.dossier-shot{background:var(--k-deep)}
+.dossier-shot figcaption{background:var(--k-surface)}
+
+/* ---------- páginas de distrito (latão) ---------- */
+.k-dark-page{background:var(--k-deep);color:var(--k-text)}
+.k-dark-page .masthead{border-color:var(--k-line)}
+.k-dark-page .identity-words small,.k-dark-page .crumbs{color:var(--k-muted)}
+.k-dark-page .brandmark{color:var(--k-text)}
+.k-dark-page .masthead-action{background:var(--k-sig);color:var(--k-on-sig)}
+.file-code,.file-project h2,.k-semgl .k-semgl-code{color:var(--k-metal)}
+.district-file h1{color:var(--k-text)}
+.file-focal,.file-project p,.k-semgl p{color:#B9C1C9}
+.file-facts,.file-pager{border-color:var(--k-line)}
+.file-facts dt,.file-hint{color:var(--k-muted)}
+.file-facts dd{color:var(--k-text)}
+.file-facts b,.file-project a,.k-semgl a,.file-pager a:hover,.map-list a:hover{color:var(--k-metal)}
+.file-project a,.k-semgl a{border-bottom-color:rgba(217,170,103,.6)}
+.file-project{border-top-color:var(--k-line)}
+.k-dark-page .link-empty{color:var(--k-muted);border-color:var(--k-line)}
+.file-pager{color:var(--k-muted)}
+.map-list{background:var(--k-line);border-color:var(--k-line)}
+.map-list a{background:var(--k-base)}
+.map-list a:hover{background:var(--k-surface)}
+.map-list small,.district-map figcaption,.map-label{color:#7F8A95;fill:#7F8A95}
+.district-map{border-color:var(--k-line);background:radial-gradient(ellipse at 50% 60%,var(--k-surface2),var(--k-deep) 70%)}
+.map-gallery{stroke:#2A3A48}
+.map-platform{fill:var(--k-surface);stroke:rgba(217,170,103,.55)}
+.map-corridor{stroke:#2A3A48}
+.map-node circle{fill:var(--k-base)}
+.map-node text{fill:var(--k-text)}
+.district-map a:hover .map-node text,.map-node.is-on text{fill:var(--k-deep)}
+.k-semgl{background:var(--k-deep);color:var(--k-text)}
+
+/* ---------- sobreposições do molde ---------- */
+.overlay{background:rgba(7,11,17,.94)}
+.overlay-panel{background:var(--k-base);border-color:var(--k-line);color:var(--k-text)}
+.overlay-top{border-color:var(--k-line)}
+.overlay-top i,.overlay-title>span,.overlay-title h2 em,.overlay-btn small,.file-heading{color:var(--k-metal)}
+.overlay-btn{background:var(--k-surface2);border-color:var(--k-line);color:var(--k-text)}
+.overlay-btn:hover,.overlay-btn:focus-visible{background:var(--k-surface)}
+.file-panel{background:var(--k-base) radial-gradient(ellipse at 85% 45%,rgba(214,78,88,.18),transparent 40%)}
+.file-return{background:var(--k-sig);color:var(--k-on-sig)}
