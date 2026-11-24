@@ -4,6 +4,7 @@ import Link from 'next/link';
 import { HeaderA, SiteFooter } from '@/components/Masthead';
 import Movimento from '@/components/Movimento';
 import Profundidade from '@/components/Profundidade';
+import CavernaTour from '@/components/CavernaTour';
 import { CAPITULOS } from '@/domain/capitulos';
 import { METODO, NUMEROS, SOBRE } from '@/domain/apresentacao';
 import { CATEGORY_LABEL, getProject, MAIS, PROJECTS, publicLink } from '@/domain/projects';
@@ -52,7 +53,7 @@ const CANTOS = ([
   ['projetos', 'Trabalhos entregues', 27, 47],
 ] as const).map(([id, atividade, x, y], i) => {
   const s = (SECOES as Secao[]).find((q) => q.id === id)!;
-  return { id, atividade, x, y, letra: 'ABCDEF'[i], canto: s.canto!, entrega: s.entrega! };
+  return { id, atividade, x, y, letra: 'ABCDEF'[i], canto: s.canto! as [string, string], entrega: s.entrega! };
 });
 
 const ACHADOS = ['55% de 20 mil produtos perdidos', 'IDOR entre tenants', 'DELETE de 29 segundos', 'Endpoint 6× mais lento', '11.600+ casos de API', '208 endpoints · 59 tenants'];
@@ -156,40 +157,21 @@ export default function Home() {
         </div>
 
         {/* ---------- A CAVERNA: como cada atividade muda a entrega (a metáfora, em destaque) ---------- */}
-        <section className="m-sec m-cav" id="caverna" aria-labelledby="m-cav-t">
-          <div className="m-wrap">
-            <header className="m-cab">
+        <section className="m-cav" id="caverna" aria-labelledby="m-cav-t">
+          <header className="m-wrap m-cav-cab">
+            <div>
               <p className="m-rot">A metáfora</p>
               <h2 id="m-cav-t">O cliente vê o herói na rua.<br /><em>A entrega depende da caverna.</em></h2>
-              <p>Todo site ou sistema que chega até você é a parte visível. Por trás existe um lugar onde ele é construído, testado e preparado para sair. Montei esse lugar em 3D: cada canto da caverna é uma parte do meu trabalho, e cada uma muda alguma coisa no que você recebe.</p>
-            </header>
-            <div className="m-cav-corpo">
-              <figure className="m-cav-arte">
-                <Image src={caverna} alt="A caverna: garagem com o carro à esquerda, computador central, emblema no piso, doze túneis em duas galerias, sacadas no alto e um óculo de luz no teto." placeholder="blur" sizes="(max-width: 1000px) 100vw, 58vw" />
-                {CANTOS.map((c) => (
-                  <Link key={c.id} href={`/arquivo#${c.id}`} prefetch={false} className="m-cav-pino" data-c={c.id} style={{ '--x': c.x, '--y': c.y } as CSSProperties} aria-label={`${c.canto[0]}: ${c.atividade}. Abrir na caverna 3D`}>
-                    <b aria-hidden="true">{c.letra}</b><span aria-hidden="true">{c.canto[0]}</span>
-                  </Link>
-                ))}
-              </figure>
-              <ol className="m-cav-lista">
-                {CANTOS.map((c) => (
-                  <li key={c.id} data-c={c.id}>
-                    <b className="m-cav-letra" aria-hidden="true">{c.letra}</b>
-                    <div>
-                      <p className="m-cav-onde">{c.canto[0]} <span>· {c.canto[1]}</span></p>
-                      <h3>{c.atividade}</h3>
-                      <p className="m-cav-entrega"><b>Na entrega</b> {c.entrega}</p>
-                    </div>
-                  </li>
-                ))}
-              </ol>
             </div>
-            <p className="m-cav-acoes">
-              <Link href="/arquivo" prefetch={false} className="m-btn m-btn-cheio">Entrar na caverna em 3D <span aria-hidden="true">→</span></Link>
-              <Link href="/distritos" className="m-link">Versão sem 3D <span aria-hidden="true">→</span></Link>
-            </p>
-          </div>
+            <div className="m-cav-lado">
+              <p>Todo site ou sistema que chega até você é a parte visível. Por trás existe um lugar onde ele é construído, testado e preparado para sair. Cada canto desta caverna é uma parte do meu trabalho, e cada um muda alguma coisa no que você recebe.</p>
+              <p className="m-cav-acoes">
+                <Link href="/arquivo" prefetch={false} className="m-btn m-btn-cheio">Entrar na caverna em 3D <span aria-hidden="true">→</span></Link>
+                <Link href="/distritos" className="m-link">Versão sem 3D <span aria-hidden="true">→</span></Link>
+              </p>
+            </div>
+          </header>
+          <CavernaTour arte={caverna} cantos={CANTOS} />
         </section>
 
         {/* ---------- TRABALHOS SELECIONADOS: um espaço do edifício por trabalho ---------- */}
