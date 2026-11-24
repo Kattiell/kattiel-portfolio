@@ -4,22 +4,11 @@
    Carregado depois de monumental.css.
    ===================================================================== */
 
-/* ---------- abertura: o K/ e a barra que corta a tela ---------- */
-.m-intro{display:none}
+/* ---------- entrada do átrio (sem a abertura, nas visitas seguintes da sessão) ---------- */
 @media (prefers-reduced-motion:no-preference){
-  .m-intro{display:grid;place-items:center;position:fixed;inset:0 -40%;z-index:200;pointer-events:none;background:var(--m-obs);
-    transform:skewX(-18deg);animation:m-intro-sai .8s cubic-bezier(.7,0,.2,1) .75s both}
-  .m-intro span{transform:skewX(18deg);font:800 clamp(96px,14vw,calc(260 * var(--mu)))/1 var(--m-disp);letter-spacing:-.06em;color:var(--m-marfim);
-    animation:m-intro-k .7s cubic-bezier(.2,.8,.2,1) both}
-  .m-intro i{font-style:normal;color:var(--m-red);display:inline-block;animation:m-intro-barra .5s cubic-bezier(.2,.8,.2,1) .2s both}
-  @keyframes m-intro-sai{to{transform:skewX(-18deg) translateX(110%)}}
-  @keyframes m-intro-k{from{opacity:0;transform:skewX(18deg) translateY(30%)}}
-  @keyframes m-intro-barra{from{transform:translateY(-120%) scaleY(1.6);opacity:0}}
-
-  /* o átrio entra depois da abertura */
-  .km .m-hero-arte img{animation-delay:.7s}
-  .km .m-hero-txt>:nth-child(1){animation-delay:1.05s}.km .m-hero-txt>:nth-child(3){animation-delay:1.5s}.km .m-hero-txt>:nth-child(4){animation-delay:1.62s}
-  .km .m-numeros li:nth-child(1){animation-delay:1.7s}.km .m-numeros li:nth-child(2){animation-delay:1.8s}.km .m-numeros li:nth-child(3){animation-delay:1.9s}.km .m-numeros li:nth-child(4){animation-delay:2s}
+  .km .m-hero-txt>:nth-child(1){animation-delay:.1s}.km .m-hero-txt>:nth-child(3){animation-delay:.55s}
+  .km .m-hero-txt>:nth-child(4){animation-delay:.67s}.km .m-hero-txt>:nth-child(5){animation-delay:.79s}
+  .km .m-numeros li:nth-child(1){animation-delay:.85s}.km .m-numeros li:nth-child(2){animation-delay:.95s}.km .m-numeros li:nth-child(3){animation-delay:1.05s}.km .m-numeros li:nth-child(4){animation-delay:1.15s}
 }
 
 /* ---------- o nome: letra por letra ---------- */
@@ -28,7 +17,7 @@
 .m-l:hover{translate:0 -.08em;color:var(--m-red)}
 @media (prefers-reduced-motion:no-preference){
   .km .m-nome{animation:none!important}
-  .m-l{animation:m-letra 1.1s cubic-bezier(.2,.8,.2,1) both;animation-delay:calc(1.1s + var(--i) * .045s)}
+  .m-l{animation:m-letra 1.1s cubic-bezier(.2,.8,.2,1) both;animation-delay:calc(.25s + var(--i) * .045s)}
   @keyframes m-letra{from{transform:translateY(110%) rotate(8deg)}}
 }
 
@@ -51,7 +40,7 @@
 .m-hud b{font-weight:500;color:var(--m-marfim)}
 .m-hud b:after{content:' ✓';color:var(--m-red)}
 @media (prefers-reduced-motion:no-preference){
-  .m-hud{animation:m-sobe 1s cubic-bezier(.2,.7,.2,1) 1.9s both}
+  .m-hud{animation:m-sobe 1s cubic-bezier(.2,.7,.2,1) 1s both}
   .m-hud i{animation:m-pisca 1.6s steps(2,jump-none) infinite}
   @keyframes m-pisca{50%{opacity:.15}}
 }
@@ -233,3 +222,149 @@ html.m-mira .km,html.m-mira .km *{cursor:none}
 .m-cap-txt>.m-chips{margin-top:calc(18 * var(--mu))}
 .m-servicos li{flex-direction:column;gap:calc(4 * var(--mu))}
 .m-servicos small{white-space:normal}
+
+/* =====================================================================
+   O átrio como inspeção (ideia: "funcionar é aparência, confiabilidade exige evidências").
+   Abertura de ~5 s na 1ª visita da sessão: repouso → varredura → diagnóstico → validação → entrega.
+   Quem toca é o shader do átrio (Profundidade.tsx, atrio); o script no topo da página decide se ela acontece.
+   ===================================================================== */
+.m-abre,.m-abre-pular{display:none}
+html.k-abre:not(.k-fim){overflow:hidden}
+html.k-abre .m-abre{display:block;position:fixed;inset:0;z-index:150;pointer-events:none;background:#0B0B0C;
+  transition:background .5s,opacity .8s cubic-bezier(.16,1,.3,1),visibility 0s .8s;
+  font:500 calc(11 * var(--mu))/1.3 var(--m-mono);letter-spacing:.18em;text-transform:uppercase;color:var(--m-mudo);text-shadow:0 0 14px #000,0 0 3px #000}
+html.k-gl .m-abre{background:transparent}
+html.k-fim .m-abre{opacity:0;visibility:hidden}
+.m-abre-topo{position:absolute;left:var(--m-x);top:calc(30 * var(--mu));margin:0;display:flex;align-items:center;gap:calc(14 * var(--mu));color:var(--m-marfim)}
+.m-abre-topo span{font:800 calc(24 * var(--mu))/1 var(--m-disp);letter-spacing:-.06em;text-transform:none}
+.m-abre-topo i{font-style:normal;color:var(--m-red)}
+.m-abre-etapas{position:absolute;left:var(--m-x);bottom:calc(96 * var(--mu));list-style:none;margin:0;padding:0;display:grid;gap:calc(14 * var(--mu))}
+.m-abre-etapas li{display:flex;align-items:baseline;gap:calc(16 * var(--mu));opacity:.28;transition:opacity .45s,color .45s}
+.m-abre-etapas b{font-weight:500;transition:color .45s}
+.m-abre-etapas span{display:flex;flex-direction:column}
+.m-abre-etapas small{display:block;max-height:0;opacity:0;overflow:hidden;font-size:.92em;letter-spacing:.12em;color:var(--m-mudo);text-transform:none;
+  transition:max-height .45s,opacity .45s,margin .45s}
+.m-abre-tempo{position:absolute;right:var(--m-x);bottom:calc(96 * var(--mu));width:calc(240 * var(--mu));display:grid;justify-items:end;gap:calc(10 * var(--mu));color:var(--m-marfim);font-variant-numeric:tabular-nums}
+.m-abre-tempo i{display:block;width:100%;height:1px;background:rgba(233,227,216,.2)}
+.m-abre-tempo i:after{content:'';display:block;height:100%;background:var(--m-red);box-shadow:0 0 8px var(--m-red);transform-origin:left;transform:scaleX(var(--p,0))}
+html.k-abre .m-abre-pular{display:inline-flex;align-items:center;gap:10px;position:fixed;right:var(--m-x);bottom:calc(32 * var(--mu));z-index:151;
+  padding:10px 16px;min-height:40px;border:1px solid rgba(233,227,216,.28);background:rgba(11,11,12,.6);color:var(--m-marfim);
+  font:500 calc(11 * var(--mu))/1 var(--m-mono);letter-spacing:.18em;text-transform:uppercase;cursor:pointer;transition:border-color .25s,background .25s}
+html.k-abre .m-abre-pular:hover,html.k-abre .m-abre-pular:focus-visible{border-color:var(--m-red);background:rgba(200,65,75,.18)}
+html.k-fim .m-abre-pular{display:none}
+@media (prefers-reduced-motion:no-preference){
+  html[data-abre="0"] .m-abre-etapas li:nth-child(1){opacity:1;color:var(--m-marfim)}
+  html[data-abre="0"] .m-abre-etapas li:nth-child(1) b{color:#E0656E}
+  html[data-abre="0"] .m-abre-etapas li:nth-child(1) small{max-height:2em;opacity:1}
+  html[data-abre="1"] .m-abre-etapas li:nth-child(2){opacity:1;color:var(--m-marfim)}
+  html[data-abre="1"] .m-abre-etapas li:nth-child(2) b{color:#E0656E}
+  html[data-abre="1"] .m-abre-etapas li:nth-child(2) small{max-height:2em;opacity:1}
+  html[data-abre="1"] .m-abre-etapas li:nth-child(-n+1){opacity:.55}
+  html[data-abre="1"] .m-abre-etapas li:nth-child(-n+1) b:after{content:" ✓";color:#E0656E}
+  html[data-abre="2"] .m-abre-etapas li:nth-child(3){opacity:1;color:var(--m-marfim)}
+  html[data-abre="2"] .m-abre-etapas li:nth-child(3) b{color:#E0656E}
+  html[data-abre="2"] .m-abre-etapas li:nth-child(3) small{max-height:2em;opacity:1}
+  html[data-abre="2"] .m-abre-etapas li:nth-child(-n+2){opacity:.55}
+  html[data-abre="2"] .m-abre-etapas li:nth-child(-n+2) b:after{content:" ✓";color:#E0656E}
+  html[data-abre="3"] .m-abre-etapas li:nth-child(4){opacity:1;color:var(--m-marfim)}
+  html[data-abre="3"] .m-abre-etapas li:nth-child(4) b{color:#E0656E}
+  html[data-abre="3"] .m-abre-etapas li:nth-child(4) small{max-height:2em;opacity:1}
+  html[data-abre="3"] .m-abre-etapas li:nth-child(-n+3){opacity:.55}
+  html[data-abre="3"] .m-abre-etapas li:nth-child(-n+3) b:after{content:" ✓";color:#E0656E}
+  html[data-abre="4"] .m-abre-etapas li:nth-child(5){opacity:1;color:var(--m-marfim)}
+  html[data-abre="4"] .m-abre-etapas li:nth-child(5) b{color:#E0656E}
+  html[data-abre="4"] .m-abre-etapas li:nth-child(5) small{max-height:2em;opacity:1}
+  html[data-abre="4"] .m-abre-etapas li:nth-child(-n+4){opacity:.55}
+  html[data-abre="4"] .m-abre-etapas li:nth-child(-n+4) b:after{content:" ✓";color:#E0656E}
+  /* durante a abertura: o cabeçalho e o texto esperam; a arte é o próprio canvas */
+  html.k-abre:not(.k-fim) :is(.m-topo,.m-trilho){opacity:0;pointer-events:none}
+  html.k-abre :is(.m-topo,.m-trilho){transition:opacity 1s cubic-bezier(.16,1,.3,1) .45s}
+  html.k-abre:not(.k-fim) :is(.m-hero-txt>*,.m-l,.m-numeros li,.m-hud,.m-feixe-base){animation-play-state:paused}
+  html.k-abre .m-hero .m-gl{transition:none}
+  html.k-abre:not(.k-fim) .m-hero .m-gl{opacity:1}
+  html.k-abre .m-hero-arte:after{transition:opacity 1.4s cubic-bezier(.16,1,.3,1)}
+  html.k-abre:not(.k-fim) .m-hero-arte:after{opacity:0}
+  html.k-abre .m-hud{animation-delay:.1s}
+  html.k-abre:is([data-abre="3"],[data-abre="4"]) :is(.m-hud,.m-feixe-base){animation-play-state:running}
+  html.k-abre .m-feixe-base{animation-delay:0s}
+  html.k-abre .m-hero-txt>:nth-child(1){animation-delay:.05s}html.k-abre .m-hero-txt>:nth-child(3){animation-delay:.45s}
+  html.k-abre .m-hero-txt>:nth-child(4){animation-delay:.57s}html.k-abre .m-hero-txt>:nth-child(5){animation-delay:.69s}
+  html.k-abre .m-l{animation-delay:calc(.12s + var(--i) * .04s)}
+  html.k-abre .m-numeros li:nth-child(1){animation-delay:.35s}html.k-abre .m-numeros li:nth-child(2){animation-delay:.43s}
+  html.k-abre .m-numeros li:nth-child(3){animation-delay:.51s}html.k-abre .m-numeros li:nth-child(4){animation-delay:.59s}
+  /* a falha aparece no diagnóstico ("em análise") e vira "corrigida" na validação */
+  html.k-abre:not(.k-fim):is([data-abre="0"],[data-abre="1"]) .m-falha{opacity:0}
+  html.k-abre:not(.k-fim):is([data-abre="0"],[data-abre="1"],[data-abre="2"]) .m-falha-ok{display:none}
+  html.k-abre:not(.k-fim):is([data-abre="0"],[data-abre="1"],[data-abre="2"]) .m-falha-an{display:inline}
+  html.k-abre:not(.k-fim):is([data-abre="0"],[data-abre="1"],[data-abre="2"]) .m-falha-mira{animation-duration:.5s}
+  /* a varredura marca cada item na validação */
+  html.k-abre:not(.k-fim):not([data-abre="3"]) .m-varredura li:after{opacity:0;scale:.3}
+  .m-varredura li:nth-child(2):after{transition-delay:.18s}.m-varredura li:nth-child(3):after{transition-delay:.36s}.m-varredura li:nth-child(4):after{transition-delay:.54s}
+}
+
+/* ---------- a tese, logo abaixo do lema ---------- */
+.m-tese{margin:calc(22 * var(--mu)) 0 0;padding-left:calc(16 * var(--mu));border-left:2px solid var(--m-red);
+  font:500 clamp(calc(17 * var(--mu)),1.35vw,calc(21 * var(--mu)))/1.35 var(--m-disp);letter-spacing:-.005em;color:var(--m-marfim)}
+.m-tese em{font-style:normal;color:#E0656E}
+.km .m-acoes{margin-top:calc(30 * var(--mu))}
+@media (min-width:761px){
+  .km .m-nome{font-size:clamp(calc(64 * var(--mu)),9vw,calc(150 * var(--mu)))}
+  .km .m-lema{max-width:36ch;margin-top:calc(24 * var(--mu))}
+}
+
+/* ---------- a falha no pilar: a mira fica presa à arte (Profundidade.tsx posiciona) ---------- */
+.m-falha{position:absolute;left:0;top:0;z-index:2;pointer-events:none;transition:opacity .6s}
+.m-gl:not(.is-on)~.m-falha{opacity:0}
+.m-falha-mira{position:absolute;left:-30px;top:-30px;width:60px;height:60px;
+  background:
+    linear-gradient(var(--m-red),var(--m-red)) 0 0/14px 1.5px,linear-gradient(var(--m-red),var(--m-red)) 0 0/1.5px 14px,
+    linear-gradient(var(--m-red),var(--m-red)) 100% 0/14px 1.5px,linear-gradient(var(--m-red),var(--m-red)) 100% 0/1.5px 14px,
+    linear-gradient(var(--m-red),var(--m-red)) 0 100%/14px 1.5px,linear-gradient(var(--m-red),var(--m-red)) 0 100%/1.5px 14px,
+    linear-gradient(var(--m-red),var(--m-red)) 100% 100%/14px 1.5px,linear-gradient(var(--m-red),var(--m-red)) 100% 100%/1.5px 14px;
+  background-repeat:no-repeat;filter:drop-shadow(0 0 6px rgba(200,65,75,.8))}
+.m-falha-mira:after{content:'';position:absolute;left:50%;top:50%;width:6px;height:6px;margin:-3px 0 0 -3px;border-radius:50%;background:#FF5A66;box-shadow:0 0 12px #FF5A66}
+.m-falha p{position:absolute;left:46px;top:-34px;margin:0;padding:8px 12px;display:grid;gap:5px;white-space:nowrap;
+  border-left:1px solid var(--m-red);background:rgba(11,11,12,.62);-webkit-backdrop-filter:blur(4px);backdrop-filter:blur(4px);
+  font:500 10px/1.2 var(--m-mono);letter-spacing:.16em;text-transform:uppercase;color:var(--m-mudo)}
+.m-falha b{font-weight:600;color:#E0656E}
+.m-falha em{font-style:normal;color:var(--m-marfim)}
+.m-falha-an{display:none}
+@media (prefers-reduced-motion:no-preference){
+  .m-falha-mira{animation:m-mira 2.4s ease-in-out infinite}
+  @keyframes m-mira{50%{scale:.86;opacity:.7}}
+}
+@media (max-width:760px){.m-falha p{display:none}}
+
+/* ---------- painel da varredura (canto do átrio) ---------- */
+.m-varredura{margin-top:calc(14 * var(--mu));padding:calc(12 * var(--mu)) calc(14 * var(--mu));min-width:calc(220 * var(--mu));text-align:left;
+  border:1px solid rgba(233,227,216,.14);background:rgba(11,11,12,.5);-webkit-backdrop-filter:blur(6px);backdrop-filter:blur(6px)}
+.m-varredura p{margin:0 0 calc(10 * var(--mu));color:var(--m-marfim)}
+.m-varredura ul{list-style:none;margin:0;padding:0;display:grid;gap:calc(8 * var(--mu))}
+.m-varredura li{display:flex;justify-content:space-between;gap:calc(18 * var(--mu));letter-spacing:.12em}
+.m-varredura li:after{content:'✓';color:#E0656E;transition:opacity .3s,scale .3s cubic-bezier(.2,.8,.2,1)}
+
+/* ---------- métricas: cartões de vidro, alimentados pelos feixes do piso ---------- */
+.km .m-numeros{gap:calc(14 * var(--mu));border-top:0;position:relative;z-index:2}
+.km .m-numeros li,.km .m-numeros li+li{padding:calc(20 * var(--mu)) calc(22 * var(--mu));border:1px solid rgba(233,227,216,.12);
+  background:linear-gradient(180deg,rgba(30,24,26,.6),rgba(14,14,16,.74));-webkit-backdrop-filter:blur(8px);backdrop-filter:blur(8px);
+  box-shadow:inset 0 1px 0 rgba(224,101,110,.55),0 -10px 24px -18px rgba(200,65,75,.9)}
+.m-feixes{position:absolute;inset:0;width:100%;height:100%;z-index:1;pointer-events:none;overflow:visible}
+.m-feixes path{fill:none;stroke-linecap:round}
+.m-feixe-base{stroke:rgba(224,70,82,.55);stroke-width:1.4;stroke-dasharray:1;filter:drop-shadow(0 0 4px rgba(200,65,75,.9))}
+.m-feixe-pulso{stroke:#FF8C94;stroke-width:2;stroke-dasharray:.06 .94;filter:drop-shadow(0 0 6px #FF4D5A)}
+.m-feixes circle{fill:#FF5A66;filter:drop-shadow(0 0 6px #FF5A66)}
+@media (prefers-reduced-motion:no-preference){
+  .m-feixe-base{animation:m-traca 1.3s cubic-bezier(.65,0,.35,1) 1s both}
+  .m-feixe-pulso{animation:m-flui 3.6s linear infinite}
+  .m-feixe-pulso:nth-of-type(6){animation-delay:-.9s}.m-feixe-pulso:nth-of-type(7){animation-delay:-1.8s}.m-feixe-pulso:nth-of-type(8){animation-delay:-2.7s}
+  @keyframes m-traca{from{stroke-dashoffset:1}to{stroke-dashoffset:0}}
+  @keyframes m-flui{from{stroke-dashoffset:.06}to{stroke-dashoffset:-1}}
+  html.k-abre:not(.k-fim):not([data-abre="3"]) .m-feixes{opacity:0}
+  .m-feixes{transition:opacity .5s}
+}
+.m-gl:not(.is-on)~.m-feixes{opacity:0}
+@media (max-width:1000px){.m-feixes{display:none}}
+@media (max-width:760px){
+  .m-abre-etapas{bottom:calc(84 * var(--mu))}
+  .m-abre-tempo{left:var(--m-x);right:auto;bottom:calc(40 * var(--mu));justify-items:start;width:calc(140 * var(--mu))}
+}

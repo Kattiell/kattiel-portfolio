@@ -20,6 +20,9 @@ in vec2 v; out vec4 o;
 uniform sampler2D uArte, uProf;
 uniform vec2 uRes, uCam, uProfTx, uArteTx;
 uniform float uImgA, uPosX, uT, uScroll, uFase, uInsp;
+// abertura (só no átrio): tempo em s (99 = desligada), dolly, foco no alvo e separação das camadas
+uniform float uAbre, uZoomA, uFoco, uSep;
+uniform vec2 uAlvo;
 
 float h1(vec2 p){ return fract(sin(dot(p, vec2(127.1, 311.7))) * 43758.5453); }
 vec2 h2(vec2 p){ return fract(sin(vec2(dot(p, vec2(127.1, 311.7)), dot(p, vec2(269.5, 183.3)))) * 43758.5453); }
@@ -33,16 +36,35 @@ vec2 cobre(vec2 s){                       // object-fit: cover com object-positi
   return (1. - k) * vec2(uPosX, .5) + s * k;
 }
 
+float lu(vec2 p){ return dot(texture(uArte, p).rgb, vec3(.3, .59, .11)); }
+// desenho técnico da cena: contornos da arte (Sobel), silhuetas por salto de profundidade e prumos
+float malha(vec2 q, float d, float dx, float dy){
+  vec2 t = uArteTx * 2.6;
+  float sx = (lu(q + t * vec2(1, -1)) + 2. * lu(q + t * vec2(1, 0)) + lu(q + t * vec2(1, 1))) - (lu(q + t * vec2(-1, -1)) + 2. * lu(q + t * vec2(-1, 0)) + lu(q + t * vec2(-1, 1)));
+  float sy = (lu(q + t * vec2(-1, 1)) + 2. * lu(q + t * vec2(0, 1)) + lu(q + t * vec2(1, 1))) - (lu(q + t * vec2(-1, -1)) + 2. * lu(q + t * vec2(0, -1)) + lu(q + t * vec2(1, -1)));
+  float contorno = smoothstep(.16, .38, length(vec2(sx, sy)));
+  float silhueta = smoothstep(.02, .06, length(vec2(dx, dy)));
+  float gx = fract(q.x * 64.); float gw = fwidth(q.x * 64.);
+  float prumo = (1. - smoothstep(0., 1.2 * gw, min(gx, 1. - gx))) * .22 * (1. - d);
+  return max(max(contorno * .85, silhueta), prumo);
+}
+
 void main(){
   // aproximação lenta com a rolagem + margem para o parallax não mostrar borda
-  float zoom = 1.07 + .05 * (1. - uScroll);
+  float zoom = (1.07 + .05 * (1. - uScroll)) * uZoomA;
   vec2 base = .5 + (cobre(v) - .5) / zoom;
   base.x += (uPosX - .5) * .04;
+  base = uAlvo + (base - uAlvo) / uFoco;          // abertura: a câmera fecha no pilar
 
   // câmera: cursor + deriva lenta + rolagem (sobe/desce entre os planos)
   vec2 off = uCam * vec2(.024, .016) + vec2(0., (uScroll - .5) * .05);
   vec2 q = base; float d = 0.;
-  for (int i = 0; i < 5; i++){ d = texture(uProf, q).r; q = base + off * (d - .38); }
+  for (int i = 0; i < 5; i++){
+    d = texture(uProf, q).r;
+    // abertura: a estrutura se separa em camadas de profundidade (as mais próximas abrem mais)
+    float camada = floor(d * 6.) / 6.;
+    q = uAlvo + (base - uAlvo) * (1. - uSep * (camada - .35) * .16) + off * (d - .38);
+  }
 
   vec3 arte = texture(uArte, q).rgb;
   vec3 c = arte;
@@ -99,21 +121,46 @@ void main(){
     float bx = mix(-.25, 1.25, uInsp);
     float dist = v.x - bx;
     float mFaixa = smoothstep(.24, 0., abs(dist)) * step(dist, 0.);
-    vec2 t = uArteTx * 2.6;
-    float l00 = dot(texture(uArte, q + t * vec2(-1, -1)).rgb, vec3(.3, .59, .11)), l10 = dot(texture(uArte, q + t * vec2(0, -1)).rgb, vec3(.3, .59, .11)), l20 = dot(texture(uArte, q + t * vec2(1, -1)).rgb, vec3(.3, .59, .11));
-    float l01 = dot(texture(uArte, q + t * vec2(-1, 0)).rgb, vec3(.3, .59, .11)), l21 = dot(texture(uArte, q + t * vec2(1, 0)).rgb, vec3(.3, .59, .11));
-    float l02 = dot(texture(uArte, q + t * vec2(-1, 1)).rgb, vec3(.3, .59, .11)), l12 = dot(texture(uArte, q + t * vec2(0, 1)).rgb, vec3(.3, .59, .11)), l22 = dot(texture(uArte, q + t * vec2(1, 1)).rgb, vec3(.3, .59, .11));
-    float sx = (l20 + 2. * l21 + l22) - (l00 + 2. * l01 + l02);
-    float sy = (l02 + 2. * l12 + l22) - (l00 + 2. * l10 + l20);
-    float contorno = smoothstep(.16, .38, length(vec2(sx, sy)));
-    float silhueta = smoothstep(.02, .06, length(vec2(dx, dy)));
-    float gx = fract(q.x * 64.); float gw = fwidth(q.x * 64.);
-    float prumo = (1. - smoothstep(0., 1.2 * gw, min(gx, 1. - gx))) * .22 * (1. - d);
-    float malha = max(max(contorno * .85, silhueta), prumo);
+    float mh = malha(q, d, dx, dy);
     c = mix(c, vec3(.05, .05, .06) + c * .25, mFaixa * .8);
-    c += vec3(.91, .89, .85) * malha * mFaixa * .7;
+    c += vec3(.91, .89, .85) * mh * mFaixa * .7;
     c += vec3(1., .2, .26) * smoothstep(.005, 0., abs(dist)) * .9;
-    c += vec3(1., .2, .26) * malha * smoothstep(.045, 0., abs(dist));
+    c += vec3(1., .2, .26) * mh * smoothstep(.045, 0., abs(dist));
+  }
+
+  // ABERTURA — uma inspeção de qualidade em 5 s, terminando no próprio átrio:
+  //   0–1,0  repouso: só as luzes carmesim da estrutura pulsam no escuro
+  //   1,0–2,3 varredura: um plano desce pela cena e deixa a malha (geometria) para trás
+  //   2,3–3,5 diagnóstico: a câmera fecha no pilar, as camadas se separam, a falha acende
+  //   3,5–4,7 validação: a matéria volta da frente para o fundo (a correção atravessa a cena)
+  if (uAbre < 6.){
+    float A = uAbre;
+    float mh = malha(q, d, dx, dy);
+    float emi = max(arte.r - max(arte.g, arte.b) - .1, 0.) * 2.2 + smoothstep(.62, .9, lum) * .5;
+    float pulso = smoothstep(.1, .9, A) * (.75 + .25 * sin(A * 11.));
+    vec3 escuro = arte * emi * pulso * .9 + carmim * emi * pulso * .25;
+    vec3 fio = vec3(.025, .025, .03) + vec3(.91, .89, .85) * mh * .62;
+    // varredura (em tela, de cima para baixo)
+    float sy = mix(1.06, -.06, smoothstep(1., 2.3, A));
+    float lido = smoothstep(sy - .004, sy + .004, v.y);
+    vec3 pre = mix(escuro, fio + escuro * .6, lido);
+    float naLinha = step(1., A) * (1. - step(2.35, A));
+    pre += carmim * naLinha * (smoothstep(.006, 0., abs(v.y - sy)) * 1.4 + smoothstep(.14, 0., v.y - sy) * step(sy, v.y) * .18);
+    pre += vec3(1., .55, .58) * naLinha * smoothstep(.002, 0., abs(v.y - sy));
+    // diagnóstico: a região do pilar acende em carmesim
+    float diag = smoothstep(2.2, 2.7, A) * (1. - smoothstep(3.6, 4.3, A));
+    vec2 rel = (q - uAlvo) * vec2(1.8, 1.);
+    float zona = smoothstep(.13, .02, length(rel));
+    pre += carmim * (mh * 1.1 + .1) * zona * diag * (.7 + .3 * sin(A * 18.));
+    float borda = .5 - abs(fract(d * 6.) - .5);
+    pre += carmim * smoothstep(.008, 0., borda) * smoothstep(.004, .02, length(vec2(dx, dy))) * uSep * .45;   // bordas das camadas (só onde há relevo)
+    // validação: a matéria volta do primeiro plano para o fundo
+    float thr = mix(-.08, 1.12, smoothstep(3.5, 4.7, A));
+    float longe2 = 1. - d;
+    float mat = smoothstep(thr, thr - .09, longe2);
+    vec3 fim = mix(pre, c, mat);
+    fim += carmim * smoothstep(.035, 0., abs(longe2 - thr)) * (1. - smoothstep(4.5, 4.8, A)) * step(3.5, A) * .9;
+    c = fim;
   }
 
   // grão e vinheta discretos
@@ -122,18 +169,48 @@ void main(){
   o = vec4(c, 1.);
 }`;
 
-type Props = { arte: string; prof: string; x?: number; fase?: number };
+type Props = { arte: string; prof: string; x?: number; fase?: number; atrio?: boolean };
 
-export default function Profundidade({ arte, prof, x = 0.5, fase = 0 }: Props) {
+// Pontos da arte do átrio (em coordenadas da textura, y de baixo para cima)
+const ALVO: [number, number] = [0.545, 0.6];   // o pilar onde a "falha" é encontrada
+const ORIGEM: [number, number] = [0.9, 0.41];   // pé do feixe carmesim, no alto da escada: de onde saem os feixes
+const FIM_ABRE = 5.3;
+const FASES = [1, 2.3, 3.5, 4.7];
+const suave = (a: number, b: number, x: number) => { const t = Math.min(1, Math.max(0, (x - a) / (b - a))); return t * t * (3 - 2 * t); };
+
+export default function Profundidade({ arte, prof, x = 0.5, fase = 0, atrio = false }: Props) {
   const ref = useRef<HTMLCanvasElement>(null);
 
   useEffect(() => {
     const cv = ref.current;
-    if (!cv || matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+    const raiz = document.documentElement;
+    // abertura: o script do <head> marca html.k-abre na 1ª visita da sessão; aqui ela é tocada (ou encerrada)
+    let abrindo = atrio && raiz.classList.contains('k-abre') && !raiz.classList.contains('k-fim');
+    let A = abrindo ? 0 : 99, vel = 1, tFim = abrindo ? Infinity : -1, vivo = false;
+    const desligaPulo: (() => void)[] = [];
+    const encerra = (t: number) => {
+      if (!abrindo) return;
+      abrindo = false; A = 99; tFim = t;
+      raiz.classList.add('k-fim'); raiz.dataset.abre = '4';
+      try { sessionStorage.setItem('k-abriu', '1'); } catch { /* sem armazenamento: só repete a abertura */ }
+      desligaPulo.forEach((f) => f());
+    };
+    if (!cv || matchMedia('(prefers-reduced-motion: reduce)').matches) { encerra(0); return; }
+    if (abrindo) {
+      const pula = () => { if (A < 3.5) A = 3.5; vel = 2.4; };
+      const tecla = (e: KeyboardEvent) => { if (e.key !== 'Tab' && e.key !== 'Shift') pula(); };
+      const botao = document.querySelector('.m-abre-pular');
+      botao?.addEventListener('click', pula);
+      addEventListener('keydown', tecla); addEventListener('wheel', pula, { passive: true }); addEventListener('touchstart', pula, { passive: true });
+      desligaPulo.push(() => { botao?.removeEventListener('click', pula); removeEventListener('keydown', tecla); removeEventListener('wheel', pula); removeEventListener('touchstart', pula); });
+      // se a arte não chegar a tempo, a página aparece sem abertura
+      const prazo = setTimeout(() => { if (abrindo && !vivo) encerra(0); }, 3500);
+      desligaPulo.push(() => clearTimeout(prazo));
+    }
     const caixa = cv.parentElement!;
     const secao = caixa.closest('section') ?? caixa;
     let gl: WebGL2RenderingContext | null = null;
-    let raf = 0, vivo = false, visivel = false, iniciado = false, morto = false;
+    let raf = 0, visivel = false, iniciado = false, morto = false;
     let escala = 0.8;
     const cam = { x: 0, y: 0, tx: 0, ty: 0 };
     const tempos: number[] = [];
@@ -148,19 +225,21 @@ export default function Profundidade({ arte, prof, x = 0.5, fase = 0 }: Props) {
     const inicia = async () => {
       iniciado = true;
       gl = cv.getContext('webgl2', { antialias: false, alpha: false, powerPreference: 'high-performance', preserveDrawingBuffer: false });
-      if (!gl) return;
+      if (!gl) { encerra(0); return; }
       const sh = (tipo: number, src: string) => { const s = gl!.createShader(tipo)!; gl!.shaderSource(s, src); gl!.compileShader(s);
         if (!gl!.getShaderParameter(s, gl!.COMPILE_STATUS)) throw new Error(gl!.getShaderInfoLog(s) ?? 'shader'); return s; };
       const pr = gl.createProgram()!;
       try { gl.attachShader(pr, sh(gl.VERTEX_SHADER, VERT)); gl.attachShader(pr, sh(gl.FRAGMENT_SHADER, FRAG)); }
-      catch (e) { console.warn('[profundidade]', e); return; }
+      catch (e) { console.warn('[profundidade]', e); encerra(0); return; }
       gl.linkProgram(pr); gl.useProgram(pr);
       const buf = gl.createBuffer(); gl.bindBuffer(gl.ARRAY_BUFFER, buf);
       gl.bufferData(gl.ARRAY_BUFFER, new Float32Array([-1, -1, 3, -1, -1, 3]), gl.STATIC_DRAW);
       const lp = gl.getAttribLocation(pr, 'p'); gl.enableVertexAttribArray(lp); gl.vertexAttribPointer(lp, 2, gl.FLOAT, false, 0, 0);
-      for (const n of ['uArte', 'uProf', 'uRes', 'uCam', 'uProfTx', 'uArteTx', 'uImgA', 'uPosX', 'uT', 'uScroll', 'uFase', 'uInsp']) U[n] = gl.getUniformLocation(pr, n);
-      const [ia, ip] = await Promise.all([carrega(arte), carrega(prof)]);
+      for (const n of ['uArte', 'uProf', 'uRes', 'uCam', 'uProfTx', 'uArteTx', 'uImgA', 'uPosX', 'uT', 'uScroll', 'uFase', 'uInsp', 'uAbre', 'uZoomA', 'uFoco', 'uSep', 'uAlvo']) U[n] = gl.getUniformLocation(pr, n);
+      let ia: HTMLImageElement, ip: HTMLImageElement;
+      try { [ia, ip] = await Promise.all([carrega(arte), carrega(prof)]); } catch { encerra(0); return; }
       if (morto) return;
+      if (atrio) profundidadeEm(ip);
       imgA = ia.naturalWidth / ia.naturalHeight; arteTx = [1 / ia.naturalWidth, 1 / ia.naturalHeight]; profTx = [1 / ip.naturalWidth, 1 / ip.naturalHeight];
       gl.pixelStorei(gl.UNPACK_FLIP_Y_WEBGL, true);
       [ia, ip].forEach((im, i) => {
@@ -170,8 +249,67 @@ export default function Profundidade({ arte, prof, x = 0.5, fase = 0 }: Props) {
         gl!.texParameteri(gl!.TEXTURE_2D, gl!.TEXTURE_WRAP_S, gl!.CLAMP_TO_EDGE); gl!.texParameteri(gl!.TEXTURE_2D, gl!.TEXTURE_WRAP_T, gl!.CLAMP_TO_EDGE);
       });
       gl.uniform1i(U.uArte, 0); gl.uniform1i(U.uProf, 1);
-      vivo = true; if (visivel) laco();
+      vivo = true;
+      if (abrindo) raiz.classList.add('k-gl');
+      if (visivel) laco();
     };
+
+    // ---- átrio: mira presa ao pilar e feixes do piso até as métricas ----
+    const dProf = { alvo: 0.6, origem: 0.6 };
+    const profundidadeEm = (im: HTMLImageElement) => {
+      try {
+        const c2 = document.createElement('canvas'); c2.width = im.naturalWidth; c2.height = im.naturalHeight;
+        const g = c2.getContext('2d', { willReadFrequently: true }); if (!g) return;
+        g.drawImage(im, 0, 0);
+        const le = ([u, w]: [number, number]) => g.getImageData(Math.round(u * (c2.width - 1)), Math.round((1 - w) * (c2.height - 1)), 1, 1).data[0] / 255;
+        dProf.alvo = le(ALVO); dProf.origem = le(ORIGEM);
+      } catch { /* mantém a estimativa */ }
+    };
+    const hero = atrio ? secao : null;
+    const falha = hero?.querySelector<HTMLElement>('.m-falha') ?? null;
+    const feixes = hero ? [...hero.querySelectorAll<SVGPathElement>('.m-feixes path')] : [];
+    const nos = hero ? [...hero.querySelectorAll<SVGCircleElement>('.m-feixes circle')] : [];
+    const cartoes = hero ? [...hero.querySelectorAll<HTMLElement>('.m-numeros li')] : [];
+    let destinos: [number, number][] = [];
+    let caixaW = 1, caixaH = 1, ultimoD = '';
+    const mede = () => {
+      const r = caixa.getBoundingClientRect(); caixaW = r.width; caixaH = r.height;
+      destinos = cartoes.map((li) => { const b = li.getBoundingClientRect(); return [b.left - r.left + b.width / 2, b.top - r.top]; });
+      ultimoD = '';
+    };
+    const ro = atrio ? new ResizeObserver(mede) : null;
+    if (ro) { ro.observe(caixa); cartoes.forEach((c) => ro.observe(c)); }
+    // inverso do mapeamento do shader: ponto da textura -> pixel da caixa
+    type Cam = { zoom: number; foco: number; ox: number; oy: number };
+    const naTela = ([qx, qy]: [number, number], dA: number, p: Cam): [number, number] => {
+      let bx = qx - p.ox * (dA - 0.38), by = qy - p.oy * (dA - 0.38);
+      bx = ALVO[0] + (bx - ALVO[0]) * p.foco; by = ALVO[1] + (by - ALVO[1]) * p.foco;
+      bx -= (x - 0.5) * 0.04;
+      const cx = 0.5 + (bx - 0.5) * p.zoom, cy = 0.5 + (by - 0.5) * p.zoom;
+      const ra = caixaW / caixaH; const k = ra > imgA ? [1, imgA / ra] : [ra / imgA, 1];
+      const vx = (cx - (1 - k[0]) * x) / k[0], vy = (cy - (1 - k[1]) * 0.5) / k[1];
+      return [vx * caixaW, (1 - vy) * caixaH];
+    };
+    const posiciona = (p: Cam) => {
+      if (!hero) return;
+      const [ax, ay] = naTela(ALVO, dProf.alvo, p);
+      falha?.style.setProperty('transform', `translate3d(${ax.toFixed(1)}px, ${ay.toFixed(1)}px, 0)`);
+      if (!feixes.length || !destinos.length) return;
+      const [ox0, oy] = naTela(ORIGEM, dProf.origem, p);
+      const ox = Math.min(caixaW - 24, Math.max(caixaW * 0.55, ox0));
+      const d = destinos.map(([dx, dy]) => {
+        const y0 = Math.min(oy, dy - 60);
+        const meio = y0 + (dy - y0) * 0.55;
+        return `M${ox.toFixed(1)} ${y0.toFixed(1)}C${ox.toFixed(1)} ${meio.toFixed(1)} ${dx.toFixed(1)} ${meio.toFixed(1)} ${dx.toFixed(1)} ${dy.toFixed(1)}`;
+      });
+      const chave = d.join('|');
+      if (chave === ultimoD) return;
+      ultimoD = chave;
+      feixes.forEach((f, i) => f.setAttribute('d', d[i % d.length] ?? ''));
+      nos.forEach((n, i) => { const [dx, dy] = destinos[i] ?? [0, 0]; n.setAttribute('cx', dx.toFixed(1)); n.setAttribute('cy', dy.toFixed(1)); });
+    };
+    const tc = atrio ? document.querySelector<HTMLElement>('.m-abre-tc') : null;
+    const painel = atrio ? document.querySelector<HTMLElement>('.m-abre') : null;
 
     const dimensiona = () => {
       const r = caixa.getBoundingClientRect();
@@ -197,14 +335,35 @@ export default function Profundidade({ arte, prof, x = 0.5, fase = 0 }: Props) {
       cam.y += (cam.ty + Math.sin(t * 0.17 + fase * 3) * 0.2 - cam.y) * k;
       const r = secao.getBoundingClientRect();
       const rolagem = Math.min(1, Math.max(0, (innerHeight - r.top) / (innerHeight + r.height)));
-      // inspeção: 2,8 s a cada 9 s (a primeira logo ao entrar)
-      const ci = (t + 7.2) % 9;
+      // abertura: avança pelo tempo de quadro (aba escondida não pula etapas)
+      if (abrindo && raiz.classList.contains('k-fim')) encerra(t); // prazo de segurança do <head>
+      if (abrindo) {
+        A += dt * vel;
+        const fixoA = (window as unknown as { __abreFixo?: number }).__abreFixo;
+        if (typeof fixoA === 'number') A = fixoA;
+        const f = String(FASES.filter((x) => A >= x).length);
+        if (raiz.dataset.abre !== f) raiz.dataset.abre = f;
+        if (tc) tc.textContent = `00:0${Math.min(A, 5).toFixed(1)}`;
+        painel?.style.setProperty('--p', Math.min(1, A / FIM_ABRE).toFixed(3));
+        if (A >= FIM_ABRE) encerra(t);
+      }
+      const zoomA = A < 99 ? 1 + 0.2 * (1 - suave(0, 5, A)) : 1;
+      const diag = A < 99 ? suave(2.2, 2.9, A) * (1 - suave(3.4, 4.4, A)) : 0;
+      const foco = 1 + 0.5 * diag;
+      const sep = A < 99 ? suave(2.4, 3, A) * (1 - suave(3.5, 4.3, A)) : 0;
+      // inspeção: 2,8 s a cada 9 s (a primeira logo ao entrar; depois da abertura, 6 s depois dela)
+      const ci = tFim === Infinity ? -1 : tFim >= 0 ? (t - tFim + 2.8) % 9 : (t + 7.2) % 9;
       const fixo = (window as unknown as { __inspFixo?: number }).__inspFixo;
-      const insp = typeof fixo === 'number' ? fixo : ci < 2.8 ? ci / 2.8 : -1;
+      const insp = typeof fixo === 'number' ? fixo : ci >= 0 && ci < 2.8 && (tFim < 0 || t - tFim > 6) ? ci / 2.8 : -1;
       gl.viewport(0, 0, cv.width, cv.height);
       gl.uniform2f(U.uRes, cv.width, cv.height); gl.uniform2f(U.uCam, cam.x, cam.y); gl.uniform2f(U.uProfTx, profTx[0], profTx[1]); gl.uniform2f(U.uArteTx, arteTx[0], arteTx[1]);
       gl.uniform1f(U.uImgA, imgA); gl.uniform1f(U.uPosX, x); gl.uniform1f(U.uT, t); gl.uniform1f(U.uScroll, rolagem);
       gl.uniform1f(U.uFase, fase); gl.uniform1f(U.uInsp, insp);
+      gl.uniform1f(U.uAbre, A); gl.uniform1f(U.uZoomA, zoomA); gl.uniform1f(U.uFoco, foco); gl.uniform1f(U.uSep, sep); gl.uniform2f(U.uAlvo, ALVO[0], ALVO[1]);
+      if (atrio) {
+        const zoom = (1.07 + 0.05 * (1 - rolagem)) * zoomA;
+        posiciona({ zoom, foco, ox: cam.x * 0.024, oy: cam.y * 0.016 + (rolagem - 0.5) * 0.05 });
+      }
       gl.drawArrays(gl.TRIANGLES, 0, 3);
       if (!cv.classList.contains('is-on')) cv.classList.add('is-on');
       raf = requestAnimationFrame(laco);
@@ -224,12 +383,13 @@ export default function Profundidade({ arte, prof, x = 0.5, fase = 0 }: Props) {
     document.addEventListener('visibilitychange', vis);
 
     return () => {
-      morto = true; vivo = false; cancelAnimationFrame(raf); io.disconnect();
+      morto = true; vivo = false; cancelAnimationFrame(raf); io.disconnect(); ro?.disconnect();
+      desligaPulo.forEach((f) => f());
       removeEventListener('pointermove', move); document.documentElement.removeEventListener('pointerleave', sai);
       document.removeEventListener('visibilitychange', vis);
       gl?.getExtension('WEBGL_lose_context')?.loseContext();
     };
-  }, [arte, prof, x, fase]);
+  }, [arte, prof, x, fase, atrio]);
 
   return <canvas ref={ref} className="m-gl" aria-hidden="true" />;
 }

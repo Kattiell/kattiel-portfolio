@@ -30,7 +30,7 @@ export const viewport: Viewport = { themeColor: '#101012' };
 
 export default function RootLayout({ children }: LayoutProps<'/'>) {
   return (
-    <html lang="pt-BR" className={`${display.variable} ${body.variable} ${meta.variable} ${caps.variable} ${serif.variable} ${sans.variable}`}>
+    <html lang="pt-BR" suppressHydrationWarning className={`${display.variable} ${body.variable} ${meta.variable} ${caps.variable} ${serif.variable} ${sans.variable}`}>
       <body>{children}</body>
     </html>
   );
