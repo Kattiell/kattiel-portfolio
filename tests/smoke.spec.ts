@@ -36,12 +36,13 @@ test('nenhum link externo falso: projeto sem URL mostra estado vazio', async ({ 
 test('projetos: a home leva à lista completa e cada item ao dossiê', async ({ page }) => {
   await page.goto('/');
   await expect(page.locator('.m-projeto')).toHaveCount(4);
-  // a travessia: um espaço do edifício por especialização
+  // a travessia: um trabalho selecionado por espaço do edifício
   await expect(page.locator('.m-cap')).toHaveCount(4);
-  // a home fala de você: números, experiência e sobre; os distritos ficam só na caverna e em /distritos
+  // a home mostra trabalho, não currículo: números dos trabalhos, método e sobre curto; distritos só na caverna e em /distritos
   await expect(page.locator('.m-numeros li')).toHaveCount(4);
-  await expect(page.locator('.m-xp > li')).toHaveCount(3);
-  await expect(page.locator('#sobre')).toContainText('Sistemas de Informação');
+  await expect(page.locator('.m-xp > li')).toHaveCount(4);
+  await expect(page.locator('#experiencia')).toHaveCount(0);
+  await expect(page.locator('#sobre')).toContainText('Trajetória no LinkedIn');
   await expect(page.getByText(/distrito/i)).toHaveCount(0);
   await page.getByRole('link', { name: /Ver os \d+ projetos/i }).click();
   await expect(page).toHaveURL(/\/projetos$/);

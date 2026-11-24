@@ -54,7 +54,7 @@ export default function Movimento() {
         }),
       { rootMargin: '-45% 0px -45% 0px' },
     );
-    document.querySelectorAll('.m-cap, #projetos, #experiencia, #sobre').forEach((s) => io2.observe(s));
+    document.querySelectorAll('.m-cap, #projetos, #metodo, #sobre').forEach((s) => io2.observe(s));
     limpar.push(() => io2.disconnect());
 
     if (reduz) return () => limpar.forEach((f) => f());

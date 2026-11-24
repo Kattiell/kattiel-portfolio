@@ -31,7 +31,6 @@ export const PROJECTS: Project[] = [
     title: 'PetTracker',
     category: 'software',
     kind: 'Projeto autoral',
-    featured: true,
     summary:
       'Aplicação full stack com autenticação, perfis de acesso e rastreamento em tempo real.',
     approach: 'React no front, Node e Prisma no back, WebSocket para as atualizações em tempo real.',
@@ -92,9 +91,20 @@ export const PROJECTS: Project[] = [
     slug: 'plenario',
     title: 'Plenário',
     category: 'software',
-    kind: 'Open source',
-    summary: 'Simulador de Tribunal do Júri com agentes de IA. .NET 10 e Next.js, 74 testes.',
-    stack: ['IA', '.NET', 'Next.js'],
+    kind: 'Projeto autoral',
+    featured: true,
+    summary: 'Simulador do Tribunal do Júri brasileiro com agentes de IA, para treinar defesa ou acusação. .NET 10 e Next.js 16, 74 testes.',
+    challenge:
+      'Os simuladores de tribunal com IA são americanos, fechados e modelam o júri dos EUA. Não havia nada aberto que seguisse o rito brasileiro.',
+    approach:
+      'Especificação própria (RFC-0001) antes do código. O rito do CPP é descrito em YAML e executado por um motor determinístico: o modelo de linguagem fala, mas nunca decide a fase. No modo ensaio, a pessoa assume um papel e os agentes fazem o resto.',
+    evidence: [
+      'Toda fala cita a prova pela folha dos autos; os jurados não deliberam entre si, como manda o art. 466 do CPP.',
+      'Revisão de segurança com 15 achados, 13 corrigidos.',
+      'Provedor de teste que roda sem chave de API, para desenvolver e testar sem custo.',
+    ],
+    outcome: 'Software implementado em .NET 10 e Next.js 16, coberto por 74 testes.',
+    stack: ['IA', 'Agentes', '.NET', 'Next.js'],
     visibility: 'case-study-only',
   },
   {
@@ -164,9 +174,11 @@ export const PROJECTS: Project[] = [
 
 export const getProject = (slug: string) => PROJECTS.find((p) => p.slug === slug);
 // ordem da home: primeiro o que mais diz sobre o trabalho
-const ORDEM = ['qa-intelligence', 'parity-gate', 'lcp-consultoria', 'pettracker'];
+const ORDEM = ['lcp-consultoria', 'qa-intelligence', 'parity-gate', 'plenario'];
 export const FEATURED = PROJECTS.filter((p) => p.featured).sort((a, b) => ORDEM.indexOf(a.slug) - ORDEM.indexOf(b.slug));
 export const OTHERS = PROJECTS.filter((p) => !p.featured);
+/** Os que aparecem em "Mais trabalhos" na home, nesta ordem. */
+export const MAIS = ['pettracker', 'brasa', 'bancada', 'mariane-borges'].map((s) => PROJECTS.find((p) => p.slug === s)!);
 /** O link que pode ser aberto, se houver (site no ar ou repositório público). */
 export const publicLink = (p: Project) => p.url ?? p.repositoryUrl;
 

@@ -1,12 +1,12 @@
 import Link from 'next/link';
 import { PROFILE } from '@/domain/profile';
 
-type Ativo = 'inicio' | 'trabalho' | 'projetos' | 'experiencia' | 'sobre' | 'distritos' | null;
+type Ativo = 'inicio' | 'trabalho' | 'projetos' | 'metodo' | 'sobre' | 'distritos' | null;
 
 const NAV: { id: Exclude<Ativo, null | 'inicio' | 'distritos'>; rotulo: string; href: string }[] = [
   { id: 'trabalho', rotulo: 'Trabalho', href: '/#trabalho' },
   { id: 'projetos', rotulo: 'Projetos', href: '/projetos' },
-  { id: 'experiencia', rotulo: 'Experiência', href: '/#experiencia' },
+  { id: 'metodo', rotulo: 'Método', href: '/#metodo' },
   { id: 'sobre', rotulo: 'Sobre', href: '/#sobre' },
 ];
 
@@ -45,7 +45,7 @@ export function SiteFooter() {
     <footer className="m-rodape" id="contato">
       <p className="m-rot">Contato</p>
       <h2>Vamos construir<br />algo que fique de pé.</h2>
-      <p>Para vagas, projetos ou uma conversa sobre qualidade de software.</p>
+      <p>Para um projeto, uma consultoria de qualidade ou uma conversa sobre o seu sistema.</p>
       <div className="m-rodape-acoes">
         <a href={principal} target="_blank" rel="noopener noreferrer" className="m-btn m-btn-cheio">
           {c.email ? 'Enviar e-mail' : c.linkedin ? 'Falar no LinkedIn' : 'Ver o GitHub'} <span aria-hidden="true">↗</span>

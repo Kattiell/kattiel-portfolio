@@ -225,3 +225,11 @@ html.m-mira .km,html.m-mira .km *{cursor:none}
 .m-gl{position:absolute;inset:0;width:100%;height:100%;display:block;opacity:0;transition:opacity 1.4s cubic-bezier(.16,1,.3,1);pointer-events:none}
 .m-gl.is-on{opacity:1}
 .m-gl.is-on~.m-laser{display:none}
+
+/* ---------- trabalhos selecionados (o portfólio mostra trabalho, não currículo) ---------- */
+.m-cap-manchete{margin:calc(14 * var(--mu)) 0 0;font:500 clamp(calc(20 * var(--mu)),1.7vw,calc(26 * var(--mu)))/1.3 var(--m-disp);letter-spacing:-.01em;color:var(--m-red)}
+.m-cap-res{margin:calc(26 * var(--mu)) 0 0;padding:calc(14 * var(--mu)) 0 0;border-top:calc(1 * var(--mu)) solid var(--m-linha);font:400 calc(16 * var(--mu))/1.55 var(--m-corpo);color:var(--m-marfim)}
+.m-cap-res b{display:block;margin-bottom:calc(6 * var(--mu));font:500 calc(11.5 * var(--mu))/1 var(--m-mono);letter-spacing:.2em;text-transform:uppercase;color:var(--m-bronze)}
+.m-cap-txt>.m-chips{margin-top:calc(18 * var(--mu))}
+.m-servicos li{flex-direction:column;gap:calc(4 * var(--mu))}
+.m-servicos small{white-space:normal}
