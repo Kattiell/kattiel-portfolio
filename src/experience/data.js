@@ -85,7 +85,7 @@ export const DISTRICTS = [
     spell: 'Incendio', spellFx: 'Brasas correm pelas fissuras, sobem em espiral e explodem controladas', duration: 1.8,
     focal: 'Mina profunda com elevador industrial e veio de carvão',
     groups: ['Vagões', 'Vigas de sustentação', 'Depósitos minerais e lanternas'],
-    interaction: 'Acionar o detonador', project: { id: 'asphodel', title: null, url: null },
+    interaction: 'Acionar o detonador', project: { id: 'transmute', title: null, url: null },
   },
 ];
 

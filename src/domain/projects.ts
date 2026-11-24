@@ -30,33 +30,39 @@ export const PROJECTS: Project[] = [
     slug: 'pettracker',
     title: 'PetTracker',
     category: 'software',
-    kind: 'Projeto autoral',
+    kind: 'Projeto autoral · em desenvolvimento',
     summary:
-      'Aplicação full stack com autenticação, perfis de acesso e rastreamento em tempo real.',
+      'Aplicação full stack em desenvolvimento, com autenticação, perfis de acesso e rastreamento em tempo real. Ainda não está pronta: o código está no GitHub.',
     approach: 'React no front, Node e Prisma no back, WebSocket para as atualizações em tempo real.',
     stack: ['React', 'Node', 'Prisma', 'WebSocket'],
-    visibility: 'case-study-only',
+    repositoryUrl: 'https://github.com/Kattiell/PetTracker',
+    visibility: 'public',
   },
+
   {
     slug: 'qa-intelligence',
-    title: 'QA Intelligence',
+    title: 'Área de QA da B2List',
     category: 'quality',
-    kind: 'Processo & automação',
+    kind: 'Lead QA · B2List',
     featured: true,
     summary:
-      'A área de QA de uma plataforma B2B montada do zero: fábrica de 11.600+ casos de teste de API, triagem de defeitos e um harness que compara o sistema legado com o refatorado.',
+      'A área de QA de uma plataforma B2B montada do zero: método, fábrica de 11.600+ casos de teste de API, triagem de defeitos e um painel de gestão do time alimentado pelo ClickUp.',
     challenge:
-      'Numa plataforma B2B em plena refatoração, o time precisava saber se o sistema novo se comportava como o legado, sem depender de memória ou de teste manual repetido.',
+      'Uma plataforma B2B de pedidos (app do vendedor, painel web e integrações com ERPs) rodando o legado e o refatorado ao mesmo tempo, com um QA só. O material de teste estava espalhado entre cards, coleções e scripts, não havia trava contra escrita acidental em produção e a liderança não via onde o tempo e o retrabalho se concentravam.',
     approach:
-      'Método de análise de cards em seis fases (extração, estudo, lacunas, bugs, cenários ponta a ponta e especificação técnica) e um harness que compara legado e refatorado.',
+      'Transformei o método em ferramenta. Uma fábrica gera os casos de API a partir de requisições reais; um plugin próprio do Claude Code conduz cada card do contexto ao laudo; e um painel de acompanhamento mostra, sprint a sprint, onde cada card espera, o retrabalho, a carga de cada pessoa e as horas estimadas contra as registradas. Com estagiários entrando, tudo isso virou uma trilha de onboarding de 4 semanas.',
     evidence: [
-      'Fábrica de casos de teste de API: mais de 11.600 casos executáveis em 208 endpoints e 59 tenants, cobrindo 67 famílias de falha.',
-      'Teste de estresse com 20 mil produtos expôs perda silenciosa de 55% dos registros (timeout no gateway) antes da produção.',
-      'Triagem de defeitos com severidade e prioridade separadas, terminal de QA em Rust e plugin de QA para o Claude Code.',
+      '11.635 casos de teste de API gerados de 322 requisições reais, em 208 blocos de endpoint; dos 1.410 executados em ambiente real, os 9 que falharam viraram achado de produto.',
+      'Teste de estresse com 20 mil produtos expôs perda silenciosa de 55% dos registros (timeout no gateway) enquanto a tela dizia sucesso; IDOR e quebra de isolamento entre tenants barrados antes da produção.',
+      'Painel de gestão do time (sprints 9 a 12) para liderança e diretoria: fluxo, idas e voltas por entrega, carga por pessoa, horas, backlog e impacto no cliente.',
+      'Monitor de horas que cobra, uma vez por card, o registro abaixo da estimativa; triagem com severidade (S1–S4) e prioridade (P0–P3) separadas.',
+      'Base de conhecimento de 252 notas (228 cobrindo 57 conectores de ERP) que a IA consulta citando a nota de origem.',
     ],
-    stack: ['Testes de API', 'Regressão', 'Carga e estresse', 'Rust', 'Node', 'Claude Code'],
+    outcome: 'O QA deixou de ser uma etapa e virou processo repetível: laudo padronizado, trava contra erro em produção e números por sprint para a gestão.',
+    stack: ['Testes de API', 'Carga e estresse', 'Segurança', 'ClickUp', 'Python', 'Claude Code'],
     visibility: 'case-study-only',
   },
+
   {
     slug: 'parity-gate',
     title: 'parity-gate',
@@ -82,11 +88,25 @@ export const PROJECTS: Project[] = [
     slug: 'mariane-borges',
     title: 'Mariane Borges · Nutrição',
     category: 'design',
-    kind: 'Cliente · em lançamento',
-    summary: 'Site estático em Astro para nutricionista, idêntico à arte aprovada e leve para celular.',
-    stack: ['Astro', 'UI/UX'],
-    visibility: 'case-study-only',
+    kind: 'Cliente · no ar',
+    summary:
+      'Site de uma página para uma nutricionista esportiva e estética: transforma a visita que chega do Instagram em agendamento no WhatsApp, idêntico à arte aprovada pela cliente.',
+    challenge:
+      'O público chega pelo Instagram, no celular, entre uma tarefa e outra, e precisa entender em segundos se a Mariane é para ele e como marcar. A cliente aprovou uma arte e queria o site idêntico a ela, sem cara de template de nutrição e sem promessa milagrosa.',
+    approach:
+      'Site estático em Astro. O banner é a própria arte, com o texto apagado por inpainting e devolvido em HTML real nas mesmas coordenadas, medido em unidades da arte para ficar idêntico em qualquer largura. Todo bloco termina perto de "Agende sua consulta", e o formulário monta a mensagem e abre o WhatsApp, sem servidor.',
+    evidence: [
+      'Calibração medida contra a arte: posição a no máximo 3 px e largura entre 99% e 102%.',
+      'Lighthouse 100 nas quatro categorias no desktop; no celular, 99/100/100/100.',
+      '0 violações no axe, 29 testes automatizados e 1,7 KB de JavaScript na página.',
+      'Fontes próprias (só o subconjunto latino), CSP e cabeçalhos de segurança no host.',
+    ],
+    outcome: 'No ar na Vercel, com deploy automático a cada mudança.',
+    stack: ['Astro', 'UI/UX', 'Acessibilidade', 'CSP', 'Vercel'],
+    url: 'https://mariane-borges-nutricionista.vercel.app/',
+    visibility: 'public',
   },
+
   {
     slug: 'plenario',
     title: 'Plenário',
@@ -111,20 +131,36 @@ export const PROJECTS: Project[] = [
     slug: 'brasa',
     title: 'Brasa',
     category: 'software',
-    kind: 'Produto privado',
-    summary: 'Comunicação por voz e texto: Electron, Fastify, Postgres com RLS e LiveKit próprio.',
+    kind: 'Em desenvolvimento · não lançado',
+    summary:
+      'Comunicação por voz e texto para um grupo fechado: app desktop em Electron, API em Fastify, Postgres com acesso por linha e servidor de voz LiveKit próprio. Ainda não foi lançado e, por enquanto, só roda localmente.',
     stack: ['Electron', 'Fastify', 'Postgres', 'LiveKit'],
     visibility: 'private',
   },
+
   {
     slug: 'bancada',
-    title: 'Bancada',
+    title: 'b2qa · o QA dentro do Claude',
     category: 'automation',
-    kind: 'Ferramenta interna',
-    summary: 'Terminal de QA em Rust que roda os casos do time, com trava de somente leitura em produção.',
-    stack: ['Rust', 'QA'],
+    kind: 'Plugin interno · B2List',
+    summary:
+      'Plugin do Claude Code criado para a empresa: conduz o teste de cada card em 9 etapas, põe um agente crítico para derrubar cada achado antes de virar bug, trava escrita em produção e mostra o laudo ao vivo num painel ao lado da conversa.',
+    challenge:
+      'Com estagiários entrando, o método de teste precisava ser seguido por outra pessoa no primeiro dia, e a IA não podia escrever em produção nem abrir card sozinha.',
+    approach:
+      'Um marketplace interno com 4 plugins: o núcleo (skills de teste, ClickUp, base de conhecimento e documentação, mais o agente crítico e os hooks de trava), os 11.635 casos de API como comandos, um acervo curado de skills de QA e o painel do laudo. As credenciais ficam fora do repositório. Para o líder, um terminal em Rust (Bancada) roda os casos com a mesma trava de ambiente.',
+    evidence: [
+      'Teste de card em 9 etapas, do pré-voo à entrega: o ambiente só conta como provado com 200 com token e 401 sem; a matriz parte de 16 tipos de caso extremo; a IA propõe o veredito e o líder de QA revisa.',
+      'Agente crítico: cada achado responde a cinco perguntas (dado, ambiente, decisão de produto, automação, dono da regra) e só vira bug se sobreviver.',
+      'Trava de produção nos hooks: POST, PUT, PATCH e DELETE em produção são recusados, host desconhecido conta como produção, e no ClickUp a IA só lê.',
+      'Painel do laudo ao vivo: etapa, casos por status, achados, massa de teste a limpar e cada chamada de API com a credencial mascarada; portão de entrega que cobra evidência antes do veredito.',
+      'Bancada: terminal em Rust (ratatui) com histórico em SQLite e exportação de evidência por card.',
+    ],
+    outcome: 'Em uso pelo time de QA, instalável por um comando a partir do repositório da empresa.',
+    stack: ['Claude Code', 'TypeScript', 'Node', 'Rust', 'MCP'],
     visibility: 'private',
   },
+
   {
     slug: 'laboratorio-civilizacoes',
     title: 'Laboratório de Civilizações',
@@ -138,11 +174,24 @@ export const PROJECTS: Project[] = [
     slug: 'ia-para-gestores',
     title: 'IA para Gestores',
     category: 'leadership',
-    kind: 'Curso',
-    summary: 'Curso para gestores e RH sobre uso responsável do Claude no trabalho.',
-    stack: ['IA', 'Liderança'],
+    kind: 'Curso · B2List',
+    summary:
+      'Curso interno em 7 módulos que leva gestores, diretores e coordenadores do primeiro contato com o Claude até a adoção governada de IA na própria área.',
+    challenge:
+      'Gestores sem base técnica lidando com volume de informação, comunicação repetida, análise sob pressão e documentação atrasada, e sem regra clara para levar a IA ao time.',
+    approach:
+      'Cada módulo abre com uma situação real da rotina de gestão (ata, planejamento, e-mail difícil, material institucional), passa pelo método e por uma demonstração ao vivo e fecha com um exercício no trabalho do aluno. Técnica e responsabilidade andam juntas: prompt, Projects e Skills de um lado; LGPD e validação humana do outro. O entregável final é o Mapa de Adoção da área de cada aluno.',
+    evidence: [
+      '7 módulos e 169 slides: por que e quando usar IA; configurar o Claude; reuniões em 15 minutos; planejamento trimestral; comunicação executiva; criação institucional; liderar a adoção.',
+      'Método CRISP (Contexto, Restrição, Instrução, Saída, Persona) e um slide "quando o Claude vai errar" em todo módulo.',
+      'Matriz de governança Confiar, Verificar, Nunca delegar, política mínima de uso e roadmap de 90 dias.',
+      'Escrito em markdown e gerado por um pipeline em Python que produz HTML e PPTX, em versão interna e white-label, com um validador que barra termo interno vazando.',
+    ],
+    outcome: 'Material completo para gestores da empresa, pronto para novas turmas.',
+    stack: ['IA', 'Liderança', 'Governança', 'Python'],
     visibility: 'case-study-only',
   },
+
   {
     slug: 'bot-trading-base',
     title: 'Bot de trading (Base)',
@@ -153,14 +202,29 @@ export const PROJECTS: Project[] = [
     visibility: 'private',
   },
   {
-    slug: 'asphodel',
-    title: 'Asphodel',
+    slug: 'transmute',
+    title: 'Transmute',
     category: 'software',
-    kind: 'Produto',
-    summary: 'Launchpad de tokens na rede Elysium, com especificação e site em Next.js.',
-    stack: ['Cripto', 'Next.js'],
-    visibility: 'case-study-only',
+    kind: 'Produto · pausado',
+    summary:
+      'Terminal de inteligência on-chain na rede Base: um oráculo de IA caça tokens em estágio inicial, agentes com arquétipos de Jung debatem e votam a "Call of the Day", e um bot de Telegram leva tudo para os grupos.',
+    challenge:
+      'Publicar sinais de IA sobre tokens recém-lançados sem repassar golpe nem endereço de contrato inventado pelo modelo, controlando o custo dos modelos e respeitando os limites do Telegram (cerca de 20 mensagens por minuto por grupo).',
+    approach:
+      'Cada endereço de contrato exibido é confirmado em duas fontes de mercado por um resolvedor determinístico, contra golpe e alucinação. O acesso é liberado pelo saldo do token na carteira, com login por assinatura (SIWE). No Agent Arena, cada usuário cria um agente a partir de um dos 12 arquétipos; toda noite os agentes caçam, debatem e votam, e só sai uma call se houver consenso, tudo numa cidade isométrica em pixel art. Dado de token é tratado como entrada hostil.',
+    evidence: [
+      'Site em Next.js 16 com 314 testes Vitest passando, em 294 commits; bot com cerca de 20 comandos e cerca de 12 mil linhas de TypeScript, em 88 commits.',
+      'Card automático quando alguém posta um endereço de contrato no grupo, ranking de quem fez as melhores calls e um flexcard em PNG com o multiplicador da call.',
+      'Flexcard desenhado como SVG com fontes embutidas e convertido em PNG (resvg), para o texto nunca sair borrado.',
+      'Cotas diárias por comando e uma caçada única do sistema distribuída a todos os holders, no lugar de uma caçada paga por usuário.',
+    ],
+    outcome: 'Pausado. O código do bot é público no GitHub; o site não está mais no ar, e as telas abaixo são do projeto rodando localmente.',
+    stack: ['Next.js', 'Supabase', 'LangGraph', 'viem', 'Telegraf', 'Vercel'],
+    repositoryUrl: 'https://github.com/Kattiell/transmute-bot',
+    visibility: 'public',
   },
+
+
   {
     slug: 'gama-vans',
     title: 'Loja de peças para vans',
@@ -178,7 +242,7 @@ const ORDEM = ['lcp-consultoria', 'qa-intelligence', 'parity-gate', 'plenario'];
 export const FEATURED = PROJECTS.filter((p) => p.featured).sort((a, b) => ORDEM.indexOf(a.slug) - ORDEM.indexOf(b.slug));
 export const OTHERS = PROJECTS.filter((p) => !p.featured);
 /** Os que aparecem em "Mais trabalhos" na home, nesta ordem. */
-export const MAIS = ['pettracker', 'brasa', 'bancada', 'mariane-borges'].map((s) => PROJECTS.find((p) => p.slug === s)!);
+export const MAIS = ['bancada', 'mariane-borges', 'ia-para-gestores', 'transmute'].map((s) => PROJECTS.find((p) => p.slug === s)!);
 /** O link que pode ser aberto, se houver (site no ar ou repositório público). */
 export const publicLink = (p: Project) => p.url ?? p.repositoryUrl;
 

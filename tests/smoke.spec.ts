@@ -26,7 +26,7 @@ test('mapa do salão: 12 distritos, de 01 a 12, navegáveis por teclado', async 
 });
 
 test('nenhum link externo falso: projeto sem URL mostra estado vazio', async ({ page }) => {
-  await page.goto('/projetos/pettracker');
+  await page.goto('/projetos/plenario');
   await expect(page.getByText('Link público não definido')).toBeVisible();
   await expect(page.locator('main a[target="_blank"]')).toHaveCount(0);
   await page.goto('/projetos/lcp-consultoria');

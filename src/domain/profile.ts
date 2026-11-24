@@ -77,7 +77,7 @@ export const PRACTICES = [
     lead: 'Produto, segurança e execução.',
     items: [
       'Bot de trading para Telegram na rede Base, com ordens limite e taxa embutida.',
-      'Asphodel: launchpad de tokens na rede Elysium, da especificação ao site.',
+      'Transmute: oráculo de IA na rede Base em que agentes debatem e votam a call do dia, com bot de Telegram.',
       'Estudo crítico de agentes de trading autônomos, com foco nos riscos de segurança.',
     ],
     stack: ['Base (EVM)', 'Telegram', 'Next.js', 'Segurança'],

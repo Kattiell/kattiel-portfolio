@@ -136,3 +136,5 @@ details[open] .practice-toggle:after{transform:rotate(0)}
 .dossier-shot{margin:40px 0 0;border:1px solid var(--k-line);background:#1b2438}
 .dossier-shot img{display:block;width:100%;height:auto}
 .dossier-shot figcaption{font:500 10px var(--k-meta);color:var(--k-muted);padding:10px 12px;background:var(--k-paper)}
+.dossier-shot img{width:auto;max-width:100%;margin:0 auto}
+.dossier-shot img{max-height:960px;object-fit:contain}

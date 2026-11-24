@@ -5,7 +5,7 @@ import { Masthead, SiteFooter } from '@/components/Masthead';
 import { DISTRICTS, pad2 } from '@/domain/districts';
 import Image from 'next/image';
 import { CATEGORY_LABEL, PROJECTS, getProject, publicLink } from '@/domain/projects';
-import { PROJECT_IMAGES } from '@/domain/projectImages';
+import { PROJECT_GALLERY, PROJECT_IMAGES } from '@/domain/projectImages';
 
 export function generateStaticParams() {
   return PROJECTS.map((p) => ({ slug: p.slug }));
@@ -47,7 +47,7 @@ export default async function ProjectPage({ params }: PageProps<'/projetos/[slug
         {PROJECT_IMAGES[p.slug] ? (
           <figure className="dossier-shot">
             <Image src={PROJECT_IMAGES[p.slug].src} alt={PROJECT_IMAGES[p.slug].alt} placeholder="blur" priority quality={90} sizes="(max-width: 1100px) 100vw, 70vw" />
-            <figcaption>Captura do site no ar.</figcaption>
+            <figcaption>{PROJECT_IMAGES[p.slug].legenda ?? 'Captura do projeto.'}</figcaption>
           </figure>
         ) : null}
         <div className="dossier-grid">
@@ -59,6 +59,16 @@ export default async function ProjectPage({ params }: PageProps<'/projetos/[slug
             )}
             {p.evidence?.length ? (
               <section><h2>Evidências</h2><ul>{p.evidence.map((e) => <li key={e}>{e}</li>)}</ul></section>
+            ) : null}
+            {PROJECT_GALLERY[p.slug]?.length ? (
+              <section><h2>Telas</h2>
+                {PROJECT_GALLERY[p.slug].map((t) => (
+                  <figure key={t.alt} className="dossier-shot">
+                    <Image src={t.src} alt={t.alt} placeholder="blur" quality={88} sizes="(max-width: 1100px) 100vw, 60vw" />
+                    {t.legenda ? <figcaption>{t.legenda}</figcaption> : null}
+                  </figure>
+                ))}
+              </section>
             ) : null}
           </div>
           <aside className="dossier-side" aria-label="Ficha do projeto">
