@@ -35,7 +35,7 @@ test('nenhum link externo falso: projeto sem URL mostra estado vazio', async ({ 
 
 test('projetos: a home leva à lista completa e cada item ao dossiê', async ({ page }) => {
   await page.goto('/');
-  await expect(page.locator('.m-projeto')).toHaveCount(4);
+  await expect(page.locator('.m-projeto')).toHaveCount(8);   // "Mais trabalhos": pelo menos 8 projetos
   // a travessia: um trabalho selecionado por espaço do edifício
   await expect(page.locator('.m-cap')).toHaveCount(4);
   // a home mostra trabalho, não currículo: números dos trabalhos, método e sobre curto; distritos só na caverna e em /distritos
