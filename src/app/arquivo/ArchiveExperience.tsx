@@ -59,22 +59,37 @@ export default function ArchiveExperience() {
     window.__trocarModo = () => location.assign('/distritos');   // sem WebGL utilizável: mapa 2D
     document.getElementById('sair-arquivo')?.addEventListener('click', sair);
 
-    const gpu = sondarGPU();
-    if (!gpu) {
+    const semGL = () => {
       document.getElementById('loading')?.classList.add('hide');
       document.getElementById('sem-gl')?.classList.remove('hide');
+      document.getElementById('app')?.classList.add('hide');
+    };
+    // GPU fraca (Intel HD antiga, 8 GB) pode perder o contexto no meio da carga ou da compilação:
+    // sem isto a tela fica preta e muda. O evento não borbulha, por isso a captura no documento.
+    const perdeu = (e: Event) => { if ((e.target as Element)?.tagName === 'CANVAS') { console.error('[arquivo] contexto WebGL perdido'); semGL(); } };
+    document.addEventListener('webglcontextlost', perdeu, true);
+    // carga que nunca termina (GPU travada, memória cheia): depois de 60 s oferece a versão 2D
+    const vigia = window.setTimeout(() => {
+      if (!document.getElementById('loading')?.classList.contains('hide')) { console.error('[arquivo] carga passou de 60 s'); semGL(); }
+    }, 60000);
+
+    const gpu = sondarGPU();
+    if (!gpu) {
+      semGL();
     } else {
       window.__qualidade = nivelPara(gpu);
       window.__gpu = gpu.nome;
       document.body.classList.add('modo-3d');
       import('@/experience/main.js').catch((e) => {
         console.error('[arquivo] falha ao abrir a caverna', e);
-        document.getElementById('loading')?.classList.add('hide');
-        document.getElementById('sem-gl')?.classList.remove('hide');
+        semGL();
       });
     }
     // voltar pelo navegador (ou qualquer navegação interna) sai do arquivo: recarrega o destino
-    return () => { if (location.pathname !== '/arquivo') location.reload(); };
+    return () => {
+      document.removeEventListener('webglcontextlost', perdeu, true); window.clearTimeout(vigia);
+      if (location.pathname !== '/arquivo') location.reload();
+    };
   }, []);
 
   return (
@@ -83,7 +98,7 @@ export default function ArchiveExperience() {
       <div id="sem-gl" className="hide k-semgl" role="alert">
         <p className="k-semgl-code">ARQUIVO / SEM 3D</p>
         <h1>Este navegador não abre a caverna em 3D.</h1>
-        <p>Ela precisa de WebGL 2. Todo o conteúdo continua disponível: o mapa dos doze distritos e os estudos de caso, em texto.</p>
+        <p>Ela precisa de WebGL 2 e de uma placa de vídeo que aguente a cena; neste computador ela não abriu. Todo o conteúdo continua disponível: o mapa dos doze distritos e os estudos de caso, em texto.</p>
         <div><Link href="/distritos">Ver o mapa do salão →</Link> <Link href="/projetos">Ver os projetos →</Link></div>
       </div>
     </>

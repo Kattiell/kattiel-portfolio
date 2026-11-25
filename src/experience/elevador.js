@@ -22,7 +22,8 @@ export async function instalarElevadores(hall) {
   const lifts = hall.lifts || [];
   if (!lifts.length) return 0;
   let cena;
-  try { cena = await load('elevador.glb'); } catch { return 0; }   // sem o arquivo: fica o procedural
+  try { cena = await load('elevador.glb'); } catch { return 0; }
+  if (!cena) return 0;   // sem o arquivo (load devolve null, não lança): fica o procedural
   // materiais: vidro sem escrever profundidade, metal pegando o mapa de ambiente, luz na camada do reflexo
   cena.traverse((o) => {
     if (!o.isMesh) return;

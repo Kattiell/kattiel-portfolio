@@ -10,8 +10,10 @@ loader.setMeshoptDecoder(MeshoptDecoder);
 // nível baixa (celular): malhas simplificadas em models/lite (geradas por tools/modelos-leves.mjs)
 const base = window.__qualidade === 'baixa' && !location.search.includes('lite=0') ? '/models/lite/' : '/models/';
 
-export function load(name) {
-  return new Promise((res) => loader.load(base + name, (g) => res(fixChannels(g.scene)), undefined, () => res(null)));
+const carregar = (url) => new Promise((res) => loader.load(url, (g) => res(fixChannels(g.scene)), undefined, () => res(null)));
+// sem a versão leve (modelo novo que ainda não passou por tools/modelos-leves.mjs): usa a completa em vez de sumir
+export async function load(name) {
+  return (await carregar(base + name)) ?? (base !== '/models/' ? carregar('/models/' + name) : null);
 }
 
 // alguns GLBs do gltfpack trazem texCoord = 4294967295 (-1 sem sinal) no KHR_texture_transform:
