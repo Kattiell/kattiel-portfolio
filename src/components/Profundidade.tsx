@@ -184,7 +184,7 @@ export default function Profundidade({ arte, prof, x = 0.5, fase = 0, atrio = fa
   useEffect(() => {
     const cv = ref.current;
     const raiz = document.documentElement;
-    // abertura: o script do <head> marca html.k-abre na 1ª visita da sessão; aqui ela é tocada (ou encerrada)
+    // abertura: o script do <head> marca html.k-abre em toda carga da página; aqui ela é tocada (ou encerrada)
     let abrindo = atrio && raiz.classList.contains('k-abre') && !raiz.classList.contains('k-fim');
     let A = abrindo ? 0 : 99, vel = 1, tFim = abrindo ? Infinity : -1, vivo = false;
     const desligaPulo: (() => void)[] = [];
@@ -192,7 +192,6 @@ export default function Profundidade({ arte, prof, x = 0.5, fase = 0, atrio = fa
       if (!abrindo) return;
       abrindo = false; A = 99; tFim = t;
       raiz.classList.add('k-fim'); raiz.dataset.abre = '4';
-      try { sessionStorage.setItem('k-abriu', '1'); } catch { /* sem armazenamento: só repete a abertura */ }
       desligaPulo.forEach((f) => f());
     };
     if (!cv || matchMedia('(prefers-reduced-motion: reduce)').matches) { encerra(0); return; }
