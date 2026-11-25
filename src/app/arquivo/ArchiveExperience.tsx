@@ -66,7 +66,9 @@ export default function ArchiveExperience() {
     };
     // GPU fraca (Intel HD antiga, 8 GB) pode perder o contexto no meio da carga ou da compilação:
     // sem isto a tela fica preta e muda. O evento não borbulha, por isso a captura no documento.
-    const perdeu = (e: Event) => { if ((e.target as Element)?.tagName === 'CANVAS') { console.error('[arquivo] contexto WebGL perdido'); semGL(); } };
+    // só o canvas da caverna (#app) conta: a home (Profundidade) solta o próprio contexto de propósito ao desmontar
+    // na navegação para cá, e isso não pode derrubar o arquivo
+    const perdeu = (e: Event) => { if ((e.target as Element)?.closest?.('#app')) { console.error('[arquivo] contexto WebGL perdido'); semGL(); } };
     document.addEventListener('webglcontextlost', perdeu, true);
     // carga que nunca termina (GPU travada, memória cheia): depois de 60 s oferece a versão 2D
     const vigia = window.setTimeout(() => {
