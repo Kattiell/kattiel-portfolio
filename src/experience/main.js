@@ -114,7 +114,7 @@ const apr = aprimorar({ scene, hall, districts }); console.info('[acabamento]', 
 markReflections(hall.root);
 // poeira suspensa no ar da caverna: pega a luz dos feixes e dá profundidade
 { const dust = motes({ n: 1400, box: [90, 34, 90], color: 0xa8d8ff, intensity: 0.9, size: 0.035, drift: 1.4, flick: 1.1 }); dust.position.set(0, 14, -6); hall.root.add(dust);
-  const mist = motes({ n: 60, box: [70, 1.6, 50], color: 0x6fb8e0, intensity: 0.06, size: 6, drift: 3, soft: 3 }); mist.position.set(0, 0.7, -8); hall.root.add(mist); }
+  const mist = motes({ n: 40, box: [70, 1.6, 50], color: 0x6fb8e0, intensity: 0.018, size: 6, drift: 3, soft: 3 }); mist.position.set(0, 0.7, -8); hall.root.add(mist); }
 setMotesScale(scene, innerHeight);
 progress(0.5, 'Trazendo as peças do Blender e do Tripo…'); await frame();
 console.info('[modelos]', await upgradeHall(hall.root));

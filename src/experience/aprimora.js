@@ -71,7 +71,7 @@ function nevoa(emissores, sprite) {
 function neblina(nuvem) {
   const g = new THREE.Group(); g.name = 'APR_neblina';
   const camadas = [];
-  for (const [y, op, rep, vel] of [[0.5, 0.11, 3, 0.006], [1.7, 0.07, 2, -0.004], [3.4, 0.04, 1.5, 0.003]]) {
+  for (const [y, op, rep, vel] of [[0.5, 0.045, 3, 0.006], [1.7, 0.035, 2, -0.004], [3.4, 0.025, 1.5, 0.003]]) {
     const t = nuvem.clone(); t.needsUpdate = true; t.repeat.set(rep, rep);
     const m = new THREE.MeshBasicMaterial({ map: t, color: 0x9fc6e0, transparent: true, opacity: op, depthWrite: false, fog: true });
     const mesh = new THREE.Mesh(new THREE.CircleGeometry(34, 48), m); mesh.rotation.x = -Math.PI / 2; mesh.position.y = y; mesh.renderOrder = 2;

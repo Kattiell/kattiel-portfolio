@@ -135,6 +135,54 @@ function cachoeiras(raiz, updaters) {
   return feitos.size > 0;
 }
 
+/* ---------------- bacias e espuma: água parada que reflete, espuma rendada que nasce no impacto ---------------- */
+function baciasEEspuma(raiz, updaters) {
+  const relevo = texturaAgua(); const tempo = { value: 0 };
+  updaters.push((dt) => { tempo.value += dt; });
+  let bacias = 0, espumas = 0; const bacia = new Map(); const espuma = new Map();
+  const tam = new THREE.Vector3();
+  raiz.traverse((o) => {
+    if (!o.isMesh || !o.material) return;
+    const m = o.material;
+    // bacias: peças planas de água (até 40 cm de altura) usavam o branco da queda; viram água translúcida
+    if (m.name === 'A_AGUA_agua') {
+      if (!o.geometry.boundingBox) o.geometry.computeBoundingBox();
+      o.geometry.boundingBox.getSize(tam); tam.multiply(o.getWorldScale(new THREE.Vector3()));
+      if (tam.y > 0.4) return;
+      if (!bacia.has(m)) {
+        // Standard (sem clearcoat): o verniz dobrava o cálculo de reflexo nesses pixels e o ganho visual era mínimo
+        const b = new THREE.MeshStandardMaterial({ name: 'A_AGUA_bacia', color: 0x0b3442, roughness: 0.03, metalness: 0.1, transparent: true, opacity: 0.72,
+          depthWrite: false, normalMap: relevo, normalScale: new THREE.Vector2(1.1, 1.1), envMapIntensity: 1.8,
+          emissive: new THREE.Color(0x0a4b5e), emissiveIntensity: 0.35 });
+        bacia.set(m, b);
+      }
+      o.material = bacia.get(m); bacias++;
+      return;
+    }
+    if (m.name !== 'A_AGUA_espuma' || !m.map) return;
+    if (!espuma.has(m)) {
+      const e = m.clone(); e.transparent = true; e.depthWrite = false; e.opacity = 1;
+      e.onBeforeCompile = (sh) => {
+        sh.uniforms.uRenda = { value: relevo }; sh.uniforms.uT = tempo;
+        sh.fragmentShader = sh.fragmentShader
+          .replace('#include <common>', `#include <common>
+uniform sampler2D uRenda; uniform float uT;`)
+          .replace('#include <map_fragment>', `#include <map_fragment>
+            // renda: dois ruídos do relevo da água andando em sentidos diferentes; só os picos viram espuma
+            vec2 q = vMapUv * 3.0;
+            float r1 = texture2D(uRenda, q + vec2(0.0, uT * 0.12)).r, r2 = texture2D(uRenda, q * 2.3 - vec2(uT * 0.07, 0.0)).g;
+            float renda = smoothstep(0.497, 0.53, r1 * 0.6 + r2 * 0.4);
+            diffuseColor.rgb = mix(diffuseColor.rgb, vec3(0.93, 0.97, 1.0), 0.6);
+            diffuseColor.a *= renda * 0.85;`);
+      };
+      e.customProgramCacheKey = () => 'realce-espuma';
+      espuma.set(m, e);
+    }
+    o.material = espuma.get(m); espumas++;
+  });
+  return `${bacias} bacias, ${espumas} espumas`;
+}
+
 /* ---------------- computador: globo holográfico ---------------- */
 function globo(raiz, updaters) {
   let mesa = null;
@@ -225,8 +273,17 @@ export function realcar({ hall, nivel = 'media', HALL }) {
   // piso molhado (segundo Reflector) saiu: custava um desenho a mais da cena por quadro
   void pisoMolhado; void nivel;
   if (cachoeiras(root, updaters)) feitos.push('cachoeiras');
+  feitos.push(baciasEEspuma(root, updaters));
   if (globo(root, updaters)) feitos.push('globo');
   const q = calor(root); if (q) feitos.push(`calor×${q}`);
   if (HALL) feitos.push(`lampiões×${lampioes(root, updaters, HALL)}`);
+  // o espelho do lago refletia a neblina rasteira e as partículas de névoa (brilham, então caíam na camada do
+  // reflexo): a água virava um leite. Saem do reflexo; lampiões, LEDs, telas e cachoeiras continuam nele.
+  let semReflexo = 0;
+  root.traverse((o) => {
+    const dentro = (re) => { for (let q = o; q; q = q.parent) if (re.test(q.name || '')) return true; return false; };
+    if ((dentro(/^APR_neblina/) || o.isPoints) && !dentro(/^REALCE_/)) { o.layers.disable(REFLECT_LAYER); semReflexo++; }
+  });
+  feitos.push(`${semReflexo} névoas fora do reflexo`);
   return feitos;
 }

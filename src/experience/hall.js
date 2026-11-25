@@ -735,7 +735,7 @@ function buildWater() {
     uniforms: {
       color: { value: null }, tDiffuse: { value: null }, textureMatrix: { value: null },
       tNormal: { value: null }, time: { value: 0 },
-      deep: { value: new THREE.Color(0x020d14) }, shallow: { value: new THREE.Color(0x064356) }, glowC: { value: new THREE.Color(0x19c6ee) },
+      deep: { value: new THREE.Color(0x010609) }, shallow: { value: new THREE.Color(0x05384a) }, glowC: { value: new THREE.Color(0x19c6ee) },
       fogColor: { value: new THREE.Color() }, fogDensity: { value: 0 },
       // pés das quedas d'água (x, z, raio): espuma e anéis de ondulação
       quedas: { value: [new THREE.Vector3(0, -34.2, 6), new THREE.Vector3(34, 26.3, 4.5), new THREE.Vector3(-30.3, 24.2, 4.2), new THREE.Vector3(32.6, 17.3, 3.4)] },
@@ -748,22 +748,33 @@ function buildWater() {
       varying vec4 vUv; varying vec3 vW; varying float vDepth;
       void main(){
         vec2 p = vW.xz;
-        vec3 n1 = texture2D(tNormal, p * 0.045 + vec2(time * 0.010, time * 0.006)).xyz * 2.0 - 1.0;
-        vec3 n2 = texture2D(tNormal, p * 0.12 - vec2(time * 0.007, -time * 0.011)).xyz * 2.0 - 1.0;
-        vec3 n3 = texture2D(tNormal, p * 0.31 + vec2(-time * 0.02, time * 0.015)).xyz * 2.0 - 1.0;
-        vec3 n4 = texture2D(tNormal, p * 0.83 + vec2(time * 0.05, -time * 0.035)).xyz * 2.0 - 1.0;   // marola fina
-        vec2 nn = n1.xy * 0.45 + n2.xy * 0.3 + n3.xy * 0.15 + n4.xy * 0.1;
+        vec3 n1 = texture2D(tNormal, p * 0.045 + vec2(time * 0.025, time * 0.015)).xyz * 2.0 - 1.0;
+        vec3 n2 = texture2D(tNormal, p * 0.12 - vec2(time * 0.018, -time * 0.028)).xyz * 2.0 - 1.0;
+        vec3 n3 = texture2D(tNormal, p * 0.31 + vec2(-time * 0.05, time * 0.038)).xyz * 2.0 - 1.0;
+        vec3 n4 = texture2D(tNormal, p * 0.83 + vec2(time * 0.12, -time * 0.085)).xyz * 2.0 - 1.0;   // marola fina
+        // ondinha curta e rápida, só perto de quem olha (longe ela vira chuvisco)
+        vec3 n5 = vDepth < 26.0 ? texture2D(tNormal, p * 2.2 + vec2(-time * 0.2, time * 0.15)).xyz * 2.0 - 1.0 : vec3(0.0);
+        vec2 nn = (n1.xy * 0.45 + n2.xy * 0.3 + n3.xy * 0.15 + n4.xy * 0.1) * 2.1;
         // anéis de ondulação no pé de cada queda
-        float espumaQ = 0.0;
-        for (int i = 0; i < 4; i++) { vec2 dq = p - quedas[i].xy; float r = length(dq); float raio = quedas[i].z;
-          float anel = sin(r * 5.5 - time * 4.0) * exp(-r / raio) ; nn += normalize(dq + 1e-4) * anel * 0.22;
-          espumaQ += smoothstep(raio * 1.1, raio * 0.25, r) * (0.55 + 0.45 * n3.x); }
+        nn += n5.xy * 0.4 * smoothstep(26.0, 4.0, vDepth);
+        // impacto das quedas: anéis que se abrem e espuma rendada que nasce no pé e é empurrada para fora
+        float espumaQ = 0.0, crista = 0.0;
+        for (int i = 0; i < 4; i++) { vec2 dq = p - quedas[i].xy; float r = length(dq); float raio = quedas[i].z; vec2 dir = normalize(dq + 1e-4);
+          float anel = sin(r * 5.5 - time * 4.0) * exp(-r / raio); nn += dir * anel * 0.38;
+          crista += pow(max(anel, 0.0), 3.0) * exp(-r / (raio * 1.3));
+          if (r < raio * 1.15) {                                               // só perto da queda: longe não lê textura
+            vec2 adv = p - dir * mod(time * 0.9, 40.0);                       // o desenho anda para fora do pé da queda
+            float renda = texture2D(tNormal, adv * 0.55).r * 0.6 + texture2D(tNormal, adv * 1.4 + 0.37).g * 0.4;
+            float zona = smoothstep(raio * 1.15, raio * 0.1, r);
+            float pisca = 0.75 + 0.25 * sin(time * 9.0 + r * 3.0);               // o pé da queda borbulha
+            espumaQ += zona * zona * smoothstep(0.5, 0.53, renda) * 0.8 + smoothstep(raio * 0.28, 0.0, r) * 0.55 * pisca;
+          } }
         vec3 N = normalize(vec3(nn.x, 1.6, nn.y));
         float far = clamp(vDepth / 60.0, 0.0, 1.0);
         vec4 uv = vUv; uv.xy += nn * mix(0.05, 0.015, far) * uv.w;
         // luzes refletidas em água se esticam na vertical: 5 amostras ao longo do eixo da tela
         vec3 refl = vec3(0.0);
-        for (int k = -1; k <= 1; k++) { vec4 u2 = uv; u2.y += float(k) * 0.018 * uv.w * (0.6 + abs(nn.y) * 2.0); refl += texture2DProj(tDiffuse, u2).rgb * (k == 0 ? 0.46 : 0.27); }   // 3 amostras (eram 5)
+        for (int k = -1; k <= 1; k++) { vec4 u2 = uv; u2.y += float(k) * 0.03 * uv.w * (0.6 + abs(nn.y) * 2.0); refl += texture2DProj(tDiffuse, u2).rgb * (k == 0 ? 0.46 : 0.27); }   // 3 amostras (eram 5)
         vec3 V = normalize(cameraPosition - vW);
         float fres = 0.12 + 0.88 * pow(1.0 - max(dot(V, N), 0.0), 3.0);
         float d = length(vW.xz);
@@ -777,17 +788,19 @@ function buildWater() {
         float ca = pow(abs(sin((n2.x + n3.y) * 6.0 + time * 0.8)), 18.0) * smoothstep(20.0, 12.5, d) * smoothstep(11.8, 12.6, d);
         base += glowC * ca * 0.6;
         // cintilação: picos das ondas pegam a luz ciano
-        float spark = pow(max(nn.x + nn.y, 0.0), 6.0) * near * 2.5;
+        float spark = pow(max(nn.x + nn.y, 0.0), 6.0) * near * 2.2;
         // brilho especular da luz do óculo (de cima, levemente ao fundo) e do deque iluminado
         vec3 L = normalize(vec3(0.0, 1.0, -0.35)); vec3 Hh = normalize(L + V);
-        float spec = pow(max(dot(N, Hh), 0.0), 260.0) * 1.8 + pow(max(dot(N, normalize(normalize(vec3(-vW.x, 6.0, -vW.z)) + V)), 0.0), 120.0) * near * 0.6;
+        float spec = pow(max(dot(N, Hh), 0.0), 220.0) * 2.4 + pow(max(dot(N, normalize(normalize(vec3(-vW.x, 6.0, -vW.z)) + V)), 0.0), 110.0) * near * 0.9;
+        vec3 Lq = normalize(vec3(0.55, 0.9, 0.35)); float specQ = pow(max(dot(N, normalize(Lq + V)), 0.0), 160.0) * 1.3;
         // espuma: anel na borda da plataforma (r 12–13,5) e nos pés das quedas, rasgada pelo ruído
         float d0 = length(vW.xz);
         float borda = smoothstep(11.9, 12.4, d0) * smoothstep(14.2, 12.6, d0);
         float rasgo = smoothstep(0.35, 0.75, n2.x * 0.5 + 0.5 + n4.y * 0.3);
         float espuma = clamp((borda * 0.8 + espumaQ) * rasgo, 0.0, 1.0);
-        vec3 col = base + refl * (0.35 + fres * 1.4) + glowC * spark + vec3(0.75, 0.88, 1.0) * spec;
-        col = mix(col, vec3(0.62, 0.74, 0.8), espuma * 0.55);
+        vec3 col = base + refl * (0.6 + fres * 2.3) + glowC * spark + vec3(0.75, 0.88, 1.0) * spec + vec3(1.0, 0.68, 0.38) * specQ;
+        col = mix(col, vec3(0.8, 0.9, 0.96), espuma * 0.5);
+        col += vec3(0.55, 0.8, 1.0) * crista * 0.35;
         float f = 1.0 - exp(-fogDensity * fogDensity * vDepth * vDepth);
         gl_FragColor = vec4(mix(col, fogColor, f), 1.0);
         #include <tonemapping_fragment>
