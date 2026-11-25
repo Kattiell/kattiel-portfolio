@@ -339,7 +339,12 @@ export default function Profundidade({ arte, prof, x = 0.5, fase = 0, atrio = fa
       if (cv.width !== w || cv.height !== h) { cv.width = w; cv.height = h; }
     };
 
-    let ultimo = performance.now();
+    let ultimo = performance.now(), ultimoDesenho = performance.now();
+    // vigia: canvas aceso e na tela que parou de desenhar há 3 s (laço morto, driver) apaga e mostra a arte parada
+    const vigia = window.setInterval(() => {
+      if (!cv.classList.contains('is-on') || !visivel || document.hidden) return;
+      if (performance.now() - ultimoDesenho > 3000 || gl?.isContextLost()) { cv.classList.remove('is-on'); diario('vigia apagou o canvas'); }
+    }, 1000);
     const laco = () => {
       if (!gl || !vivo || !visivel || document.hidden) { raf = 0; return; }
       // contexto perdido sem o evento chegar (driver, aba em segundo plano): mostra a imagem parada
@@ -389,18 +394,22 @@ export default function Profundidade({ arte, prof, x = 0.5, fase = 0, atrio = fa
         const zoom = (1.07 + 0.05 * (1 - rolagem)) * zoomA;
         posiciona({ zoom, foco, ox: cam.x * 0.024, oy: cam.y * 0.016 + (rolagem - 0.5) * 0.05 });
       }
-      gl.drawArrays(gl.TRIANGLES, 0, 3);
+      gl.drawArrays(gl.TRIANGLES, 0, 3); ultimoDesenho = agora;
       if (!cv.classList.contains('is-on')) cv.classList.add('is-on');
       raf = requestAnimationFrame(laco);
     };
 
     // a GPU pode descartar o contexto (outra aba pesada, driver, muitos canvas): o canvas virava um painel
     // cinza-claro por cima da arte. Perdeu: some e a imagem parada aparece; voltou: monta de novo
+    // diário de campo: se o painel cinza voltar, window.__kGL diz o que aconteceu com cada canvas
+    const nomeCv = atrio ? 'atrio' : arte.split('/').pop();
+    const diario = (ev: string) => { const w = window as unknown as { __kGL?: string[] }; (w.__kGL ??= []).push(`${Math.round(performance.now())} ${nomeCv} ${ev}`); if (w.__kGL.length > 200) w.__kGL.shift(); };
     const perdeu = (e: Event) => {
+      diario(dormindo ? 'dormiu' : 'contexto perdido');
       e.preventDefault(); vivo = false; cancelAnimationFrame(raf); raf = 0;
       cv.classList.remove('is-on'); if (abrindo) encerra(0);
     };
-    const voltou = () => { iniciado = false; if (visivel && !morto) inicia(); else gl = null; };
+    const voltou = () => { diario('contexto restaurado'); iniciado = false; if (visivel && !morto) inicia(); else gl = null; };
     cv.addEventListener('webglcontextlost', perdeu);
     cv.addEventListener('webglcontextrestored', voltou);
 
@@ -427,7 +436,7 @@ export default function Profundidade({ arte, prof, x = 0.5, fase = 0, atrio = fa
     document.addEventListener('visibilitychange', vis);
 
     return () => {
-      morto = true; vivo = false; cancelAnimationFrame(raf); io.disconnect(); clearTimeout(sono);
+      morto = true; vivo = false; cancelAnimationFrame(raf); io.disconnect(); clearTimeout(sono); clearInterval(vigia);
       cv.removeEventListener('webglcontextlost', perdeu); cv.removeEventListener('webglcontextrestored', voltou);
       desligaPulo.forEach((f) => f());
       removeEventListener('pointermove', move); document.documentElement.removeEventListener('pointerleave', sai);
