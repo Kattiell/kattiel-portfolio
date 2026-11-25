@@ -19,6 +19,7 @@ import { motes, setMotesScale } from './vida.js';
 import { criarApresentacao } from './apresentacao.js';
 import { aprimorar } from './aprimora.js';
 import { aplicarAcabamento } from './acabamento.js';
+import { realcar } from './realce.js';
 import { fundirEstaticos, poolDeLuzes, resolucaoDinamica, reflexoEspacado, descartePorDistancia, fundirLocal, cronometroGpu } from './desempenho.js';
 
 /* ---------------- infraestrutura ---------------- */
@@ -50,7 +51,7 @@ $('app').appendChild(renderer.domElement);
 
 const scene = new THREE.Scene();
 scene.background = new THREE.Color(0x020406);
-scene.fog = new THREE.FogExp2(0x030a12, 0.0062);
+scene.fog = new THREE.FogExp2(0x07090c, 0.0062);
 const camera = new THREE.PerspectiveCamera(70, innerWidth / innerHeight, 0.05, 400);
 window.__cam = camera;
 // título e link de cada túnel vêm de src/domain/projects.ts (passados pela página /arquivo)
@@ -70,6 +71,10 @@ const vignette = new ShaderPass({
   fragmentShader: `uniform sampler2D tDiffuse; uniform float forca; varying vec2 vUv;
     void main(){ vec4 c = texture2D(tDiffuse, vUv); vec2 d = vUv - 0.5; float v = smoothstep(0.85, 0.2, length(d * vec2(1.0, 1.25)));
       c.rgb *= mix(1.0 - forca, 1.0, v);
+      // marcação de cor da arte: sombras puxam para o ciano, luzes para o âmbar, e um pouco mais de contraste
+      float lum = dot(c.rgb, vec3(0.2126, 0.7152, 0.0722));
+      c.rgb *= mix(vec3(0.84, 0.98, 1.1), vec3(1.12, 1.0, 0.86), smoothstep(0.04, 0.75, lum));
+      c.rgb = max(c.rgb * 1.08 - 0.006, 0.0);
       c.rgb = c.rgb / (1.0 + max(c.r, max(c.g, c.b)) * 0.06);   // suaviza picos antes do tom de filme
       gl_FragColor = c; }`,
 });
@@ -116,6 +121,8 @@ console.info('[fachadas Blender]', await upgradeFacades(districts));
 // acabamento depois das fachadas: elas também ganham o brilho contido e o lampião novo
 console.info('[acabamento]', aplicarAcabamento({ hall, districts }).join(', '));
 scene.traverse((o) => { if (!o.material) return; for (const m of [].concat(o.material)) if (m.emissiveIntensity > 1.6) m.emissiveIntensity = 1.6; });
+// realce: carro envernizado, piso molhado, filetes nas cachoeiras, globo no computador, lampiões quentes
+console.info('[realce]', realcar({ hall, nivel: quality.level, HALL }).join(', '));
 progress(0.65, 'Calculando colisões…'); await frame();
 const hallColl = new THREE.Group(); hallColl.add(hall.colliders, districts.colliders); hallColl.updateMatrixWorld(true);
 const hallOctree = new Octree(); hallOctree.fromGraphNode(hallColl);
@@ -386,7 +393,7 @@ async function returnToHall() {
   scene.remove(state.dest.root); disposeTree(state.dest.root); state.dest.env?.dispose(); state.dest = null;
   scene.environment = hallEnv; scene.environmentIntensity = 0.55;
   hall.root.visible = true;
-  scene.fog.color.setHex(0x030a12); scene.fog.density = 0.0062; scene.background.setHex(0x020406);
+  scene.fog.color.setHex(0x07090c); scene.fog.density = 0.0062; scene.background.setHex(0x020406);
   player.octree = hallOctree;
   resetPortal(p); setHallDim(1);
   // volta de frente para o centro do salão, na boca do túnel

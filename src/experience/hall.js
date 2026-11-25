@@ -532,12 +532,12 @@ export function buildHall(renderer, areas = new Set()) {
 
   /* ---------------- iluminação do salão ---------------- */
   {
-    root.add(new THREE.HemisphereLight(0x3a5f80, 0x0a0c10, 0.72));   // base suave: a rocha lê sem estourar
+    root.add(new THREE.HemisphereLight(0x55606b, 0x1c140e, 0.62));   // base neutra (a arte é rocha escura, não azul): o ciano fica para as luzes
     // luz azul rasante no paredão e no teto: a rocha precisa ler (como na arte), não sumir no preto
     for (const [f, y, tf, ty] of [[-60, 4, -40, 30], [60, 4, 40, 30], [0, 2, 0, 40], [-150, 10, -100, 20], [150, 10, 100, 20]]) {
       const l = new THREE.SpotLight(0x2a8fd0, 560, 90, 0.7, 0.8, 1.3); l.position.copy(P(14, f, y)); l.target.position.copy(P(46, tf, ty)); root.add(l, l.target);
     }
-    const key = new THREE.DirectionalLight(0xa9c8e6, 1.4); key.position.set(-14, 60, 4); key.target.position.set(0, 0, -10);
+    const key = new THREE.DirectionalLight(0xc3d0db, 1.35); key.position.set(-14, 60, 4); key.target.position.set(0, 0, -10);
     key.castShadow = true; key.shadow.mapSize.set(2048, 2048);
     Object.assign(key.shadow.camera, { left: -45, right: 45, top: 45, bottom: -45, near: 10, far: 120 });
     key.shadow.bias = -0.0004; key.shadow.normalBias = 0.04;
