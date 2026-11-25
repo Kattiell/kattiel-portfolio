@@ -198,6 +198,8 @@ export default function Profundidade({ arte, prof, x = 0.5, fase = 0, atrio = fa
       if (!abrindo) return;
       abrindo = false; A = 99; tFim = t;
       raiz.classList.add('k-fim'); raiz.dataset.abre = '4';
+      // a abertura pediu rolagem manual (para começar do topo); acabou, o navegador volta a lembrar a posição
+      try { if ('scrollRestoration' in history) history.scrollRestoration = 'auto'; } catch { /* sem histórico */ }
       desligaPulo.forEach((f) => f());
     };
     if (!cv || matchMedia('(prefers-reduced-motion: reduce)').matches) { encerra(0); return; }

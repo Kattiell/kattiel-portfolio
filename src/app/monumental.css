@@ -269,3 +269,12 @@
 }
 /* páginas internas antigas (dossiê, distritos): a escala delas parava em 1440px; agora acompanha telas largas */
 .ka{--u:max(calc(min(100vw, 1440px) / 1024), calc(100vw / 1920 * 1.406))}
+
+/* ---------- /projetos: abas Meus projetos · Colaborações ---------- */
+.ka .ka-abas{position:sticky;top:calc(72 * var(--mu));z-index:5;display:flex;gap:calc(8 * var(--mu));margin:0 0 calc(32 * var(--mu));padding:calc(10 * var(--mu)) 0;background:var(--m-obs);border-bottom:1px solid var(--m-linha)}
+.ka .ka-abas a{display:inline-flex;align-items:center;gap:10px;padding:10px 16px;border:1px solid var(--m-linha);font:500 13px/1 var(--m-mono);letter-spacing:.12em;text-transform:uppercase;color:var(--m-texto);text-decoration:none;transition:border-color .2s,color .2s,background .2s}
+.ka .ka-abas a:hover,.ka .ka-abas a:focus-visible{border-color:var(--m-red);color:var(--m-marfim)}
+.ka .ka-abas b{display:inline-grid;place-items:center;min-width:22px;height:22px;padding:0 6px;background:var(--m-carm);color:var(--m-marfim);font-weight:600;letter-spacing:0}
+.ka .ka-aba{scroll-margin-top:calc(150 * var(--mu))}
+.ka .ka-aba+.ka-aba{margin-top:calc(80 * var(--mu))}
+.ka .ka-aba-t{margin:0 0 calc(12 * var(--mu));font:600 clamp(32px,3.6vw,calc(56 * var(--mu)))/1 var(--m-disp);letter-spacing:-.02em;color:var(--m-marfim)}

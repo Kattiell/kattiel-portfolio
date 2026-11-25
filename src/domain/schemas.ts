@@ -21,6 +21,8 @@ export type Project = {
   visibility: 'public' | 'case-study-only' | 'private';
   /** Aparece como estudo de caso em destaque na home. */
   featured?: boolean;
+  /** Projeto de outra pessoa em que eu colaboro: quem é o dono e qual foi a minha parte. */
+  colaboracao?: { dono: string; donoUrl: string; papel: string };
 };
 
 export type District = {

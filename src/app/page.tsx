@@ -28,8 +28,9 @@ const ARTE = { engenharia, qualidade, automacao, lideranca } as const;
 // Embaixo (contorno, riscado): o que a tela dizia sobre os mesmos casos.
 // Abertura: toca em toda carga da página (inclusive recarregar), sem "reduzir movimento" e com WebGL2.
 // Recarregar volta ao topo para a abertura começar do átrio. Link com #âncora vai direto, sem abertura.
+// Voltar/avançar do navegador também não toca: a pessoa volta para onde estava, sem tela travada.
 // Roda antes do átrio ser desenhado (sem piscar o conteúdo). Prazo de segurança: aos 8 s a página aparece de qualquer jeito.
-const ABRE = `try{var h=document.documentElement;if(!matchMedia('(prefers-reduced-motion: reduce)').matches&&window.WebGL2RenderingContext&&!location.hash){if('scrollRestoration' in history)history.scrollRestoration='manual';scrollTo(0,0);h.classList.add('k-abre');h.dataset.abre='0';setTimeout(function(){h.classList.add('k-fim')},8000)}}catch(e){}`;
+const ABRE = `try{var h=document.documentElement;if(!matchMedia('(prefers-reduced-motion: reduce)').matches&&window.WebGL2RenderingContext&&!location.hash&&(performance.getEntriesByType('navigation')[0]||{}).type!=='back_forward'){if('scrollRestoration' in history)history.scrollRestoration='manual';scrollTo(0,0);h.classList.add('k-abre');h.dataset.abre='0';setTimeout(function(){h.classList.add('k-fim')},8000)}}catch(e){}`;
 
 // A abertura conta uma inspeção: cada etapa é uma parte do trabalho de QA.
 const ETAPAS = [

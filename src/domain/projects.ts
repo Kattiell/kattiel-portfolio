@@ -272,6 +272,48 @@ export const PROJECTS: Project[] = [
   },
 
   {
+    slug: 'eatmate',
+    title: 'EatMate',
+    category: 'software',
+    kind: 'Colaboração · open source',
+    summary:
+      'Diário alimentar que roda no navegador: a pessoa anota as refeições em linguagem natural e recebe uma nota semanal de A a E no estilo Nutri-Score e um relatório para compartilhar. Sem conta, sem servidor, funciona offline e em 6 idiomas.',
+    approach:
+      'Entrei na segurança e na robustez do app, que guarda tudo no próprio aparelho: o que entra de fora (backup importado, iframe, scripts) passou a ter limite, e o que pesa passou a carregar só quando a pessoa precisa.',
+    evidence: [
+      'Content Security Policy, bibliotecas separadas e GitHub Actions fixadas por SHA (contra ataque à cadeia de dependências).',
+      'Abertura dentro de iframe bloqueada (contra clickjacking) e idiomas e telas baixados sob demanda.',
+      'Backup importado com limite de tamanho, de quantidade e de texto, e a cópia local compactada quando o armazenamento do navegador enche.',
+      'Telas estreitas ajustadas, com um teste automático que falha se aparecer rolagem lateral.',
+    ],
+    outcome: 'No ar no GitHub Pages. Minha parte: 5 commits de segurança, desempenho e responsividade.',
+    stack: ['TypeScript', 'PWA', 'CSP', 'GitHub Actions'],
+    url: 'https://malonefreak.github.io/EatMate/',
+    repositoryUrl: 'https://github.com/MaloneFreak/EatMate',
+    visibility: 'public',
+    colaboracao: { dono: 'MaloneFreak', donoUrl: 'https://github.com/MaloneFreak', papel: 'Segurança, desempenho e responsividade' },
+  },
+  {
+    slug: 'jobeval',
+    title: 'JobEval',
+    category: 'automation',
+    kind: 'Colaboração · open source',
+    summary:
+      'Prompts de operação que transformam um LLM num consultor de recrutamento de um mercado específico: nota de aderência à vaga baseada em evidência, currículo ajustado e carta de apresentação opcional, entregues como código Typst.',
+    approach:
+      'Escrevi a edição brasileira: a persona Helena Duarte, uma consultora que conhece o mercado de trabalho do Brasil, para que a avaliação e o currículo sigam o que recrutadores daqui esperam.',
+    evidence: [
+      'Edição Brasil: a persona Helena Duarte, consultora que avalia a vaga e ajusta o currículo pelo que o mercado brasileiro espera.',
+    ],
+    outcome: 'No ar no GitHub Pages. Minha parte: a edição brasileira.',
+    stack: ['Engenharia de prompt', 'LLM', 'Typst'],
+    url: 'https://malonefreak.github.io/JobEval/',
+    repositoryUrl: 'https://github.com/MaloneFreak/JobEval',
+    visibility: 'public',
+    colaboracao: { dono: 'MaloneFreak', donoUrl: 'https://github.com/MaloneFreak', papel: 'Edição brasileira' },
+  },
+
+  {
     slug: 'gama-vans',
     title: 'Loja de peças para vans',
     category: 'design',
@@ -283,6 +325,9 @@ export const PROJECTS: Project[] = [
 ];
 
 export const getProject = (slug: string) => PROJECTS.find((p) => p.slug === slug);
+/** Os meus (sou dono) e as colaborações (projetos de outras pessoas em que participo). */
+export const PROPRIOS = PROJECTS.filter((p) => !p.colaboracao);
+export const COLABORACOES = PROJECTS.filter((p) => p.colaboracao);
 // ordem da home: primeiro o que mais diz sobre o trabalho
 const ORDEM = ['lcp-consultoria', 'qa-intelligence', 'parity-gate', 'plenario'];
 export const FEATURED = PROJECTS.filter((p) => p.featured).sort((a, b) => ORDEM.indexOf(a.slug) - ORDEM.indexOf(b.slug));

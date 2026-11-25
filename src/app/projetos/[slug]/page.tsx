@@ -74,6 +74,7 @@ export default async function ProjectPage({ params }: PageProps<'/projetos/[slug
           <aside className="dossier-side" aria-label="Ficha do projeto">
             <dl>
               <dt>Tipo</dt><dd>{p.kind}</dd>
+              {p.colaboracao ? (<><dt>Dono</dt><dd><a href={p.colaboracao.donoUrl} target="_blank" rel="noopener noreferrer">{p.colaboracao.dono} ↗</a></dd><dt>Minha parte</dt><dd>{p.colaboracao.papel}</dd></>) : null}
               <dt>Visibilidade</dt><dd>{VISIBILIDADE[p.visibility]}</dd>
               {p.stack?.length ? (<><dt>Stack</dt><dd className="k-chips">{p.stack.map((s) => <span key={s}>{s}</span>)}</dd></>) : null}
               <dt>Distrito</dt>
