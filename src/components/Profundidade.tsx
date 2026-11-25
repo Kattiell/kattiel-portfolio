@@ -173,7 +173,8 @@ type Props = { arte: string; prof: string; x?: number; fase?: number; atrio?: bo
 
 // Pontos da arte do átrio (em coordenadas da textura, y de baixo para cima)
 const ALVO: [number, number] = [0.535, 0.67];  // a fissura carmesim no pilar: a "falha" que a inspeção encontra
-const ORIGEM: [number, number] = [0.81, 0.33];  // reflexo do feixe carmesim no piso, ao pé da escada: de onde saem os feixes
+const ORIGEM: [number, number] = [0.81, 0.33];  // pé da escada, onde a coluna de luz toca o piso
+const TOPO: [number, number] = [0.812, 0.95];   // a boca do óculo no teto: os feixes nascem aqui e descem pela coluna
 const FIM_ABRE = 5.3;
 const FASES = [1, 2.3, 3.5, 4.7];
 const suave = (a: number, b: number, x: number) => { const t = Math.min(1, Math.max(0, (x - a) / (b - a))); return t * t * (3 - 2 * t); };
@@ -254,7 +255,7 @@ export default function Profundidade({ arte, prof, x = 0.5, fase = 0, atrio = fa
     };
 
     // ---- átrio: mira presa ao pilar e feixes do piso até as métricas ----
-    const dProf = { alvo: 0.6, origem: 0.6 };
+    const dProf = { alvo: 0.6, origem: 0.6, topo: 0.3 };
     const profundidadeEm = (im: HTMLImageElement) => {
       try {
         const c2 = document.createElement('canvas'); c2.width = im.naturalWidth; c2.height = im.naturalHeight;
@@ -262,6 +263,7 @@ export default function Profundidade({ arte, prof, x = 0.5, fase = 0, atrio = fa
         g.drawImage(im, 0, 0);
         const le = ([u, w]: [number, number]) => g.getImageData(Math.round(u * (c2.width - 1)), Math.round((1 - w) * (c2.height - 1)), 1, 1).data[0] / 255;
         dProf.alvo = le(ALVO); dProf.origem = le(ORIGEM);
+        dProf.topo = le(TOPO);
       } catch { /* mantém a estimativa */ }
     };
     const hero = atrio ? secao : null;
@@ -271,13 +273,12 @@ export default function Profundidade({ arte, prof, x = 0.5, fase = 0, atrio = fa
     const cartoes = hero ? [...hero.querySelectorAll<HTMLElement>('.m-numeros li')] : [];
     let destinos: [number, number][] = [];
     let caixaW = 1, caixaH = 1, ultimoD = '';
+    // medido a cada quadro (não só no resize): os cartões entram com animação e a página reflui depois das
+    // fontes; medir uma vez deixava os fios soltos, presos onde o cartão estava no meio da entrada
     const mede = () => {
       const r = caixa.getBoundingClientRect(); caixaW = r.width; caixaH = r.height;
       destinos = cartoes.map((li) => { const b = li.getBoundingClientRect(); return [b.left - r.left + b.width / 2, b.top - r.top]; });
-      ultimoD = '';
     };
-    const ro = atrio ? new ResizeObserver(mede) : null;
-    if (ro) { ro.observe(caixa); cartoes.forEach((c) => ro.observe(c)); }
     // inverso do mapeamento do shader: ponto da textura -> pixel da caixa
     type Cam = { zoom: number; foco: number; ox: number; oy: number };
     const naTela = ([qx, qy]: [number, number], dA: number, p: Cam): [number, number] => {
@@ -293,19 +294,33 @@ export default function Profundidade({ arte, prof, x = 0.5, fase = 0, atrio = fa
       if (!hero) return;
       const [ax, ay] = naTela(ALVO, dProf.alvo, p);
       falha?.style.setProperty('transform', `translate3d(${ax.toFixed(1)}px, ${ay.toFixed(1)}px, 0)`);
-      if (!feixes.length || !destinos.length) return;
-      const [ox0, oy] = naTela(ORIGEM, dProf.origem, p);
-      const ox = Math.min(caixaW - 24, Math.max(caixaW * 0.55, ox0));
-      const d = destinos.map(([dx, dy]) => {
-        const y0 = Math.min(oy, dy - 60);
-        const meio = y0 + (dy - y0) * 0.55;
-        return `M${ox.toFixed(1)} ${y0.toFixed(1)}C${ox.toFixed(1)} ${meio.toFixed(1)} ${dx.toFixed(1)} ${meio.toFixed(1)} ${dx.toFixed(1)} ${dy.toFixed(1)}`;
+      if (!feixes.length || !cartoes.length) return;
+      mede();
+      // como na arte do GPT: os fios nascem no óculo, descem juntos pela coluna de luz e pela escada,
+      // abrem no piso em trilhos horizontais logo acima dos cartões e descem em ângulo reto até cada um
+      const [tx, ty] = naTela(TOPO, dProf.topo, p);
+      const [bx, by] = naTela(ORIGEM, dProf.origem, p);
+      const n = destinos.length;
+      const ordem = destinos.map((q, i) => i).sort((a, b) => Math.abs(destinos[b][0] - bx) - Math.abs(destinos[a][0] - bx));
+      const f = (v: number) => v.toFixed(1);
+      const d = destinos.map(([dx, dy], i) => {
+        const k = i - (n - 1) / 2;
+        const x0 = tx + k * 5, x1 = bx + k * 9;              // feixe junto na coluna, um pouco mais aberto no piso
+        const linha = ordem.indexOf(i);                       // o mais distante corre mais alto
+        const topoCartao = Math.min(...destinos.map((q) => q[1]));
+        const hy = Math.max(by + 30, topoCartao - 26 - (n - 1 - linha) * 11);
+        const lado = dx < x1 ? -1 : 1;
+        const R = Math.max(2, Math.min(34, Math.abs(dx - x1) / 2, (hy - by) / 2, (dy - hy) / 2));
+        const R2 = Math.max(2, Math.min(18, Math.abs(dx - x1) / 2, (dy - hy) / 2));
+        return `M${f(x0)} ${f(Math.min(ty, -20))}L${f(x0)} ${f(ty)}L${f(x1)} ${f(by)}L${f(x1)} ${f(hy - R)}`
+          + `Q${f(x1)} ${f(hy)} ${f(x1 + lado * R)} ${f(hy)}L${f(dx - lado * R2)} ${f(hy)}`
+          + `Q${f(dx)} ${f(hy)} ${f(dx)} ${f(hy + R2)}L${f(dx)} ${f(dy)}`;
       });
       const chave = d.join('|');
       if (chave === ultimoD) return;
       ultimoD = chave;
       feixes.forEach((f, i) => f.setAttribute('d', d[i % d.length] ?? ''));
-      nos.forEach((n, i) => { const [dx, dy] = destinos[i] ?? [0, 0]; n.setAttribute('cx', dx.toFixed(1)); n.setAttribute('cy', dy.toFixed(1)); });
+      nos.forEach((no, i) => { const [dx, dy] = destinos[i] ?? [0, 0]; no.setAttribute('cx', dx.toFixed(1)); no.setAttribute('cy', dy.toFixed(1)); });
     };
     const tc = atrio ? document.querySelector<HTMLElement>('.m-abre-tc') : null;
     const painel = atrio ? document.querySelector<HTMLElement>('.m-abre') : null;
@@ -382,7 +397,7 @@ export default function Profundidade({ arte, prof, x = 0.5, fase = 0, atrio = fa
     document.addEventListener('visibilitychange', vis);
 
     return () => {
-      morto = true; vivo = false; cancelAnimationFrame(raf); io.disconnect(); ro?.disconnect();
+      morto = true; vivo = false; cancelAnimationFrame(raf); io.disconnect();
       desligaPulo.forEach((f) => f());
       removeEventListener('pointermove', move); document.documentElement.removeEventListener('pointerleave', sai);
       document.removeEventListener('visibilitychange', vis);
