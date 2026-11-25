@@ -405,7 +405,7 @@ html.k-fim .m-abre-pular{display:none}
 .m-tour-pino.is-on span,.m-tour-pino:hover span{opacity:1;translate:0 0}
 @keyframes m-cav-pulso{0%{opacity:.9;transform:scale(.85)}100%{opacity:0;transform:scale(1.6)}}
 
-.m-tour-painel{position:absolute;z-index:4;right:var(--m-x);top:50%;translate:0 -46%;width:min(440px,33vw);padding:calc(30 * var(--mu)) calc(32 * var(--mu)) calc(26 * var(--mu));
+.m-tour-painel{position:absolute;z-index:4;right:var(--m-x);top:50%;translate:0 -46%;width:clamp(340px,33vw,calc(470 * var(--mu)));max-height:calc(100% - 40px);overflow:auto;padding:calc(30 * var(--mu)) calc(32 * var(--mu)) calc(26 * var(--mu));
   background:rgba(16,16,18,.9);
   border:1px solid rgba(233,227,216,.12);border-top:2px solid var(--m-red);box-shadow:0 30px 80px rgba(0,0,0,.5)}
 .m-tour-topo{display:flex;justify-content:space-between;align-items:center;font:500 12px/1 var(--m-mono);letter-spacing:.18em;color:var(--m-mudo)}
@@ -417,7 +417,7 @@ html.k-fim .m-abre-pular{display:none}
 @keyframes m-tour-entra{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
 .m-tour-onde{margin:calc(26 * var(--mu)) 0 0;font:500 12px/1.4 var(--m-mono);letter-spacing:.14em;text-transform:uppercase;color:var(--m-bronze)}
 .m-tour-onde span{color:var(--m-mudo);letter-spacing:.06em;text-transform:none;font-family:var(--m-corpo);font-size:13px}
-.m-tour-texto h3{margin:calc(10 * var(--mu)) 0 0;font:600 clamp(26px,2.2vw,calc(36 * var(--mu)))/1.05 var(--m-disp);letter-spacing:-.015em;color:var(--m-marfim)}
+.m-tour-texto h3{margin:calc(10 * var(--mu)) 0 0;font:600 clamp(24px,2vw,calc(34 * var(--mu)))/1.08 var(--m-disp);overflow-wrap:break-word;hyphens:auto;letter-spacing:-.015em;color:var(--m-marfim)}
 .m-tour-entrega{margin:calc(18 * var(--mu)) 0 0;padding:calc(14 * var(--mu)) 0 0;border-top:1px solid var(--m-linha);font:400 calc(16.5 * var(--mu))/1.6 var(--m-corpo);color:var(--m-texto)}
 .m-tour-entrega b{display:block;margin-bottom:8px;font:600 11px/1 var(--m-mono);letter-spacing:.18em;text-transform:uppercase;color:var(--m-red)}
 .m-tour-abas{display:grid;grid-template-columns:repeat(6,1fr);gap:6px;list-style:none;margin:calc(22 * var(--mu)) 0 0;padding:0}
@@ -431,6 +431,12 @@ html.k-fim .m-abre-pular{display:none}
 .m-tour-abas button:hover{color:var(--m-marfim)}
 .m-tour-ir{display:inline-block;margin-top:calc(20 * var(--mu));font:600 14px/1 var(--m-corpo);color:var(--m-marfim);border-bottom:1px solid var(--m-red);padding-bottom:5px;text-decoration:none}
 @media (prefers-reduced-motion: reduce){.m-tour,.m-tour-cena{transition:none}.m-tour-pino.is-on b:after,.m-tour-texto{animation:none}}
+/* até 1180px o painel ainda cobre os pinos do centro: desce para baixo da arte */
+@media (max-width:1180px){
+  .m-tour-painel{position:relative;right:auto;top:auto;translate:none;width:auto;max-height:none;margin:-8px var(--m-x) 0;padding:24px 24px 22px;background:var(--m-graf)}
+  .m-tour-texto{min-height:0}
+  .m-tour:after{height:10%}
+}
 @media (max-width:1000px){
   .m-cav{padding-top:88px}
   .m-cav-cab{grid-template-columns:1fr;gap:18px}

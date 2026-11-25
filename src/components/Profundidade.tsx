@@ -390,8 +390,27 @@ export default function Profundidade({ arte, prof, x = 0.5, fase = 0, atrio = fa
       raf = requestAnimationFrame(laco);
     };
 
+    // a GPU pode descartar o contexto (outra aba pesada, driver, muitos canvas): o canvas virava um painel
+    // cinza-claro por cima da arte. Perdeu: some e a imagem parada aparece; voltou: monta de novo
+    const perdeu = (e: Event) => {
+      e.preventDefault(); vivo = false; cancelAnimationFrame(raf); raf = 0;
+      cv.classList.remove('is-on'); if (abrindo) encerra(0);
+    };
+    const voltou = () => { iniciado = false; if (visivel && !morto) inicia(); else gl = null; };
+    cv.addEventListener('webglcontextlost', perdeu);
+    cv.addEventListener('webglcontextrestored', voltou);
+
+    // longe da tela por uns segundos, o contexto dorme (libera a memória da GPU); ao voltar, acorda.
+    // assim só 1 ou 2 dos 5 canvas da página existem na GPU ao mesmo tempo
+    // (a extensão é guardada antes de dormir: com o contexto perdido, getExtension devolve null)
+    let dormindo = false, sono = 0, extSono: WEBGL_lose_context | null = null;
+    const adormece = () => { extSono = gl?.getExtension('WEBGL_lose_context') ?? null; if (extSono && !visivel && !morto) { dormindo = true; extSono.loseContext(); } };
+    const acorda = () => { if (!dormindo) return; dormindo = false; if (extSono) extSono.restoreContext(); else voltou(); };
+
     const io = new IntersectionObserver(([e]) => {
       visivel = e.isIntersecting;
+      clearTimeout(sono);
+      if (visivel) acorda(); else if (gl && !abrindo) sono = window.setTimeout(adormece, 4000);
       if (visivel && !iniciado) inicia();
       if (visivel && vivo && !raf) { ultimo = performance.now(); laco(); }
     }, { rootMargin: '150px 0px' });
@@ -404,7 +423,8 @@ export default function Profundidade({ arte, prof, x = 0.5, fase = 0, atrio = fa
     document.addEventListener('visibilitychange', vis);
 
     return () => {
-      morto = true; vivo = false; cancelAnimationFrame(raf); io.disconnect();
+      morto = true; vivo = false; cancelAnimationFrame(raf); io.disconnect(); clearTimeout(sono);
+      cv.removeEventListener('webglcontextlost', perdeu); cv.removeEventListener('webglcontextrestored', voltou);
       desligaPulo.forEach((f) => f());
       removeEventListener('pointermove', move); document.documentElement.removeEventListener('pointerleave', sai);
       document.removeEventListener('visibilitychange', vis);
