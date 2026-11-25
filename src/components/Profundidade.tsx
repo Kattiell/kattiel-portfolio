@@ -340,6 +340,8 @@ export default function Profundidade({ arte, prof, x = 0.5, fase = 0, atrio = fa
     let ultimo = performance.now();
     const laco = () => {
       if (!gl || !vivo || !visivel || document.hidden) { raf = 0; return; }
+      // contexto perdido sem o evento chegar (driver, aba em segundo plano): mostra a imagem parada
+      if (gl.isContextLost()) { vivo = false; raf = 0; cv.classList.remove('is-on'); if (abrindo) encerra(0); return; }
       const agora = performance.now();
       // a cena se mexe devagar: 30 quadros por segundo bastam (a abertura roda cheia). Metade da GPU e da CPU.
       if (!abrindo && agora - ultimo < 31) { raf = requestAnimationFrame(laco); return; }

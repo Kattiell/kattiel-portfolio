@@ -265,9 +265,10 @@ export const PROJECTS: Project[] = [
       'Página de cada moeda com Raio-X (compra do criador, top 10, carteiras ligadas e escudo anti-sniper), curva, compra e venda com slippage e taxas do criador.',
     ],
     outcome:
-      'Em pré-lançamento: os contratos ainda não foram auditados e o site de produção não mostra número inventado. As telas abaixo são do modo de prévia, com moedas e negociações simuladas.',
+      'Em pré-lançamento: os contratos ainda não foram auditados. No ar como vitrine, com moedas e negociações simuladas e um aviso claro; lista de espera e pedidos de lançamento abrem com a testnet.',
     stack: ['Next.js', 'TypeScript', 'Tailwind', 'Solidity', 'Foundry', 'viem', 'Three.js', 'Postgres'],
-    visibility: 'case-study-only',
+    url: 'https://asphodel-three.vercel.app',
+    visibility: 'public',
   },
 
   {
@@ -287,7 +288,7 @@ const ORDEM = ['lcp-consultoria', 'qa-intelligence', 'parity-gate', 'plenario'];
 export const FEATURED = PROJECTS.filter((p) => p.featured).sort((a, b) => ORDEM.indexOf(a.slug) - ORDEM.indexOf(b.slug));
 export const OTHERS = PROJECTS.filter((p) => !p.featured);
 /** Os que aparecem em "Mais trabalhos" na home, nesta ordem. */
-export const MAIS = ['lunara', 'asphodel', 'mariane-borges', 'bancada'].map((s) => PROJECTS.find((p) => p.slug === s)!);
+export const MAIS = ['lunara', 'asphodel', 'mariane-borges', 'transmute', 'bancada', 'ia-para-gestores', 'laboratorio-civilizacoes', 'brasa'].map((s) => PROJECTS.find((p) => p.slug === s)!);
 /** O link que pode ser aberto, se houver (site no ar ou repositório público). */
 export const publicLink = (p: Project) => p.url ?? p.repositoryUrl;
 

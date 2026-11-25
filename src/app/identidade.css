@@ -453,3 +453,12 @@ html.k-fim .m-abre-pular{display:none}
 
 /* aparelho de toque ou fraco: sem pulso correndo nos fios (o desenho fica) */
 @media (pointer:coarse){.m-feixe-pulso{display:none}}
+
+/* capa tipográfica (projeto sem captura): no grid de 4 colunas o título estourava a caixa por cima */
+.m-capa-tipo{overflow:hidden}
+.m-capa-tipo small{display:-webkit-box;-webkit-box-orient:vertical;-webkit-line-clamp:3;line-clamp:3;overflow:hidden}
+@media (min-width:1500px){
+  .m-capa-tipo{padding:calc(24 * var(--mu));gap:calc(10 * var(--mu))}
+  .m-capa-tipo b{font-size:clamp(22px,1.7vw,calc(32 * var(--mu)))}
+  .m-capa-tipo small{font-size:calc(13 * var(--mu))}
+}
