@@ -9,7 +9,7 @@
  */
 import * as THREE from 'three';
 import { Reflector } from 'three/addons/objects/Reflector.js';
-import { REFLECT_LAYER } from './hall.js';
+import { REFLECT_LAYER, texturaAgua } from './hall.js';
 
 const ADITIVO = { transparent: true, depthWrite: false, blending: THREE.AdditiveBlending, toneMapped: false };
 const fixo = (o) => { o.traverse((q) => { q.userData.naoFundir = true; q.layers.enable(REFLECT_LAYER); }); return o; };
@@ -101,11 +101,17 @@ function pisoMolhado(raiz, updaters, nivel) {
 }
 
 /* ---------------- cachoeiras: filetes de espuma ---------------- */
-function cachoeiras(raiz) {
+function cachoeiras(raiz, updaters) {
   const feitos = new Set();
+  // relevo do vídeo (o mesmo do lago, gravado no Blender) esticado no sentido da queda e descendo com a água:
+  // uma leitura de textura a mais por pixel de cachoeira, sem geometria nova
+  const relevo = texturaAgua(); relevo.repeat.set(6, 1.4);
   raiz.traverse((o) => {
     if (!o.isMesh) return; const m = o.material; if (!m || feitos.has(m) || m.name !== 'A_AGUA_agua' || !m.map) return;
     feitos.add(m);
+    m.normalMap = relevo; m.normalScale = new THREE.Vector2(0.75, 0.75);
+    const sentido = Math.sign(m.map.repeat.y || 1);
+    if (!relevo.userData.anda) { relevo.userData.anda = true; updaters.push((dt, t) => { relevo.offset.y = sentido * ((t * 0.7) % 1000); }); }
     m.emissiveIntensity = 0.7; m.opacity = 0.94; m.emissive = new THREE.Color(0xe6f0f4); m.color = new THREE.Color(0xffffff);
     m.onBeforeCompile = (sh) => {
       sh.fragmentShader = sh.fragmentShader
@@ -218,7 +224,7 @@ export function realcar({ hall, nivel = 'media', HALL }) {
   if (carro(root, updaters)) feitos.push('carro');
   // piso molhado (segundo Reflector) saiu: custava um desenho a mais da cena por quadro
   void pisoMolhado; void nivel;
-  if (cachoeiras(root)) feitos.push('cachoeiras');
+  if (cachoeiras(root, updaters)) feitos.push('cachoeiras');
   if (globo(root, updaters)) feitos.push('globo');
   const q = calor(root); if (q) feitos.push(`calor×${q}`);
   if (HALL) feitos.push(`lampiões×${lampioes(root, updaters, HALL)}`);

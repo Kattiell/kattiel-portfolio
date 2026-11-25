@@ -709,18 +709,25 @@ function waterfall({ x, z, top, bottom, width, yaw = 0, curveR = 0 }) {
   return { group, update, sheet };
 }
 
+/* Relevo da água: o Noise do vídeo (Detail 2, Distortion 0) gravado no Blender numa textura sem emenda
+   (batcaverna/tools/blender/agua_normal.py + agua_normal_mapa.py). Antes era gerado em JS na carga
+   (~1 milhão de avaliações de ruído); agora são 47 KB baixados uma vez e compartilhados por lago e cachoeiras. */
+let _aguaNormal = null;
+export function texturaAgua() {
+  if (_aguaNormal) return _aguaNormal;
+  // enquanto baixa: normal plano (1 px), a água aparece lisa por um instante em vez de esperar
+  const t = new THREE.DataTexture(new Uint8Array([128, 128, 255, 255]), 1, 1); t.needsUpdate = true;
+  t.wrapS = t.wrapT = THREE.RepeatWrapping;
+  const url = window.__qualidade === 'baixa' ? '/textures/agua_normal_512.webp' : '/textures/agua_normal.webp';
+  new THREE.TextureLoader().load(url, (img) => {
+    t.image = img.image; t.anisotropy = 8; t.generateMipmaps = true; t.minFilter = THREE.LinearMipmapLinearFilter;
+    t.magFilter = THREE.LinearFilter; t.needsUpdate = true; img.dispose();
+  });
+  _aguaNormal = t; return t;
+}
+
 function buildWater() {
-  // mapa normal de ondas gerado em canvas (tileável)
-  // 512 px e 5 oitavas: ondas grandes + marola fina (antes 256 / 4)
-  const S = window.__qualidade === 'baixa' ? 256 : 512; const c = makeCanvas(S, S); const g = c.getContext('2d'); const img = g.createImageData(S, S);
-  const hgt = (x, y) => fbm(Math.cos(x / S * 6.283) * 2 + 5, Math.sin(x / S * 6.283) * 2, Math.cos(y / S * 6.283) * 2 + Math.sin(y / S * 6.283) * 1.3, 5);
-  for (let y = 0; y < S; y++) for (let x = 0; x < S; x++) {
-    const dx = hgt(x + 1, y) - hgt(x - 1, y), dy = hgt(x, y + 1) - hgt(x, y - 1);
-    let nx = -dx * 6, ny = -dy * 6, nz = 1; const l = Math.hypot(nx, ny, nz); nx /= l; ny /= l; nz /= l;
-    const i = (y * S + x) * 4; img.data[i] = (nx * 0.5 + 0.5) * 255; img.data[i + 1] = (ny * 0.5 + 0.5) * 255; img.data[i + 2] = (nz * 0.5 + 0.5) * 255; img.data[i + 3] = 255;
-  }
-  g.putImageData(img, 0, 0);
-  const normals = new THREE.CanvasTexture(c); normals.wrapS = normals.wrapT = THREE.RepeatWrapping; normals.anisotropy = 8;
+  const normals = texturaAgua();
   // Espelho em tempo real, mas barato: a câmera refletida só enxerga a camada 1 (LEDs, telas,
   // cachoeiras, véus — materiais sem iluminação), em meia resolução. É o que a água da arte reflete.
   const shader = {
