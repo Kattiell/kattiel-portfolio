@@ -216,7 +216,8 @@ function lampioes(raiz, updaters, HALL) {
 export function realcar({ hall, nivel = 'media', HALL }) {
   const feitos = []; const { root, updaters } = hall;
   if (carro(root, updaters)) feitos.push('carro');
-  if (nivel !== 'baixa' && pisoMolhado(root, updaters, nivel)) feitos.push('piso molhado');
+  // piso molhado (segundo Reflector) saiu: custava um desenho a mais da cena por quadro
+  void pisoMolhado; void nivel;
   if (cachoeiras(root)) feitos.push('cachoeiras');
   if (globo(root, updaters)) feitos.push('globo');
   const q = calor(root); if (q) feitos.push(`calor×${q}`);

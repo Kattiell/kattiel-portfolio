@@ -62,6 +62,9 @@ const semTextura = (m) => !MAPAS.some((k) => m[k]);
 
 export function fundirEstaticos(raiz, { ensaio, fora = [], semSombra = false } = {}) {
   raiz.updateMatrixWorld(true);
+  // retrato de todo nó visível (não só malhas): depois do ensaio, quem não andou congela a matriz
+  const todos = [];
+  raiz.traverse((o) => { if (o !== raiz && visivelDeFato(o) && !ancestrais(o, (p) => EXCLUI_NOME.test(p.name || '') || fora.includes(p) || p.userData?.naoFundir)) todos.push([o, o.matrixWorld.clone()]); });
   const cands = [];
   raiz.traverse((o) => {
     if (!o.isMesh || o.isInstancedMesh || o.isSkinnedMesh || o.morphTargetInfluences) return;
@@ -138,9 +141,17 @@ export function fundirEstaticos(raiz, { ensaio, fora = [], semSombra = false } =
     for (const o of lista) o.visible = false;
     depois++;
   }
+  // congela: matriz parada não é recalculada a cada quadro (era ~15% da CPU só em updateMatrixWorld).
+  // Os originais fundidos (invisíveis) nem entram mais na travessia.
+  let congelados = 0;
+  for (const [o, m0] of todos) {
+    if (!o.matrixWorld.equals(m0) || o.isCamera || o.isLight) continue;
+    o.matrixAutoUpdate = false; congelados++;
+    if (!o.visible) o.matrixWorldAutoUpdate = false;
+  }
   // transparente de dupla face: o three desenha duas vezes (verso e frente); uma passada basta aqui
   raiz.traverse((o) => { if (!o.isMesh || Array.isArray(o.material)) return; const m = o.material; if (m.transparent && m.side === THREE.DoubleSide && !m.isShaderMaterial) m.forceSinglePass = true; });
-  return { antes, depois };
+  return { antes, depois, congelados };
 }
 
 /** O reflexo do lago só é refeito a cada `n` quadros (é um segundo desenho da cena). */

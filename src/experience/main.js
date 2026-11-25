@@ -578,7 +578,11 @@ function updateSystems(t) { alertLight.intensity = alertOn ? 220 * (0.55 + 0.45 
 
 /* ---------------- laço principal ---------------- */
 let introT = 0; let fpsAcc = 0, fpsN = 0;
-function loop() {
+let ultimoQuadro = 0;
+function loop(agoraMs = performance.now()) {
+  // apresentação com a câmera parada: 30 quadros por segundo bastam (metade da CPU e da GPU)
+  if (state.mode === 'apres' && !apres.voando && agoraMs - ultimoQuadro < 31) { requestAnimationFrame(loop); return; }
+  ultimoQuadro = agoraMs;
   const dt = Math.min(clock.getDelta(), 0.05); state.t += dt; const t = state.t;
   if (state.mode === 'intro') { introT += dt; introAt(introT); if (introT >= INTRO_T) endIntro(); }
   else if (state.mode === 'apres') apres.update(dt, t);
@@ -617,6 +621,9 @@ function loop() {
   const r = fundirEstaticos(hall.root, { fora, semSombra: quality.level !== 'alta', ensaio: (i) => { const t = 2 + i * 0.53; for (const u of hall.updaters) u(0.11, t); districts.update(0.11, t, null); } });
   const orc = { alta: [14, 6], media: [8, 4], baixa: [4, 2] }[quality.level];
   luzes = poolDeLuzes(scene, hall.root, camera, { pontos: orc[0], spots: orc[1] });
+  // o reflexo do lago vê só a camada 1; se as luzes não estiverem nela, o estado de luz muda entre os dois
+  // desenhos e todo material refaz a escolha de programa a cada quadro (getParameters era ~10% da CPU)
+  scene.traverse((o) => { if (o.isLight) o.layers.enable(1); });
   feiticos.aquecer();   // compila os shaders do feitiço (e de todo o salão) antes do primeiro quadro
   // fechaduras das grades: as peças giram juntas, então fundem no espaço da própria fechadura (a runa anima à parte)
   let nLocal = 0; for (const p of districts.portals) { const lk = p.barrier.userData.lock; nLocal += fundirLocal(lk, [p.barrier.userData.rune]); }

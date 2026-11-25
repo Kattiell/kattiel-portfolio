@@ -174,6 +174,7 @@ export function criarApresentacao({ camera, districts, hub, reducedMotion, onExp
 
   return {
     get ativo() { return ativo; },
+    get voando() { return !!anim; },
     entrar() {
       ativo = true; ui.raiz.classList.remove('hide'); document.body.classList.add('modo-apres');
       const h = location.hash.slice(1); const i = porId(h);

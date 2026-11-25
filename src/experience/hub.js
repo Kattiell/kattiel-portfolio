@@ -130,7 +130,8 @@ export function buildHub({ root, batch, colliders, updaters, interactables, scre
     const car = buildCar(); car.name = 'HERO_CAR'; car.position.copy(TT).setY(PL.y + 0.04); car.rotation.y = Math.PI * 0.62; root.add(car);
     { const cc = new THREE.Mesh(new THREE.CylinderGeometry(2.4, 2.4, 2.4, 24)); cc.position.copy(TT).setY(PL.y + 1.2); colliders.add(cc); }
     root.userData.turntable = { turn, speed: 0.06, TT };
-    updaters.push((dt) => { const s = root.userData.turntable.speed; turn.rotation.y += dt * s; const c2 = root.getObjectByName('HERO_CAR'); if (c2) c2.rotation.y += dt * s; });
+    let carro = null;   // o GLB troca o carro depois da carga: busca de novo só se o guardado saiu da cena
+    updaters.push((dt) => { const s = root.userData.turntable.speed; turn.rotation.y += dt * s; if (!carro || !carro.parent) carro = root.getObjectByName('HERO_CAR'); if (carro) carro.rotation.y += dt * s; });
     interactables.push({ kind: 'info', label: () => 'Veículo blindado — comande a plataforma pelo Batcomputador', pos: () => TT.clone(), radius: 6 });
     const roof = new THREE.Mesh(new THREE.BoxGeometry(15, 0.8, 21), mat.graphite); roof.position.set(gx - 0.5, 8.6, gz); garVis.add(roof);
     for (let z = -4; z <= 12; z += 4) garBatch.add(new THREE.BoxGeometry(7, 0.05, 0.12), glow(0xdff6ff, 0.55), V3(gx, 8.18, z));
