@@ -226,6 +226,51 @@ export const PROJECTS: Project[] = [
 
 
   {
+    slug: 'lunara',
+    title: 'Lunara',
+    category: 'software',
+    kind: 'Produto Web3 · IA',
+    summary:
+      'Plataforma de imagens com IA na rede Base: a pessoa descreve a imagem num chat e recebe a arte pronta, ou usa um workflow criado pela comunidade (um estilo com prompt, passos e capa). Os créditos semanais vêm do token $LUNARA que ela guarda na carteira.',
+    challenge:
+      'Cobrar geração de imagem sem cartão de crédito e sem deixar o custo dos modelos fugir do controle: o acesso precisava sair do token, com login por carteira ou pelo X, e cada imagem gerada tinha de ser descontada de um saldo que o usuário enxerga.',
+    approach:
+      'Créditos como livro-caixa no servidor (saldo, transações e uso de workflow em tabelas próprias), com a recarga semanal decidida pelo saldo de $LUNARA: Free com 100 créditos, Premium com 1.200 a partir de 400 mil tokens, VIP+ com 9.000 a partir de 1 milhão. Login por carteira com assinatura ou pelo X com OAuth 2.0 e PKCE, sessão em cookie HttpOnly. Workflows da comunidade com curtidas, visualizações e custo fixo de 100 créditos para quem não é o autor. Geração pelo gpt-image-1 da OpenAI.',
+    evidence: [
+      'Backend em NestJS com Prisma (95 commits): usuários, contas sociais, carteiras, staking, workflows, uso de workflow, saldo e transações de crédito, e log de auditoria.',
+      'Integração com o Agent Commerce Protocol da Virtuals: outros agentes pagam em USDC e recebem a imagem por uma API com esquema de entrada e de saída.',
+      'A Lunara também age sozinha: um agente na rede social de agentes Moltbook e um bot no X que classifica cada menção (informação, análise, workflow ou conversa) antes de responder, dentro do limite de 1.500 posts por mês do plano gratuito.',
+      'Front em React com Vite, Tailwind e Radix (48 commits), com perfil, plano, carteiras e geração no celular.',
+    ],
+    outcome:
+      'Os sites saíram do ar. As telas abaixo são do front real rodando localmente, com login, servidor e geração simulados e as imagens tiradas das artes deste portfólio.',
+    stack: ['React', 'Vite', 'NestJS', 'Prisma', 'OpenAI', 'Base (EVM)', 'Virtuals ACP'],
+    visibility: 'case-study-only',
+  },
+  {
+    slug: 'asphodel',
+    title: 'Asphodel',
+    category: 'software',
+    kind: 'Produto Web3 · pré-lançamento',
+    summary:
+      'Launchpad de memecoins para a rede Elysium: a pessoa planta uma moeda numa tela só e numa transação só, e ela nasce como semente numa curva de preço própria até florescer numa pool de DEX ao chegar em 300 HYPE. O campo de asfódelos em 3D é o mapa das moedas.',
+    challenge:
+      'Launchpads de memecoin costumam premiar quem compra no primeiro segundo e quem cria a moeda e vende tudo. A ideia era um lançamento justo e legível: regras fixas que ninguém muda depois, proteção contra robôs no início e tudo visível para quem chega depois.',
+    approach:
+      'Curva x·y=K com taxa fixa de 1% (0,90% para o criador e 0,10% para a plataforma), anti-sniper de 60 s com taxa de 50% caindo até 1%, compra do criador limitada a 1% do suprimento e 1 bilhão de tokens sem dono e sem mint. A matemática do site e a do contrato são a mesma, e um teste confere a cotação contra a rede. Pedido de lançamento passa por moderação de texto e de imagem no servidor antes de virar semente no campo.',
+    evidence: [
+      'Contratos em Solidity com Foundry (TokenFactory, BondingCurve, AsphodelToken e FeeVault): 26 testes e 4 invariantes com 12 mil trades aleatórios.',
+      'Site em Next.js 16, TypeScript e Tailwind 4 com login por carteira (SIWE) e pelo X, perfil, lista de espera e pedidos de lançamento gravados em Postgres com RLS.',
+      'Moderação no servidor: texto normalizado contra leetspeak e repetição (55 testes, incluindo falsos positivos) e imagem re-encodada sem metadados e classificada por NSFWJS.',
+      'Página de cada moeda com Raio-X (compra do criador, top 10, carteiras ligadas e escudo anti-sniper), curva, compra e venda com slippage e taxas do criador.',
+    ],
+    outcome:
+      'Em pré-lançamento: os contratos ainda não foram auditados e o site de produção não mostra número inventado. As telas abaixo são do modo de prévia, com moedas e negociações simuladas.',
+    stack: ['Next.js', 'TypeScript', 'Tailwind', 'Solidity', 'Foundry', 'viem', 'Three.js', 'Postgres'],
+    visibility: 'case-study-only',
+  },
+
+  {
     slug: 'gama-vans',
     title: 'Loja de peças para vans',
     category: 'design',
@@ -242,7 +287,7 @@ const ORDEM = ['lcp-consultoria', 'qa-intelligence', 'parity-gate', 'plenario'];
 export const FEATURED = PROJECTS.filter((p) => p.featured).sort((a, b) => ORDEM.indexOf(a.slug) - ORDEM.indexOf(b.slug));
 export const OTHERS = PROJECTS.filter((p) => !p.featured);
 /** Os que aparecem em "Mais trabalhos" na home, nesta ordem. */
-export const MAIS = ['bancada', 'mariane-borges', 'ia-para-gestores', 'transmute'].map((s) => PROJECTS.find((p) => p.slug === s)!);
+export const MAIS = ['lunara', 'asphodel', 'mariane-borges', 'bancada'].map((s) => PROJECTS.find((p) => p.slug === s)!);
 /** O link que pode ser aberto, se houver (site no ar ou repositório público). */
 export const publicLink = (p: Project) => p.url ?? p.repositoryUrl;
 

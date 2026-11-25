@@ -23,6 +23,19 @@ import tmBot2 from '../../public/img/projetos/transmute/bot-2.webp';
 import tmBot3 from '../../public/img/projetos/transmute/bot-3.webp';
 import tmFlex from '../../public/img/projetos/transmute/bot-flexcard.webp';
 
+import luWorkflows from '../../public/img/projetos/lunara/workflows.webp';
+import luGerando from '../../public/img/projetos/lunara/chat-gerando.webp';
+import luImagem from '../../public/img/projetos/lunara/chat-imagem.webp';
+import luAtivo from '../../public/img/projetos/lunara/workflow-ativo.webp';
+import luDetalhes from '../../public/img/projetos/lunara/workflow-detalhes.webp';
+import luCriar from '../../public/img/projetos/lunara/criar-workflow.webp';
+import luPerfil from '../../public/img/projetos/lunara/perfil.webp';
+import luCelular from '../../public/img/projetos/lunara/celular.webp';
+import asHome from '../../public/img/projetos/asphodel/home.webp';
+import asPlantar from '../../public/img/projetos/asphodel/plantar.webp';
+import asMoeda from '../../public/img/projetos/asphodel/moeda.webp';
+import asCelular from '../../public/img/projetos/asphodel/celular.webp';
+
 export type Tela = { src: StaticImageData; alt: string; legenda?: string };
 
 export const PROJECT_IMAGES: Record<string, Tela> = {
@@ -30,6 +43,8 @@ export const PROJECT_IMAGES: Record<string, Tela> = {
   'mariane-borges': { src: mariane, alt: 'Página inicial do site da nutricionista Mariane Borges: "Nutrição que transforma sua rotina", com o botão "Agende sua consulta".', legenda: 'Captura do site no ar.' },
   bancada: { src: painel, alt: 'Painel do laudo ao vivo ao lado do Claude Code: etapa 4 de 8, casos por status, achados, massa de teste a limpar e as chamadas de API com status e tempo.', legenda: 'Painel do laudo ao vivo (dados de demonstração).' },
   transmute: { src: tmArena, alt: 'Painel do Transmute: o Agent Arena com a Cosmic City, a contagem para a próxima sessão e o menu do terminal de sinais.', legenda: 'O Agent Arena, com o projeto rodando localmente (sem dados).' },
+  lunara: { src: luWorkflows, alt: 'Tela principal da Lunara: workflows da comunidade com capa, autor, categoria e custo em créditos, o ranking dos usuários e o gerador de imagens aberto ao lado.', legenda: 'Workflows da comunidade e o gerador ao lado (dados de demonstração).' },
+  asphodel: { src: asHome, alt: 'Página inicial da Asphodel: "Plant a coin on Elysium." ao lado de um lírio dourado em 3D sobre um campo de asfódelos.', legenda: 'A página inicial com o campo em 3D (modo de prévia).' },
   'ia-para-gestores': { src: cursoCapa, alt: 'Capa do módulo 1 do curso IA para Gestores: "Por que IA, por que agora, por que Claude".', legenda: 'Capa do módulo 1.' },
 };
 
@@ -43,6 +58,20 @@ export const PROJECT_GALLERY: Record<string, Tela[]> = {
     { src: tmBot2, alt: 'Grupo no Telegram: alguém posta um endereço de contrato, o bot responde com o card do token e, depois, /flex devolve o flexcard.', legenda: 'Bot: card automático do token e flexcard da call (reconstituição, dados fictícios).' },
     { src: tmBot3, alt: 'Grupo no Telegram: /gods 7d mostra o ranking com estatísticas, melhores callers e melhores calls.', legenda: 'Bot: ranking de quem fez as melhores calls (reconstituição, dados fictícios).' },
     { src: tmFlex, alt: 'Flexcard em PNG: DEMO a 84.0K, 6.10x, alcançou 512.0K.', legenda: 'Flexcard gerado pelo código real do bot, com dados fictícios.' },
+  ],
+  lunara: [
+    { src: luGerando, alt: 'Chat do gerador: o pedido do usuário e a resposta "Generating your image using Lunara AI".', legenda: 'Criação de imagem pelo chat: o pedido e a geração em andamento.' },
+    { src: luImagem, alt: 'Imagem pronta no chat com "Image ready", 100 créditos descontados e os botões Download, Create Workflow e Print Card.', legenda: 'Imagem pronta: o saldo cai 100 créditos e a imagem vira download, workflow ou card.' },
+    { src: luAtivo, alt: 'Gerador com um workflow da comunidade selecionado como estilo, mostrando autor e custo.', legenda: 'Um workflow da comunidade selecionado como estilo da próxima imagem.' },
+    { src: luDetalhes, alt: 'Detalhes de um workflow: descrição, curtidas, visualizações, tags, passos e galeria.', legenda: 'Página de um workflow: passos, números e galeria.' },
+    { src: luCriar, alt: 'Formulário de criação de workflow com nome, categoria, descrição, prompt e custo para outros usuários.', legenda: 'Criação de workflow: o prompt que os outros vão usar e o custo para eles.' },
+    { src: luPerfil, alt: 'Perfil do usuário com a carteira verificada, o saldo de $LUNARA e o plano Premium com a barra até o VIP+.', legenda: 'Perfil: carteira verificada, plano pelo saldo do token e progresso até o próximo nível.' },
+    { src: luCelular, alt: 'A Lunara no celular: lista de workflows com os botões de uso.', legenda: 'No celular.' },
+  ],
+  asphodel: [
+    { src: asPlantar, alt: 'Tela "Plant a coin": nome, ticker, descrição, perfil do X, e-mail privado, imagem e compra do criador limitada a 1%.', legenda: 'Plantar uma moeda: tudo numa tela e numa transação, com a compra do criador limitada a 1%.' },
+    { src: asMoeda, alt: 'Página da moeda Golden Field: Raio-X com compra do criador, top 10 e escudo anti-sniper, gráfico da curva e painel de compra e venda.', legenda: 'Página da moeda: Raio-X, curva até a floração e compra e venda (simulado).' },
+    { src: asCelular, alt: 'A página inicial da Asphodel no celular, com o lírio em 3D.', legenda: 'No celular.' },
   ],
   bancada: [
     { src: laudo, alt: 'Laudo exportado em HTML: veredito proposto aguardando revisão do líder, as 9 etapas e a matriz de casos com o tipo de caso extremo.', legenda: 'Laudo exportado: a IA propõe o veredito, o líder de QA revisa (exemplo fictício).' },
