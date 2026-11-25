@@ -75,18 +75,23 @@ export default function Movimento() {
     limpar.push(() => io3.disconnect());
 
     // ---- velocidade da rolagem: a faixa acelera e inclina ----
+    // a variável vai só na faixa (no <html> ela recalculava o estilo da página inteira a cada quadro),
+    // e o laço só roda enquanto a página rola: parada, a CPU fica livre
+    const faixa = document.querySelector<HTMLElement>('.m-faixa');
     let ultimoY = scrollY;
     let vel = 0;
     let raf = 0;
+    let escrito = '';
     const laco = () => {
       const y = scrollY;
       vel += (y - ultimoY - vel) * 0.12;
       ultimoY = y;
       vel *= 0.9;
-      raiz.style.setProperty('--m-vel', vel.toFixed(2));
-      raf = requestAnimationFrame(laco);
+      const v = Math.abs(vel) < 0.05 ? '0' : vel.toFixed(1);
+      if (v !== escrito && faixa) { faixa.style.setProperty('--m-vel', v); escrito = v; }
+      raf = v === '0' ? 0 : requestAnimationFrame(laco);
     };
-    raf = requestAnimationFrame(laco);
+    on('scroll', () => { if (!raf) { ultimoY = scrollY; raf = requestAnimationFrame(laco); } });
     limpar.push(() => cancelAnimationFrame(raf));
 
     if (!fino) return () => limpar.forEach((f) => f());
@@ -111,6 +116,7 @@ export default function Movimento() {
       const alvo = (e.target as Element | null)?.closest?.('a, button, [data-cursor]');
       ret.classList.toggle('is-alvo', !!alvo);
       rotulo.textContent = alvo ? (alvo.getAttribute('data-cursor') ?? (alvo.matches('.m-projeto-capa') ? 'Abrir' : '')) : '';
+      if (!raf2) raf2 = requestAnimationFrame(segue);
     });
     on('pointerdown', () => ret.classList.add('is-clique'));
     on('pointerup', () => ret.classList.remove('is-clique'));
@@ -118,9 +124,10 @@ export default function Movimento() {
       rx += (mx - rx) * 0.22;
       ry += (my - ry) * 0.22;
       ret.style.transform = `translate3d(${rx}px, ${ry}px, 0)`;
-      raf2 = requestAnimationFrame(segue);
+      // chegou no cursor: para até o próximo movimento
+      raf2 = Math.abs(mx - rx) + Math.abs(my - ry) < 0.4 ? 0 : requestAnimationFrame(segue);
     };
-    let raf2 = requestAnimationFrame(segue);
+    let raf2 = 0;
     limpar.push(() => cancelAnimationFrame(raf2));
 
     return () => limpar.forEach((f) => f());

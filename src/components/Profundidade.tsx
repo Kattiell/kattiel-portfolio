@@ -185,6 +185,11 @@ export default function Profundidade({ arte, prof, x = 0.5, fase = 0, atrio = fa
   useEffect(() => {
     const cv = ref.current;
     const raiz = document.documentElement;
+    // aparelho fraco (toque, poucos núcleos, pouca memória, economia de dados): só o átrio anima, e mais leve;
+    // nos capítulos fica a imagem parada (que já está na página por baixo do canvas)
+    const nav = navigator as Navigator & { deviceMemory?: number; connection?: { saveData?: boolean } };
+    const leve = matchMedia('(pointer: coarse)').matches || (navigator.hardwareConcurrency || 8) <= 4 || (nav.deviceMemory || 8) <= 4 || !!nav.connection?.saveData;
+    if (leve && !atrio) return;
     // abertura: o script do <head> marca html.k-abre em toda carga da página; aqui ela é tocada (ou encerrada)
     let abrindo = atrio && raiz.classList.contains('k-abre') && !raiz.classList.contains('k-fim');
     let A = abrindo ? 0 : 99, vel = 1, tFim = abrindo ? Infinity : -1, vivo = false;
@@ -302,7 +307,7 @@ export default function Profundidade({ arte, prof, x = 0.5, fase = 0, atrio = fa
       const [bx, by] = naTela(ORIGEM, dProf.origem, p);
       const n = destinos.length;
       const ordem = destinos.map((q, i) => i).sort((a, b) => Math.abs(destinos[b][0] - bx) - Math.abs(destinos[a][0] - bx));
-      const f = (v: number) => v.toFixed(1);
+      const f = (v: number) => String(Math.round(v));   // pixel inteiro: o SVG só redesenha quando o fio anda de fato
       const d = destinos.map(([dx, dy], i) => {
         const k = i - (n - 1) / 2;
         const x0 = tx + k * 5, x1 = bx + k * 9;              // feixe junto na coluna, um pouco mais aberto no piso
@@ -320,14 +325,14 @@ export default function Profundidade({ arte, prof, x = 0.5, fase = 0, atrio = fa
       if (chave === ultimoD) return;
       ultimoD = chave;
       feixes.forEach((f, i) => f.setAttribute('d', d[i % d.length] ?? ''));
-      nos.forEach((no, i) => { const [dx, dy] = destinos[i] ?? [0, 0]; no.setAttribute('cx', dx.toFixed(1)); no.setAttribute('cy', dy.toFixed(1)); });
+      nos.forEach((no, i) => { const [dx, dy] = destinos[i] ?? [0, 0]; no.setAttribute('cx', String(Math.round(dx))); no.setAttribute('cy', String(Math.round(dy))); });
     };
     const tc = atrio ? document.querySelector<HTMLElement>('.m-abre-tc') : null;
     const painel = atrio ? document.querySelector<HTMLElement>('.m-abre') : null;
 
     const dimensiona = () => {
       const r = caixa.getBoundingClientRect();
-      const k = Math.min(devicePixelRatio || 1, 1.25) * escala;
+      const k = Math.min(devicePixelRatio || 1, leve ? 1 : 1.25) * escala;
       const w = Math.max(2, Math.round(r.width * k)), h = Math.max(2, Math.round(r.height * k));
       if (cv.width !== w || cv.height !== h) { cv.width = w; cv.height = h; }
     };
@@ -336,12 +341,14 @@ export default function Profundidade({ arte, prof, x = 0.5, fase = 0, atrio = fa
     const laco = () => {
       if (!gl || !vivo || !visivel || document.hidden) { raf = 0; return; }
       const agora = performance.now();
+      // a cena se mexe devagar: 30 quadros por segundo bastam (a abertura roda cheia). Metade da GPU e da CPU.
+      if (!abrindo && agora - ultimo < 31) { raf = requestAnimationFrame(laco); return; }
       const dt = Math.min(0.05, (agora - ultimo) / 1000); ultimo = agora;
       const t = (agora - t0) / 1000;
       // resolução que se ajusta: se o quadro passa de ~22 ms, renderiza menor
       tempos.push(dt); if (tempos.length > 40) tempos.shift();
       if (tempos.length === 40) { const m = tempos.reduce((a, b) => a + b) / 40;
-        if (m > 0.022 && escala > 0.5) { escala -= 0.1; tempos.length = 0; } else if (m < 0.012 && escala < 0.9) { escala += 0.05; tempos.length = 0; } }
+        if (m > (abrindo ? 0.022 : 0.045) && escala > 0.5) { escala -= 0.1; tempos.length = 0; } else if (m < (abrindo ? 0.012 : 0.036) && escala < 0.9) { escala += 0.05; tempos.length = 0; } }
       dimensiona();
       // câmera com inércia; parada, deriva sozinha
       const k = 1 - Math.exp(-dt * 2.4);

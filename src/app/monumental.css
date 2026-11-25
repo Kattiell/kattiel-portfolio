@@ -17,7 +17,7 @@
 
 /* ---------- cabeçalho (todas as páginas) ---------- */
 .m-topo{position:sticky;top:0;z-index:50;height:calc(72 * var(--mu));display:flex;align-items:center;gap:calc(32 * var(--mu));padding:0 var(--m-x);
-  background:rgba(16,16,18,.82);backdrop-filter:blur(calc(14 * var(--mu)));-webkit-backdrop-filter:blur(calc(14 * var(--mu)));border-bottom:calc(1 * var(--mu)) solid var(--m-linha);font-family:var(--m-corpo)}
+  background:rgba(16,16,18,.94);border-bottom:calc(1 * var(--mu)) solid var(--m-linha);font-family:var(--m-corpo)}
 .km .m-topo{position:fixed;left:0;right:0}
 .m-topo a{text-decoration:none}
 .m-id{display:flex;align-items:center;gap:calc(12 * var(--mu));color:var(--m-marfim);margin-right:auto}
@@ -183,7 +183,7 @@
     /* revelações de conteúdo: uma vez só, por tempo (Movimento.tsx + identidade.css "entrada") */
     /* o cabeçalho ganha fundo depois do átrio */
     .km .m-topo{animation:m-topo linear both;animation-timeline:scroll(root);animation-range:0 calc(320 * var(--mu))}
-    @keyframes m-topo{from{background:rgba(16,16,18,0);border-bottom-color:transparent;backdrop-filter:none}to{background:rgba(16,16,18,.82);border-bottom-color:var(--m-linha)}}
+    @keyframes m-topo{from{background:rgba(16,16,18,0);border-bottom-color:transparent}to{background:rgba(16,16,18,.94);border-bottom-color:var(--m-linha)}}
   }
 }
 
