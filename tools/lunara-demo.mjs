@@ -67,7 +67,9 @@ function resposta(url, metodo) {
 }
 
 const b = await chromium.launch({ channel: 'chrome', headless: true });
-const ctx = await b.newContext({ viewport: { width: 1600, height: 960 }, deviceScaleFactor: 1.25 });
+// 1920×1080 sem zoom: a tela como um desktop comum vê
+const ctx = await b.newContext({ viewport: { width: 1920, height: 1080 }, deviceScaleFactor: 1 });
+async function prepara(ctx) {
 await ctx.addInitScript((u) => {
   localStorage.setItem('lunara_auth', JSON.stringify({ user: u, authType: 'social', timestamp: Date.now() }));
   localStorage.setItem('user', JSON.stringify(u));
@@ -86,6 +88,8 @@ await ctx.route(CDN + '**', (r) => {
 });
 // qualquer outra saída (fontes do Google, CDNs) passa; chamadas de terceiros de login ficam bloqueadas
 await ctx.route(/(api\.twitter\.com|alchemy\.com|walletconnect|privy)/, (r) => r.abort());
+}
+await prepara(ctx);
 
 const p = await ctx.newPage();
 p.on('pageerror', (e) => LOG && console.log('ERRO', e.message.slice(0, 160)));
@@ -120,13 +124,22 @@ await tenta('workflow', async () => {
   await p.waitForTimeout(5500);
   await p.evaluate(() => document.querySelectorAll('*').forEach((e) => { const cs = getComputedStyle(e); if (/(auto|scroll)/.test(cs.overflowY) && e.scrollHeight > e.clientHeight + 20) e.scrollTop = e.scrollHeight; }));
   await p.waitForTimeout(800); await shot('06-workflow-gerado');
-  await p.screenshot({ path: path.join(saida, '06b-chat-detalhe.png'), clip: { x: 1090, y: 80, width: 510, height: 880 } }); console.log('print 06b-chat-detalhe');
+  // o painel do gerador: sobe a partir do título até achar a coluna inteira
+  const clip = await p.evaluate(() => {
+    let e = [...document.querySelectorAll('h1,h2,h3,span,div')].find((x) => x.childElementCount === 0 && /LUNARA AI Generator/i.test(x.textContent || ''));
+    while (e && e.getBoundingClientRect().height < innerHeight * 0.8) e = e.parentElement;
+    const r = e.getBoundingClientRect(); return { x: r.left, y: r.top, width: r.width, height: Math.min(r.height, innerHeight - r.top) };
+  });
+  await p.screenshot({ path: path.join(saida, '06b-chat-detalhe.png'), clip }); console.log('print 06b-chat-detalhe');
 });
 await tenta('detalhes', async () => { await p.getByRole('button', { name: /View Details/i }).first().click(); await p.waitForTimeout(1200); await shot('07-detalhes'); await fecha(); });
 await tenta('criar', async () => { await p.getByRole('button', { name: /Create Workflow/i }).first().click(); await p.waitForTimeout(1200); await shot('08-criar-workflow'); await fecha(); });
 await tenta('perfil', async () => { await p.locator('header button').nth(-2).click(); await p.waitForTimeout(1500); await shot('09-perfil'); await fecha(); });
 // celular
 await tenta('celular', async () => {
-  await p.setViewportSize({ width: 390, height: 844 }); await p.reload({ waitUntil: 'networkidle' }); await p.waitForTimeout(2500); await shot('10-celular');
+  const cel = await b.newContext({ viewport: { width: 390, height: 844 }, deviceScaleFactor: 2, isMobile: true, hasTouch: true });
+  await prepara(cel); const pc = await cel.newPage();
+  await pc.goto('http://localhost:5173/', { waitUntil: 'networkidle' }); await pc.waitForTimeout(2500);
+  await pc.screenshot({ path: path.join(saida, '10-celular.png') }); console.log('print 10-celular');
 });
 await b.close();
