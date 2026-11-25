@@ -20,6 +20,7 @@ import { criarApresentacao } from './apresentacao.js';
 import { aprimorar } from './aprimora.js';
 import { aplicarAcabamento } from './acabamento.js';
 import { realcar } from './realce.js';
+import { instalarElevadores } from './elevador.js';
 import { fundirEstaticos, poolDeLuzes, resolucaoDinamica, reflexoEspacado, descartePorDistancia, fundirLocal, cronometroGpu } from './desempenho.js';
 
 /* ---------------- infraestrutura ---------------- */
@@ -118,6 +119,7 @@ setMotesScale(scene, innerHeight);
 progress(0.5, 'Trazendo as peças do Blender e do Tripo…'); await frame();
 console.info('[modelos]', await upgradeHall(hall.root));
 console.info('[fachadas Blender]', await upgradeFacades(districts));
+console.info('[elevadores Blender]', await instalarElevadores(hall));
 // acabamento depois das fachadas: elas também ganham o brilho contido e o lampião novo
 console.info('[acabamento]', aplicarAcabamento({ hall, districts }).join(', '));
 scene.traverse((o) => { if (!o.material) return; for (const m of [].concat(o.material)) if (m.emissiveIntensity > 1.6) m.emissiveIntensity = 1.6; });
@@ -466,16 +468,33 @@ for (const p of districts.portals) {
 }
 
 /* ---------------- elevadores ---------------- */
+// Estados: INFERIOR → (fecha portas) SUBINDO → (abre) SUPERIOR → DESCENDO → INFERIOR. Durante a viagem o
+// visitante continua olhando 360° (a posição segue a cabine, a orientação é dele); pitch entre ±70°, sem roll
+// nem balanço. Se ninguém mexer, a câmera gira devagar 20° e para no primeiro movimento do mouse ou do dedo.
 function useLift(lift) {
-  if (state.mode !== 'hall') return;
-  state.mode = 'lift'; player.enabled = false; sound.lift();
+  if (state.mode !== 'hall' || /NDO$/.test(lift.estado || '')) return;
+  state.mode = 'lift'; player.enabled = false; player.olhar = true; sound.lift();
   const up = lift.level === 'lower'; const y0 = up ? HALL.lower.y : HALL.upper.y, y1 = up ? HALL.upper.y : HALL.lower.y;
-  const base = P(lift.r, lift.f, 0); let t = 0;
+  lift.estado = up ? 'SUBINDO' : 'DESCENDO';
+  const base = P(lift.r, lift.f, 0); let t = 0, fase = 0, y = y0;
   player.teleport(base.clone().setY(y0), player.yaw);
+  const PITCH = 70 * DEG; const yaw0 = player.yaw; let esperado = yaw0, mexeu = reducedMotion;
+  ui.prompt.textContent = `Elevador · ${up ? 'subindo para o nível 02' : 'descendo para o nível 01'}`; ui.prompt.classList.add('on');
   state.anim = { update(dt) {
-    t = Math.min(1, t + dt / 3.2); const e = t * t * (3 - 2 * t); const y = y0 + (y1 - y0) * e;
-    lift.cage.position.y = y - HALL.lower.y; camera.position.set(base.x, y + 1.75, base.z); camera.rotation.set(player.pitch, player.yaw, 0, 'YXZ');
-    if (t >= 1) { lift.level = up ? 'upper' : 'lower'; player.teleport(base.clone().setY(y1), player.yaw); state.mode = 'hall'; player.enabled = document.pointerLockElement === renderer.domElement || isTouch; state.anim = null; toast(up ? 'Galeria superior — distritos 1 a 6' : 'Galeria inferior — distritos 7 a 12'); }
+    if (fase === 0) { lift.portasAlvo = 0; t += dt / 0.7; if (t >= 1) { fase = 1; t = 0; } }
+    else if (fase === 1) {
+      t = Math.min(1, t + dt / 3.6); const e = t * t * t * (t * (t * 6 - 15) + 10);   // suave na saída e na chegada
+      y = y0 + (y1 - y0) * e; lift.cage.position.y = y - HALL.lower.y;
+      if (!mexeu) { if (Math.abs(player.yaw - esperado) > 1e-4) mexeu = true; else { esperado = yaw0 + 0.35 * e; player.yaw = esperado; } }
+      if (t >= 1) { fase = 2; t = 0; lift.level = up ? 'upper' : 'lower'; lift.estado = up ? 'SUPERIOR' : 'INFERIOR'; lift.portasAlvo = 1; }
+    } else { t += dt / 0.6; }
+    player.pitch = THREE.MathUtils.clamp(player.pitch, -PITCH, PITCH);
+    camera.position.set(base.x, y + 1.75, base.z); camera.rotation.set(player.pitch, player.yaw, 0, 'YXZ');
+    if (fase === 2 && t >= 1) {
+      player.olhar = false; player.teleport(base.clone().setY(y1), player.yaw); state.mode = 'hall';
+      player.enabled = document.pointerLockElement === renderer.domElement || isTouch; state.anim = null;
+      toast(up ? 'Galeria superior — distritos 1 a 6' : 'Galeria inferior — distritos 7 a 12');
+    }
   } };
 }
 
@@ -605,7 +624,7 @@ function loop(agoraMs = performance.now()) {
     state.interact = findInteract();
     const lbl = !state.interact ? '' : state.interact.kind === 'portal' ? `E — conjurar ${state.interact.portal.d.spell} · Distrito ${state.interact.portal.d.id}: ${state.interact.portal.d.name}` : state.interact.label();
     ui.prompt.textContent = lbl; ui.prompt.classList.toggle('on', !!lbl);
-  } else { ui.prompt.classList.remove('on'); }
+  } else if (state.mode !== 'lift') { ui.prompt.classList.remove('on'); }
   gpuTempo.inicio();
   if (quality.level === 'baixa') renderer.render(scene, camera); else composer.render();
   gpuTempo.fim();

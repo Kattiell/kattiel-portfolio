@@ -28,6 +28,7 @@ export default async function ProjectPage({ params }: PageProps<'/projetos/[slug
   const link = publicLink(p);
   const district = DISTRICTS.find((d) => d.projectSlug === p.slug);
   const blocks = [
+    ['Como funciona', p.funcionamento],
     ['Contexto', p.challenge],
     ['Decisão e implementação', p.approach],
     ['Resultado verificável', p.outcome],

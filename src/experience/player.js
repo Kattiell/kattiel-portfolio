@@ -13,6 +13,7 @@ export class Player {
     this.vel = new THREE.Vector3(); this.onFloor = false;
     this.octree = new Octree();
     this.keys = {}; this.yaw = 0; this.pitch = 0; this.enabled = false;
+    this.olhar = false;   // só girar a câmera (dentro do elevador): sem andar, mas olhando 360°
     // rendered view (follows yaw/pitch and the capsule with damping) + walk motion
     this.view = { yaw: 0, pitch: 0, y: 0, roll: 0, fov: null, phase: 0, bob: 0 };
     this.reduced = matchMedia?.('(prefers-reduced-motion: reduce)').matches || new URLSearchParams(location.search).has('reduzido');
@@ -21,7 +22,7 @@ export class Player {
     addEventListener('keydown', (e) => { this.keys[e.code] = true; });
     addEventListener('keyup', (e) => { this.keys[e.code] = false; });
     dom.addEventListener('mousemove', (e) => {
-      if (!this.enabled || document.pointerLockElement !== dom) return;
+      if ((!this.enabled && !this.olhar) || document.pointerLockElement !== dom) return;
       this.yaw -= e.movementX * this.sensitivity; this.pitch -= e.movementY * this.sensitivity;
       this.pitch = Math.max(-1.45, Math.min(1.45, this.pitch));
     });

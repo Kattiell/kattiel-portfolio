@@ -274,7 +274,7 @@ export function buildHall(renderer, areas = new Set()) {
     collBox(colliders, 3, 0.3, 3, P(r, f, HALL.upper.y - 0.15));
     const lift = { group: g, cage, level: 'lower', moving: false, t: 0, f, r, pos: base, name: s < 0 ? 'Elevador oeste' : 'Elevador leste' };
     lifts.push(lift);
-    interactables.push({ kind: 'lift', lift, label: () => `E — ${lift.level === 'lower' ? 'subir' : 'descer'} (${lift.name})`, pos: () => P(r, f, lift.level === 'lower' ? HALL.lower.y : HALL.upper.y), radius: 1.9 });
+    interactables.push({ kind: 'lift', lift, label: () => `Elevador · nível ${lift.level === 'lower' ? '01' : '02'} · [E] ${lift.level === 'lower' ? 'subir ↑' : 'descer ↓'}`, pos: () => P(r, f, lift.level === 'lower' ? HALL.lower.y : HALL.upper.y), radius: 1.9 });
   }
 
   /* ---------------- hub central (deque, plataforma giratória, torre de comando, laboratório, arsenal) ---------------- */

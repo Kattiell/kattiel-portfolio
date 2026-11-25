@@ -9,6 +9,8 @@ export type Project = {
   /** Rótulo curto do tipo de trabalho (ex.: "Cliente · no ar"). */
   kind: string;
   summary: string;
+  /** Como funciona, em linguagem de quem não é da área: 2 ou 3 frases. Todo projeto tem. */
+  funcionamento?: string;
   challenge?: string;
   approach?: string;
   /** Só resultado documentado. */

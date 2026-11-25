@@ -11,6 +11,8 @@ export const PROJECTS: Project[] = [
     featured: true,
     summary:
       'Consultoria financeira de Belo Horizonte. Troquei um site de vitrine por um diagnóstico financeiro em 5 perguntas que já entrega o resultado pronto para a conversa no WhatsApp.',
+    funcionamento:
+      'O visitante responde 5 perguntas sobre a empresa e vê na hora um medidor da saúde financeira (controle, atenção ou crítico) com as frentes de serviço recomendadas. Um botão leva o resultado pronto para o WhatsApp da consultoria, sem formulário nem servidor no meio.',
     challenge:
       'O site antigo tinha depoimentos de exemplo, logos falsos de parceiros e fotos de banco de imagem, usava um azul que não existe no logo e não aparecia na busca por "consultoria financeira empresarial em Belo Horizonte".',
     approach:
@@ -32,9 +34,11 @@ export const PROJECTS: Project[] = [
     category: 'software',
     kind: 'Projeto autoral · em desenvolvimento',
     summary:
-      'Aplicação full stack em desenvolvimento, com autenticação, perfis de acesso e rastreamento em tempo real. Ainda não está pronta: o código está no GitHub.',
-    approach: 'React no front, Node e Prisma no back, WebSocket para as atualizações em tempo real.',
-    stack: ['React', 'Node', 'Prisma', 'WebSocket'],
+      'Painel web para acompanhar pets: o login separa administrador e tutor, cada um com o seu painel, e o tutor vê no mapa onde o pet está. Em desenvolvimento: por enquanto é só o front.',
+    funcionamento:
+      'A pessoa entra e o sistema decide, pelo perfil, se mostra o painel do administrador ou o do tutor. Na tela de rastreamento, a posição do pet aparece num mapa do OpenStreetMap com o histórico de pontos; ela deveria chegar por WebSocket, mas hoje o próprio código simula o movimento a cada 15 segundos.',
+    approach: 'React com Vite, mapa com Leaflet e uma conexão WebSocket preparada para receber a posição em tempo real. O servidor ainda não existe: login e posição são simulados.',
+    stack: ['React', 'Vite', 'Leaflet', 'WebSocket'],
     repositoryUrl: 'https://github.com/Kattiell/PetTracker',
     visibility: 'public',
   },
@@ -47,6 +51,8 @@ export const PROJECTS: Project[] = [
     featured: true,
     summary:
       'A área de QA de uma plataforma B2B montada do zero: método, fábrica de 11.600+ casos de teste de API, triagem de defeitos e um painel de gestão do time alimentado pelo ClickUp.',
+    funcionamento:
+      'Cada card que chega ao QA passa por um roteiro fixo: prova que o ambiente está certo, monta os casos extremos, executa e entrega um laudo. Os casos de API saem de uma fábrica que os gera a partir de requisições reais, e um painel mostra à gestão, sprint a sprint, onde as entregas travam e quanto voltam.',
     challenge:
       'Uma plataforma B2B de pedidos (app do vendedor, painel web e integrações com ERPs) rodando o legado e o refatorado ao mesmo tempo, com um QA só. O material de teste estava espalhado entre cards, coleções e scripts, não havia trava contra escrita acidental em produção e a liderança não via onde o tempo e o retrabalho se concentravam.',
     approach:
@@ -71,6 +77,8 @@ export const PROJECTS: Project[] = [
     featured: true,
     summary:
       'Gate de CI que detecta mudanças que quebram APIs (schema drift, troca de status code) em qualquer API JSON ou GraphQL, sem dependências em tempo de execução.',
+    funcionamento:
+      'Antes de uma mudança entrar no código, o gate chama a API e compara a resposta com o contrato combinado: se um campo sumiu, mudou de tipo ou o status code trocou, ele barra o merge e explica o que quebrou. Também separa endpoint instável de teste instável.',
     challenge:
       'Mudança de contrato quebra integração sem ninguém perceber até o cliente reclamar, e teste instável vira ruído que o time aprende a ignorar.',
     approach:
@@ -91,6 +99,8 @@ export const PROJECTS: Project[] = [
     kind: 'Cliente · no ar',
     summary:
       'Site de uma página para uma nutricionista esportiva e estética: transforma a visita que chega do Instagram em agendamento no WhatsApp, idêntico à arte aprovada pela cliente.',
+    funcionamento:
+      'Quem chega pelo Instagram cai numa página só, idêntica à arte aprovada, que conta o trabalho da nutricionista e termina sempre perto de "Agende sua consulta". O formulário monta a mensagem e abre o WhatsApp dela já com o texto pronto.',
     challenge:
       'O público chega pelo Instagram, no celular, entre uma tarefa e outra, e precisa entender em segundos se a Mariane é para ele e como marcar. A cliente aprovou uma arte e queria o site idêntico a ela, sem cara de template de nutrição e sem promessa milagrosa.',
     approach:
@@ -114,6 +124,8 @@ export const PROJECTS: Project[] = [
     kind: 'Projeto autoral',
     featured: true,
     summary: 'Simulador do Tribunal do Júri brasileiro com agentes de IA, para treinar defesa ou acusação. .NET 10 e Next.js 16, 74 testes.',
+    funcionamento:
+      'A pessoa escolhe um processo e um papel (defesa ou acusação) e os agentes de IA fazem o resto do júri: juiz, promotor, testemunhas e jurados. Quem decide a fase do rito é um motor com as regras do Código de Processo Penal; a IA só fala, sempre citando a prova dos autos.',
     challenge:
       'Os simuladores de tribunal com IA são americanos, fechados e modelam o júri dos EUA. Não havia nada aberto que seguisse o rito brasileiro.',
     approach:
@@ -134,7 +146,9 @@ export const PROJECTS: Project[] = [
     kind: 'Em desenvolvimento · não lançado',
     summary:
       'Comunicação por voz e texto para um grupo fechado: app desktop em Electron, API em Fastify, Postgres com acesso por linha e servidor de voz LiveKit próprio. Ainda não foi lançado e, por enquanto, só roda localmente.',
-    stack: ['Electron', 'Fastify', 'Postgres', 'LiveKit'],
+    funcionamento:
+      'É um app de computador para um grupo de amigos, no estilo Discord, em que só entra quem tem convite e está na lista de liberação, com login pelo Discord. As mensagens e o "digitando" chegam em tempo real, e quem vê o quê é decidido pelo próprio banco de dados. Voz, câmera e tela passam por um servidor de voz do próprio grupo, com uma chave que vale para uma sala só por 5 minutos.',
+    stack: ['Electron', 'React', 'Fastify', 'Postgres', 'LiveKit'],
     visibility: 'private',
   },
 
@@ -145,6 +159,8 @@ export const PROJECTS: Project[] = [
     kind: 'Plugin interno · B2List',
     summary:
       'Plugin do Claude Code criado para a empresa: conduz o teste de cada card em 9 etapas, põe um agente crítico para derrubar cada achado antes de virar bug, trava escrita em produção e mostra o laudo ao vivo num painel ao lado da conversa.',
+    funcionamento:
+      'O QA abre um card no Claude Code e o plugin conduz o teste em 9 etapas, com um agente crítico que tenta derrubar cada achado antes de ele virar bug. Escrita em produção é bloqueada, e um painel ao lado da conversa mostra o laudo se montando ao vivo.',
     challenge:
       'Com estagiários entrando, o método de teste precisava ser seguido por outra pessoa no primeiro dia, e a IA não podia escrever em produção nem abrir card sozinha.',
     approach:
@@ -166,8 +182,10 @@ export const PROJECTS: Project[] = [
     title: 'Laboratório de Civilizações',
     category: 'automation',
     kind: 'Pesquisa',
-    summary: 'Simulação ideológica com agentes em Python e NumPy, rodando com LLM local.',
-    stack: ['Python', 'NumPy', 'Agentes'],
+    summary: 'Simulação que põe a mesma população, no mesmo mundo e sob os mesmos choques, para viver sob dez conjuntos de regras ideológicas, e compara o que acontece com cada sociedade em 100 anos.',
+    funcionamento:
+      'Um motor em Python simula 1.500 cidadãos por sociedade sob dez modelos ideológicos, com os mesmos choques para todos. Agentes como líder, legisladores, juiz e imprensa propõem leis, que o motor confere antes da votação; eles podem ser movidos por regras ou por um modelo de linguagem local. Uma interface web desenha cada sociedade como uma vila em pixel art e compara tudo em gráficos, inclusive o Brasil de 1500 a 2076 contra dados reais.',
+    stack: ['Python', 'NumPy', 'Agentes', 'Ollama'],
     visibility: 'case-study-only',
   },
   {
@@ -177,6 +195,8 @@ export const PROJECTS: Project[] = [
     kind: 'Curso · B2List',
     summary:
       'Curso interno em 7 módulos que leva gestores, diretores e coordenadores do primeiro contato com o Claude até a adoção governada de IA na própria área.',
+    funcionamento:
+      'São 7 módulos, cada um começando por uma situação real da rotina do gestor (uma ata, um planejamento, um e-mail difícil), passando por uma demonstração ao vivo e terminando num exercício no trabalho do próprio aluno. No fim, cada um sai com o mapa de adoção de IA da sua área.',
     challenge:
       'Gestores sem base técnica lidando com volume de informação, comunicação repetida, análise sob pressão e documentação atrasada, e sem regra clara para levar a IA ao time.',
     approach:
@@ -196,9 +216,11 @@ export const PROJECTS: Project[] = [
     slug: 'bot-trading-base',
     title: 'Bot de trading (Base)',
     category: 'software',
-    kind: 'Freelance',
-    summary: 'Bot para Telegram com ordens limite e taxa embutida na rede Base.',
-    stack: ['Cripto', 'Telegram'],
+    kind: 'Freelance · em desenvolvimento (fase 0)',
+    summary: 'Bot de trading para Telegram na rede Base, no estilo do BasedBot. Está na fase 0: a estrutura, o /start, o menu e os convites funcionam; compra, venda e ordens limite são as próximas fases.',
+    funcionamento:
+      'O Telegram entrega cada mensagem a um webhook numa aplicação Next.js, e o bot responde ao /start com um menu de 9 botões; o /start também aceita um código de convite. Pelo plano, as ordens vão ser executadas pela Definitive Flash API com a taxa do bot descontada em cada operação, e as chaves das carteiras ficam cifradas com AES-256-GCM.',
+    stack: ['Next.js', 'Telegram Bot API', 'Base (EVM)'],
     visibility: 'private',
   },
   {
@@ -208,6 +230,8 @@ export const PROJECTS: Project[] = [
     kind: 'Produto · pausado',
     summary:
       'Terminal de inteligência on-chain na rede Base: um oráculo de IA caça tokens em estágio inicial, agentes com arquétipos de Jung debatem e votam a "Call of the Day", e um bot de Telegram leva tudo para os grupos.',
+    funcionamento:
+      'Toda noite um oráculo de IA caça tokens novos na rede Base, e agentes com arquétipos diferentes debatem e votam se vale uma "Call of the Day". O resultado vai para o site e para um bot de Telegram, que também responde quando alguém posta um endereço de contrato no grupo.',
     challenge:
       'Publicar sinais de IA sobre tokens recém-lançados sem repassar golpe nem endereço de contrato inventado pelo modelo, controlando o custo dos modelos e respeitando os limites do Telegram (cerca de 20 mensagens por minuto por grupo).',
     approach:
@@ -232,6 +256,8 @@ export const PROJECTS: Project[] = [
     kind: 'Produto Web3 · IA',
     summary:
       'Plataforma de imagens com IA na rede Base: a pessoa descreve a imagem num chat e recebe a arte pronta, ou usa um workflow criado pela comunidade (um estilo com prompt, passos e capa). Os créditos semanais vêm do token $LUNARA que ela guarda na carteira.',
+    funcionamento:
+      'A pessoa entra com a carteira ou com o X, descreve a imagem num chat e recebe a arte pronta; cada geração desconta 100 créditos do saldo. Ela também pode escolher um workflow da comunidade (um estilo pronto) e os créditos da semana vêm de quanto token $LUNARA ela guarda.',
     challenge:
       'Cobrar geração de imagem sem cartão de crédito e sem deixar o custo dos modelos fugir do controle: o acesso precisava sair do token, com login por carteira ou pelo X, e cada imagem gerada tinha de ser descontada de um saldo que o usuário enxerga.',
     approach:
@@ -254,6 +280,8 @@ export const PROJECTS: Project[] = [
     kind: 'Produto Web3 · pré-lançamento',
     summary:
       'Launchpad de memecoins para a rede Elysium: a pessoa planta uma moeda numa tela só e numa transação só, e ela nasce como semente numa curva de preço própria até florescer numa pool de DEX ao chegar em 300 HYPE. O campo de asfódelos em 3D é o mapa das moedas.',
+    funcionamento:
+      'Quem quer lançar uma moeda preenche uma tela só e assina uma transação; a moeda nasce numa curva de preço própria, com regras fixas e proteção contra robôs no primeiro minuto. Quando a curva junta 300 HYPE, a moeda "floresce" e vai para uma pool de DEX.',
     challenge:
       'Launchpads de memecoin costumam premiar quem compra no primeiro segundo e quem cria a moeda e vende tudo. A ideia era um lançamento justo e legível: regras fixas que ninguém muda depois, proteção contra robôs no início e tudo visível para quem chega depois.',
     approach:
@@ -278,6 +306,8 @@ export const PROJECTS: Project[] = [
     kind: 'Colaboração · open source',
     summary:
       'Diário alimentar que roda no navegador: a pessoa anota as refeições em linguagem natural e recebe uma nota semanal de A a E no estilo Nutri-Score e um relatório para compartilhar. Sem conta, sem servidor, funciona offline e em 6 idiomas.',
+    funcionamento:
+      'A pessoa anota o que comeu do jeito que fala ("café com leite e pão na chapa") e o app separa os alimentos e dá uma nota de A a E para cada refeição. Depois de 7 dias registrados sai uma nota da semana e um relatório para mostrar ao nutricionista; tudo fica só no aparelho.',
     approach:
       'Entrei na segurança e na robustez do app, que guarda tudo no próprio aparelho: o que entra de fora (backup importado, iframe, scripts) passou a ter limite, e o que pesa passou a carregar só quando a pessoa precisa.',
     evidence: [
@@ -300,6 +330,8 @@ export const PROJECTS: Project[] = [
     kind: 'Colaboração · open source',
     summary:
       'Prompts de operação que transformam um LLM num consultor de recrutamento de um mercado específico: nota de aderência à vaga baseada em evidência, currículo ajustado e carta de apresentação opcional, entregues como código Typst.',
+    funcionamento:
+      'A pessoa copia o assistente do país da vaga, cola no ChatGPT, Claude ou Gemini e manda o currículo e a vaga. O assistente avalia a aderência com base no que está comprovado, espera a escolha da pessoa e escreve o currículo ajustado, que vira PDF numa página do próprio site.',
     approach:
       'Escrevi a edição brasileira: a persona Helena Duarte, uma consultora que conhece o mercado de trabalho do Brasil, para que a avaliação e o currículo sigam o que recrutadores daqui esperam.',
     evidence: [
@@ -317,9 +349,11 @@ export const PROJECTS: Project[] = [
     slug: 'gama-vans',
     title: 'Loja de peças para vans',
     category: 'design',
-    kind: 'Cliente',
-    summary: 'E-commerce em Next.js com UX para um público mais velho, geração estática e CSP.',
-    stack: ['Next.js', 'UI/UX'],
+    kind: 'Cliente · proposta',
+    summary: 'Loja de peças para a Gama Vans, oficina de vans de Uberlândia, desenhada para um público mais velho: letra grande, passos numerados e um carrinho enxuto. Catálogo por modelo de van e busca por peça.',
+    funcionamento:
+      'O cliente escolhe o modelo da van (Sprinter, Ducato, Master ou HR) ou busca a peça pelo nome ou código e vai adicionando ao carrinho. As páginas do catálogo são geradas antes do acesso a partir de um banco SQLite; o carrinho guarda no navegador só a peça e a quantidade, e o preço sempre vem do catálogo. A finalização ainda é uma simulação, sem pagamento.',
+    stack: ['Next.js', 'SQLite', 'Acessibilidade', 'CSP'],
     visibility: 'case-study-only',
   },
 ];
