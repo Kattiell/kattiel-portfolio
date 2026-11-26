@@ -253,7 +253,7 @@ export const PROJECTS: Project[] = [
     slug: 'lunara',
     title: 'Lunara',
     category: 'software',
-    kind: 'Produto Web3 · IA',
+    kind: 'Produto Web3 · pausado',
     summary:
       'Plataforma de imagens com IA na rede Base: a pessoa descreve a imagem num chat e recebe a arte pronta, ou usa um workflow criado pela comunidade (um estilo com prompt, passos e capa). Os créditos semanais vêm do token $LUNARA que ela guarda na carteira.',
     funcionamento:
@@ -269,7 +269,7 @@ export const PROJECTS: Project[] = [
       'Front em React com Vite, Tailwind e Radix (48 commits), com perfil, plano, carteiras e geração no celular.',
     ],
     outcome:
-      'Os sites saíram do ar. As telas abaixo são do front real rodando localmente, com login, servidor e geração simulados e as imagens tiradas das artes deste portfólio.',
+      'Pausado. Os sites saíram do ar; as telas abaixo são do front real rodando localmente, com login, servidor e geração simulados e as imagens tiradas das artes deste portfólio.',
     stack: ['React', 'Vite', 'NestJS', 'Prisma', 'OpenAI', 'Base (EVM)', 'Virtuals ACP'],
     visibility: 'case-study-only',
   },
@@ -277,7 +277,7 @@ export const PROJECTS: Project[] = [
     slug: 'asphodel',
     title: 'Asphodel',
     category: 'software',
-    kind: 'Produto Web3 · pré-lançamento',
+    kind: 'Produto Web3 · pausado',
     summary:
       'Launchpad de memecoins para a rede Elysium: a pessoa planta uma moeda numa tela só e numa transação só, e ela nasce como semente numa curva de preço própria até florescer numa pool de DEX ao chegar em 300 HYPE. O campo de asfódelos em 3D é o mapa das moedas.',
     funcionamento:
@@ -293,7 +293,7 @@ export const PROJECTS: Project[] = [
       'Página de cada moeda com Raio-X (compra do criador, top 10, carteiras ligadas e escudo anti-sniper), curva, compra e venda com slippage e taxas do criador.',
     ],
     outcome:
-      'Em pré-lançamento: os contratos ainda não foram auditados. No ar como vitrine, com moedas e negociações simuladas e um aviso claro; lista de espera e pedidos de lançamento abrem com a testnet.',
+      'Pausado antes do lançamento: os contratos não chegaram a ser auditados. A vitrine segue no ar, com moedas e negociações simuladas e um aviso claro; lista de espera e pedidos de lançamento estão fechados.',
     stack: ['Next.js', 'TypeScript', 'Tailwind', 'Solidity', 'Foundry', 'viem', 'Three.js', 'Postgres'],
     url: 'https://asphodel-three.vercel.app',
     visibility: 'public',
